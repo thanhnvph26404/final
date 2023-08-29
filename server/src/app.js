@@ -1,18 +1,21 @@
 import dotenv from "dotenv";
-import express, { Express } from "express";
+import express from "express";
 import morgan from "morgan";
 import cors from 'cors';
 import connectDB from "./config/database";
-const app: Express = express();
+
+import authRouter from "./routes/auth";
+const app = express();
 
 dotenv.config();
 
 // connect db
-connectDB(process.env.MONGO_URI as string)
+connectDB(process.env.MONGO_URI)
 
 app.use(express.json());
 app.use(morgan("tiny"));
 app.use(cors())
 
-export const viteNodeApp: Express = app;
+app.use('/auth', authRouter)
+export const viteNodeApp = app;
 // 
