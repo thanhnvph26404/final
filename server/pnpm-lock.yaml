@@ -38,6 +38,9 @@ dependencies:
   mongoose:
     specifier: ^7.4.5
     version: 7.4.5
+  mongoose-paginate-v2:
+    specifier: ^1.7.31
+    version: 1.7.31
   morgan:
     specifier: ^1.10.0
     version: 1.10.0
@@ -47,6 +50,9 @@ dependencies:
   nodemailer:
     specifier: ^6.9.4
     version: 6.9.4
+  pnpm:
+    specifier: ^8.7.0
+    version: 8.7.0
   uuid:
     specifier: ^9.0.0
     version: 9.0.0
@@ -1123,6 +1129,11 @@ packages:
       saslprep: 1.0.3
     dev: false
 
+  /mongoose-paginate-v2@1.7.31:
+    resolution: {integrity: sha512-Zz7i/1k7/MJqipzttn9SUenbcW1hC63qBOB7HHBNMfIfg0AOPFT2CdAWpeAJ7BBGEQ4qC1Gu02fIaSeMmXOT0A==}
+    engines: {node: '>=4.0.0'}
+    dev: false
+
   /mongoose@7.4.5:
     resolution: {integrity: sha512-X7Mw7KHUYZmyOQmlu7D9TnZh/3vOrAYmZwEpXDU0VDvLPKT0T7PF6blwiv3aXOEMwv9T3rLTC9lJb3C5dWld2A==}
     engines: {node: '>=14.20.1'}
@@ -1298,6 +1309,12 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
     dev: true
+
+  /pnpm@8.7.0:
+    resolution: {integrity: sha512-HWH4wQ6KWl2/vd6g8fXvt9vVF3IjBzrslTzyMKpGQWiEuUJ6ZCHbp48orQ+T++3ji6VwgyN7NQJD3mseOoznHQ==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
 
   /postcss@8.4.28:
     resolution: {integrity: sha512-Z7V5j0cq8oEKyejIKfpD8b4eBy9cwW2JWPk0+fB1HOAMsfHbnAXLLS+PfVWlzMSLQaWttKDt607I0XHmpE67Vw==}

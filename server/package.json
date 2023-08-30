@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "vite"
   },
-  "keywords": [ ],
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -26,6 +26,7 @@
     "jsonwebtoken": "^9.0.1",
     "mock-aws-s3": "^4.0.2",
     "mongoose": "^7.4.5",
+    "mongoose-paginate-v2": "^1.7.31",
     "morgan": "^1.10.0",
     "nock": "^13.3.3",
     "nodemailer": "^6.9.4",
