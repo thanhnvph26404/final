@@ -6,6 +6,7 @@ import connectDB from "./config/database";
 
 import authRouter from "./routes/auth";
 import passwordRouter from "./routes/password";
+import categoryRouter from "./routes/categories";
 const app = express();
 
 dotenv.config();
@@ -19,5 +20,6 @@ app.use(cors())
 
 app.use('/auth', authRouter)
 app.use('/password', passwordRouter)
+app.use('/category', categoryRouter)
 export const viteNodeApp = app;
 // 
