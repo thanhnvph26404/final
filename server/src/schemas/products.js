@@ -1,57 +1,57 @@
 import joi from "joi";
 import { errorMessages } from "./component/function";
 
-const sizesSchema = joi.object({
+const sizesSchema = joi.object( {
   size: joi.any().required(),
-  inventory: joi.number().min(0).required().messages(errorMessages("Số lượng")),
-});
+  inventory: joi.number().min( 0 ).required().messages( errorMessages( "Số lượng" ) ),
+} );
 
 export const productSchema = joi
-  .object({
+  .object( {
     sold: joi
       .number()
-      .min(0)
+      .min( 0 )
       .required()
-      .messages(errorMessages("đã bán")),
+      .messages( errorMessages( "đã bán" ) ),
     name: joi.
       string()
       .required()
-      .messages(errorMessages("Tên")),
+      .messages( errorMessages( "Tên" ) ),
     price: joi.number()
-      .min(0)
+      .min( 0 )
       .required()
-      .messages(errorMessages("Giá")),
+      .messages( errorMessages( "Giá" ) ),
     original_price: joi
       .number()
-      .min(0)
+      .min( 0 )
       .required()
-      .messages(errorMessages("Giá gốc")),
+      .messages( errorMessages( "Giá gốc" ) ),
     description: joi
       .string()
       .required()
-      .messages(errorMessages("Mô tả")),
+      .messages( errorMessages( "Mô tả" ) ),
     images: joi
       .array()
-      .min(1)
+      .min( 1 )
       .required()
       .items(
-        joi.object({
-          status: joi.string().required().messages(errorMessages("Trạng thái")),
-          name: joi.string().required().messages(errorMessages("Tên")),
-          uid: joi.string().required().messages(errorMessages("Uid")),
-          url: joi.string().required().messages(errorMessages("Đường dẫn")),
-        })
+        joi.object( {
+          status: joi.string().required().messages( errorMessages( "Trạng thái" ) ),
+          name: joi.string().required().messages( errorMessages( "Tên" ) ),
+          uid: joi.string().required().messages( errorMessages( "Uid" ) ),
+          url: joi.string().required().messages( errorMessages( "Đường dẫn" ) ),
+        } )
       )
-      .messages(errorMessages("Ảnh")),
+      .messages( errorMessages( "Ảnh" ) ),
     sizes: joi
       .array()
-      .items(sizesSchema)
+      .items( sizesSchema )
       .required(),
     category: joi
       .string()
       .required()
-      .messages(errorMessages("Danh mục")),
+      .messages( errorMessages( "Danh mục" ) ),
     comments: joi.any()
 
-  })
-  .unknown(true);
+  } )
+  .unknown( true );
