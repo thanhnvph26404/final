@@ -12,7 +12,7 @@ export const productSchema = joi
       .number()
       .min(0)
       .required()
-      .message(errorMessages("đã bán")),
+      .messages(errorMessages("đã bán")),
     name: joi.
       string()
       .required()
@@ -30,7 +30,7 @@ export const productSchema = joi
       .string()
       .required()
       .messages(errorMessages("Mô tả")),
-    images: joi 
+    images: joi
       .array()
       .min(1)
       .required()
@@ -40,18 +40,18 @@ export const productSchema = joi
           name: joi.string().required().messages(errorMessages("Tên")),
           uid: joi.string().required().messages(errorMessages("Uid")),
           url: joi.string().required().messages(errorMessages("Đường dẫn")),
-         })
-             )
-          .messages(errorMessages("Ảnh")),
-      sizes: joi
-        .array()
-        .items(sizesSchema)
-        .required(),
-      category: joi
-        .string()
-        .required()
-        .messages(errorMessages("Danh mục")),
-      comments : joi.any().items()
-         
+        })
+      )
+      .messages(errorMessages("Ảnh")),
+    sizes: joi
+      .array()
+      .items(sizesSchema)
+      .required(),
+    category: joi
+      .string()
+      .required()
+      .messages(errorMessages("Danh mục")),
+    comments: joi.any()
+
   })
   .unknown(true);
