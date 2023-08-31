@@ -6,14 +6,6 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
-    stars: {
-      type: Number,
-      required: false,
-    },
-    inventory: {
-      type: Number,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -52,6 +44,19 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
+    sizes: [
+      {
+        size: {
+          type: mongoose.Schema.Types.Mixed,
+          required: true,
+        },
+        inventory: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
