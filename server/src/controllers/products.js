@@ -1,7 +1,6 @@
 import { productSchema } from "../schemas/products"
 
 import Product from "../models/products"
-
 export const create = async (req, res) => {
     try {
         const { error } = productSchema.validate(req.body, { abortEarly: false });
@@ -38,7 +37,6 @@ export const create = async (req, res) => {
         });
     }
 };
-import { Product } from "../models/products"
 export const getAll = async (req, res) => {
     try {
         const data = await Product.find();
