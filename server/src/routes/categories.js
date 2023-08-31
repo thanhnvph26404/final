@@ -1,4 +1,5 @@
 import express from "express";
+import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 
 import { create, getAll, getOne, remove, update } from "../controllers/categories";
 
@@ -6,10 +7,10 @@ import { create, getAll, getOne, remove, update } from "../controllers/categorie
 
 const router = express.Router();
 
-router.get("/", getAll);
-router.get("/:id", getOne);
-router.post("/",  create);
-router.patch("/:id", update);
-router.delete("/:id",remove);
+router.get( "/", getAll );
+router.get( "/:id", authMiddlware, isAdmin, getOne );
+router.post( "/", authMiddlware, isAdmin, create );
+router.patch( "/:id", authMiddlware, isAdmin, update );
+router.delete( "/:id", authMiddlware, isAdmin, remove );
 
 export default router;
