@@ -1,7 +1,6 @@
 import { productSchema } from "../schemas/products"
 import Category from "../models/categories"
 import Product from "../models/products"
-import categories from "../models/categories";
 export const create = async ( req, res ) =>
 {
     try
@@ -120,7 +119,7 @@ export const updateProduct = async ( req, res ) =>
                 message: errors
             } );
         }
-        const checkCategory = await categories.findById( req.body.category );
+        const checkCategory = await Category.findById( req.body.category );
         if ( !checkCategory )
         {
             return res.status( 400 ).json( {
@@ -147,3 +146,24 @@ export const updateProduct = async ( req, res ) =>
         } );
     }
 }
+
+
+export const remove = async (req, res) => {
+    try {
+      const data = await Product.findByIdAndDelete(req.params.id);
+  
+      if (!data) {
+        return res.status(404).json({
+          message: "Xóa sản phẩm thất bại",
+        });
+      }
+  
+      return res.status(200).json({
+        message: "Xóa sản phẩm thành công ",
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: "Lỗi server: " + error.message,
+      });
+    }
+  };
