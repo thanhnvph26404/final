@@ -1,5 +1,6 @@
+
 import mongoose from "mongoose"
-const voucherSchema = new mongoose.Schema( {
+const voucherSchema = new mongoose.Schema({
     name: {
         type: String,
         require: true,
@@ -31,8 +32,9 @@ const voucherSchema = new mongoose.Schema( {
     },
     status: {
         type: String,
-        enum: [ "active", "expored" ],
+        enum: ["active", "expored"],
         default: "active"
     }
-}, { versionKey: false, timeseries: true } )
-export default mongoose.model( "voucher", voucherSchema )
+}, { versionKey: false, timeseries: true })
+export default mongoose.model("voucher", voucherSchema)
+
