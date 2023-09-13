@@ -1,33 +1,19 @@
 
-import React from 'react'
-
-type Props = {
-  change: () => void
-}
-
-
-
 
 import { IoMail, IoCaretDownOutline, IoCaretUpOutline} from 'react-icons/io5'
 import { FaCalendarAlt, FaBell } from 'react-icons/fa'
-import { LuMenu } from 'react-icons/lu'
 
 
-const Header = ({ change }: Props) => {
+
+const Header = () => {
   
   return (
     <div className=''>
-      <div className='flex justify-between max-w-full mt-8 mb-7 mx-6 h-10'>
-        <div onClick={change} className='rounded-md border shadow-slate-100 flex items-center hover:bg-black-400 group opacity-80 lg:hidden'>
-          <LuMenu className='text-gray-85 text-xl mx-2 group-hover:text-white'/>
-        </div>
-        <div className='hidden lg:block'>
-          
-        </div>
+      <div className='flex justify-end max-w-full mt-8 mb-7 mx-6 h-10'>
         <div className='flex items-center ml-8'>
-          <FaCalendarAlt className='text-gray-85 text-xl mx-2 hover:text-[#1D1F2C]  ' />
-          <IoMail className='text-gray-85 text-xl mx-2 hover:text-[#1D1F2C] ' />
-          <FaBell className='text-gray-85 text-xl mx-2 hover:text-[#1D1F2C] ' />
+          <FaCalendarAlt className='text-gray-85 text-lg mx-2 hover:text-[#1D1F2C]  ' />
+          <IoMail className='text-gray-85 text-lg mx-2 hover:text-[#1D1F2C] ' />
+          <FaBell className='text-gray-85 text-lg mx-2 hover:text-[#1D1F2C] ' />
           <div className='flex items-center ml-6'>
             <div className='rounded-full w-8 h-8 overflow-hidden  bg-black-400 mr-3'>
               <img src="https://www.roberthalf.com.au/sites/roberthalf.com.au/files/2019-05/admin_staff.jpg"  alt="" className='block h-full  object-cover' />
