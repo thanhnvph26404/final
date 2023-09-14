@@ -3,7 +3,7 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-],
+  ],
   theme: {
     extend: {
       colors: {
@@ -12,12 +12,19 @@ export default {
           400: '#4A4C56'
         },
         'gray': {
-          85: '#858D9D', 
+          85: '#858D9D',
           66: '#667085'
         }
-        
+
       }
     },
+    variants: {
+      extend: {
+        display: [ "group-hover" ],
+        margin: [ "group-hover" ],
+        visibility: [ "group-hover" ]
+      }
+    }
   },
   plugins: [],
 }

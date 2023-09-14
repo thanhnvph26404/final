@@ -1,13 +1,15 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
+import { configureStore, combineReducers } from '@reduxjs/toolkit'
+
+import
+{
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 // import { PersistGate } from 'redux-persist/integration/react'
@@ -18,25 +20,25 @@ const persistConfig = {
     whitelist: []
 }
 
-const rootReducer = combineReducers({
+const rootReducer = combineReducers( {
 
-})
+} )
 
 const middleware: [] = []
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer( persistConfig, rootReducer )
 
-export const store = configureStore({
+export const store = configureStore( {
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
+    middleware: ( getDefaultMiddleware ) =>
+        getDefaultMiddleware( {
             serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+                ignoredActions: [ FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER ],
             },
-        }).concat(...middleware),
-})
+        } ).concat( ...middleware ),
+} )
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
-export default persistStore(store);
+export default persistStore( store );
