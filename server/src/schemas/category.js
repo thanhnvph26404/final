@@ -3,6 +3,14 @@ import joi from "joi";
 import { errorMessages } from "./component/function";
 
 export const categorySchema = joi.object({
-  slug: joi.string().required().messages(errorMessages("Danh mục")),
-  brand: joi.string().required().messages(errorMessages("Thương hiệu")),
+  title: joi.string().required().messages(errorMessages("Danh mục")),
+  image: joi
+  .required()
+  .object( {
+    status: joi.string().required().messages( errorMessages( "Trạng thái" ) ),
+    name: joi.string().required().messages( errorMessages( "Tên" ) ),
+    uid: joi.string().required().messages( errorMessages( "Uid" ) ),
+    url: joi.string().required().messages( errorMessages( "Đường dẫn" ) ),
+  } )
+  .messages( errorMessages( "Ảnh" ) ),
 });

@@ -10,7 +10,7 @@ import passwordRouter from "./routes/password";
 import categoryRouter from "./routes/categories";
 import uploadRouter from "./routes/upload";
 import contactRouter from "./routes/contact";
-
+import colorRouter from "./routes/color";
 const app = express();
 
 dotenv.config();
@@ -28,6 +28,7 @@ app.use( '/images', uploadRouter )
 app.use( "/voucher", voucherRouter );
 app.use( "/products", ProductRouter );
 app.use( "/contact", contactRouter );
+app.use( "/color", colorRouter );
 
 
 
