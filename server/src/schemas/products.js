@@ -51,6 +51,10 @@ export const productSchema = joi
       .string()
       .required()
       .messages( errorMessages( "Danh mục" ) ),
+    brand: joi
+      .string()
+      .required()
+      .messages( errorMessages( "thương hiệu " ) ),
     comments: joi.any()
 
   } )
