@@ -11,6 +11,8 @@ import categoryRouter from "./routes/categories";
 import uploadRouter from "./routes/upload";
 import contactRouter from "./routes/contact";
 import colorRouter from "./routes/color";
+import brandRouter from "./routes/brand";
+
 const app = express();
 
 dotenv.config();
@@ -29,6 +31,8 @@ app.use( "/voucher", voucherRouter );
 app.use( "/products", ProductRouter );
 app.use( "/contact", contactRouter );
 app.use( "/color", colorRouter );
+app.use( "/brand", brandRouter );
+
 
 
 

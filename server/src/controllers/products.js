@@ -73,21 +73,21 @@ export const getOne = async ( req, res ) =>
     try
     {
         const data = await Product.findById( req.params.id )
-            .populate( "category" )
-            .populate( {
-                path: "comments",
-                populate: [
-                    {
-                        path: "user",
-                    },
-                    {
-                        path: "feed_back",
-                        populate: {
-                            path: "user",
-                        },
-                    },
-                ],
-            } );
+            .populate( "category" ).populate( "brand" )
+        // .populate( {
+        //     // path: "comments",
+        //     populate: [
+        //         {
+        //             path: "user",
+        //         },
+        //         {
+        //             path: "feed_back",
+        //             populate: {
+        //                 path: "user",
+        //             },
+        //         },
+        //     ],
+        // } );
 
         if ( !data || data.length === 0 )
         {
@@ -148,22 +148,26 @@ export const updateProduct = async ( req, res ) =>
 }
 
 
-export const remove = async (req, res) => {
-    try {
-      const data = await Product.findByIdAndDelete(req.params.id);
-  
-      if (!data) {
-        return res.status(404).json({
-          message: "Xóa sản phẩm thất bại",
-        });
-      }
-  
-      return res.status(200).json({
-        message: "Xóa sản phẩm thành công ",
-      });
-    } catch (error) {
-      return res.status(500).json({
-        message: "Lỗi server: " + error.message,
-      });
+export const remove = async ( req, res ) =>
+{
+    try
+    {
+        const data = await Product.findByIdAndDelete( req.params.id );
+
+        if ( !data )
+        {
+            return res.status( 404 ).json( {
+                message: "Xóa sản phẩm thất bại",
+            } );
+        }
+
+        return res.status( 200 ).json( {
+            message: "Xóa sản phẩm thành công ",
+        } );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
+            message: "Lỗi server: " + error.message,
+        } );
     }
-  };
+};

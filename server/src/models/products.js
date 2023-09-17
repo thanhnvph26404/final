@@ -24,6 +24,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
+      required: true,
+
+    },
     images: [
       {
         status: {
@@ -72,4 +78,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-export default mongoose.model("Product", productSchema);
+export default mongoose.model( "Product", productSchema );
