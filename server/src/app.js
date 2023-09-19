@@ -11,27 +11,31 @@ import categoryRouter from "./routes/categories";
 import uploadRouter from "./routes/upload";
 import contactRouter from "./routes/contact";
 import colorRouter from "./routes/color";
+
 import brandRouter from "./routes/brand";
+
+
+import sizeRouter from "./routes/size";
 
 const app = express();
 
 dotenv.config();
 
 // connect db
-connectDB( process.env.MONGO_URI )
+connectDB(process.env.MONGO_URI)
 
-app.use( express.json() );
-app.use( morgan( "tiny" ) );
-app.use( cors() )
-app.use( '/auth', authRouter )
-app.use( '/password', passwordRouter )
-app.use( '/category', categoryRouter )
-app.use( '/images', uploadRouter )
-app.use( "/voucher", voucherRouter );
-app.use( "/products", ProductRouter );
-app.use( "/contact", contactRouter );
-app.use( "/color", colorRouter );
-app.use( "/brand", brandRouter );
+app.use(express.json());
+app.use(morgan("tiny"));
+app.use(cors())
+app.use('/auth', authRouter)
+app.use('/password', passwordRouter)
+app.use('/category', categoryRouter)
+app.use('/images', uploadRouter)
+app.use("/voucher", voucherRouter);
+app.use("/products", ProductRouter);
+app.use("/contact", contactRouter);
+app.use("/color", colorRouter);
+app.use("/size", sizeRouter);
 
 
 
