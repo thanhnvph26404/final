@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate, useNavigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 
 import { LayoutAdmin, LayoutWebsite } from "./components";
@@ -10,7 +10,7 @@ export const router = createBrowserRouter([
         element: <LayoutWebsite />,
         children: [
             { index: true, element: <Navigate to={'/'} /> },
-            { path: '/', element: <HomePage /> },
+            { path: '/homepage', element: <HomePage /> },
             
         ]
     },
