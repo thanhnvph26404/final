@@ -1,4 +1,11 @@
 
+// import React from 'react'
+
+type Props = {
+  change: () => void
+}
+
+
 
 import { IoMail, IoCaretDownOutline, IoCaretUpOutline} from 'react-icons/io5'
 import { FaCalendarAlt, FaBell } from 'react-icons/fa'
