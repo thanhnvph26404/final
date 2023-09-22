@@ -107,10 +107,10 @@ const HomePage = () => {
 
 
 
-      <div className="mt-[100px] mb-10 text-center">
+      <div className="mt-[200px] mb-10 text-center">
         <p className="text-3xl text-green-900 font-bold">Feedback Corner</p>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 ml-[100px] mb-[100px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 ml-[100px] ">
         <div className="w-full sm:w-1/2 md:w-4/5">
           <div className="flex">
             <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
