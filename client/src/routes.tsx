@@ -4,6 +4,8 @@ import { createBrowserRouter, Navigate, useNavigate } from "react-router-dom";
 
 import { LayoutAdmin, LayoutWebsite } from "./components";
 import { DashboardPage, HomePage, NotfoundPage } from "./pages";
+import LoginPage from "./pages/website/LoginPage";
+import SignupPage from "./pages/website/SignupPage";
 
 export const router = createBrowserRouter( [
     {
@@ -12,6 +14,10 @@ export const router = createBrowserRouter( [
         children: [
             { index: true, element: <Navigate to={ '/' } /> },
             { path: '/', element: <HomePage /> },
+            { path: '/login', element: <LoginPage /> },
+            { path: '/signup', element: <SignupPage /> },
+
+
 
 
 

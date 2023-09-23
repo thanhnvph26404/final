@@ -51,13 +51,13 @@ const Header = () =>
               </span>
             </Link>
 
-            {/* <Link to={ "" }>
-                <button className="">Đăng nhập</button>
-              </Link>
-              <div>/</div>
-              <Link to={ "" }>
-                <button className="">Đăng kí</button>
-              </Link> */}
+            <Link to={ "/login" }>
+              <button className="">Đăng nhập</button>
+            </Link>
+            <div>/</div>
+            <Link to={ "signup" }>
+              <button className="">Đăng kí</button>
+            </Link>
           </ul>
         </nav>
         <div className="relative mr-40 z-50 ">
