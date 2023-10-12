@@ -1,5 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-
+import { uploadImagesApi } from './upload/upload.service'
+import categorySlice from './categoies/categorySlice'
 import
 {
     persistStore,
@@ -12,6 +13,7 @@ import
     REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import { categoryApi } from './categoies/category.services'
 // import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
@@ -20,11 +22,15 @@ const persistConfig = {
     whitelist: []
 }
 
-const rootReducer = combineReducers( {
-
+const rootReducer = combineReducers({
+    [uploadImagesApi.reducerPath]: uploadImagesApi.reducer,
+    categories: categorySlice,
+    [categoryApi.reducerPath]: categoryApi.reducer
 } )
 
-const middleware: [] = []
+const middleware = [
+    uploadImagesApi.middleware,categoryApi.middleware
+]
 
 const persistedReducer = persistReducer( persistConfig, rootReducer )
 

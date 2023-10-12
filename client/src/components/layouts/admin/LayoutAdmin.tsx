@@ -107,7 +107,7 @@ const LayoutAdmin = () => {
         <Header/>
         <Content style={{ margin: '0 16px'}}>
           
-          <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
+          <div style={{ padding: 24, minHeight: 360 }}>
             <Outlet/>
           </div>
         </Content>
