@@ -3,9 +3,12 @@ import { createBrowserRouter, Navigate, useNavigate } from "react-router-dom";
 
 
 import { LayoutAdmin, LayoutWebsite } from "./components";
-import { DashboardPage, HomePage, NotfoundPage } from "./pages";
+
+
 import LoginPage from "./pages/website/LoginPage";
 import SignupPage from "./pages/website/SignupPage";
+
+import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage } from "./pages";
 
 export const router = createBrowserRouter( [
     {
@@ -29,7 +32,9 @@ export const router = createBrowserRouter( [
         children: [
             { index: true, element: <Navigate to={ 'dashboard' } /> },
             { path: 'dashboard', element: <DashboardPage /> },
-
+            { path: 'category', element: <CategoryList /> },
+            { path: 'category/add', element: <AddCategory /> },
+            { path: 'category/edit/:id', element: <EditCategory /> },
 
         ]
     },

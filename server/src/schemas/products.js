@@ -36,8 +36,6 @@ export const productSchema = joi
       .required()
       .items(
         joi.object( {
-          status: joi.string().required().messages( errorMessages( "Trạng thái" ) ),
-          name: joi.string().required().messages( errorMessages( "Tên" ) ),
           uid: joi.string().required().messages( errorMessages( "Uid" ) ),
           url: joi.string().required().messages( errorMessages( "Đường dẫn" ) ),
         } )
