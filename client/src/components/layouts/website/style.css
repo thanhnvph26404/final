@@ -11,6 +11,48 @@
     font-weight: 500;
 }
 
+
+.group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    /* Hiển thị các mục menu con theo chiều dọc */
+    align-items: center;
+    /* Căn giữa đều 2 bên */
+}
+
+
+/* Thiết lập chiều rộng ban đầu và hiển thị khi hover */
+/* 
+
+*/
+.font-serif {
+    font-family: 'League Spartan', sans-serif;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.font-monster {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.search-form {
+    display: none;
+}
+
+.search-form.visible {
+    display: block;
+}
+
+
+
+
+
+
 .font-noto-sans-header {
     font-family: Noto Sans;
     font-size: 18px;
@@ -41,7 +83,7 @@ header .nav-btn {
     header .nav-header ul {
         display: flex;
         flex-direction: column;
-        width: 100%;
+        width: 50%;
         align-items: center;
         margin-bottom: 0.25rem;
     }
