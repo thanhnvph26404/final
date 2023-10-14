@@ -1,5 +1,5 @@
 
-import { createBrowserRouter, Navigate, useNavigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
 
 import { LayoutAdmin, LayoutWebsite } from "./components";
@@ -9,6 +9,9 @@ import LoginPage from "./pages/website/LoginPage";
 import SignupPage from "./pages/website/SignupPage";
 
 import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage } from "./pages";
+import UserList from "./pages/admin/UserList";
+import ForgotPage from "./pages/website/ForgotPassword";
+import ResetPage from "./pages/website/Resetpassword";
 
 export const router = createBrowserRouter( [
     {
@@ -17,8 +20,8 @@ export const router = createBrowserRouter( [
         children: [
             { index: true, element: <Navigate to={ '/' } /> },
             { path: '/', element: <HomePage /> },
-            { path: '/login', element: <LoginPage /> },
-            { path: '/signup', element: <SignupPage /> },
+
+
 
 
 
@@ -27,6 +30,10 @@ export const router = createBrowserRouter( [
 
         ]
     },
+    { path: 'forgot-password', element: <ForgotPage /> },
+    { path: "password/reset-password/:randomString", element: < ResetPage /> },
+    { path: 'login', element: <LoginPage /> },
+    { path: 'signup', element: <SignupPage /> },
 
     {
         path: '/admin',
@@ -37,6 +44,7 @@ export const router = createBrowserRouter( [
             { path: 'category', element: <CategoryList /> },
             { path: 'category/add', element: <AddCategory /> },
             { path: 'category/edit/:id', element: <EditCategory /> },
+            { path: 'customers', element: <UserList /> },
 
         ]
     },

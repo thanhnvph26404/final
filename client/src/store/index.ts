@@ -14,22 +14,30 @@ import
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { categoryApi } from './categoies/category.services'
+import authApi, { authReducer } from './Auth/Auth.services'
+import AuthSlice from './Auth/Auth.Slice'
 // import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: []
+    whitelist: [ "auth" ]
 }
 
-const rootReducer = combineReducers({
-    [uploadImagesApi.reducerPath]: uploadImagesApi.reducer,
+const rootReducer = combineReducers( {
+    [ uploadImagesApi.reducerPath ]: uploadImagesApi.reducer,
     categories: categorySlice,
-    [categoryApi.reducerPath]: categoryApi.reducer
+    [ categoryApi.reducerPath ]: categoryApi.reducer,
+    [ authApi.reducerPath ]: authReducer,
+    users: AuthSlice,
+
+
+
 } )
 
 const middleware = [
-    uploadImagesApi.middleware,categoryApi.middleware
+    uploadImagesApi.middleware, categoryApi.middleware, authApi.middleware
+
 ]
 
 const persistedReducer = persistReducer( persistConfig, rootReducer )

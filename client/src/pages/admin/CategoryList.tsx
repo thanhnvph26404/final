@@ -1,14 +1,16 @@
 import { IoPencilSharp } from "react-icons/io5";
 import { FaTrashCan } from "react-icons/fa6";
 import { AiOutlinePlus } from "react-icons/ai";
-import {
-    useGetCategoryListQuery,
-    useDeleteCategoryMutation,
-} from "../../store/categoies/category.services";
-import {
-    loadCategoryList,
-    deleteCategory,
-} from "../../store/categoies/categorySlice";
+import
+    {
+        useGetCategoryListQuery,
+        useDeleteCategoryMutation,
+    } from "../../store/categoies/category.services";
+import
+    {
+        loadCategoryList,
+        deleteCategory,
+    } from "../../store/categoies/categorySlice";
 import { useAppDispatch, useAppSelector } from "../../store/hook";
 
 import { ICategory } from "../../store/categoies/category.interface";
@@ -20,46 +22,54 @@ import { Image } from "../../store/upload/upload.interface";
 import { Link } from "react-router-dom";
 import { toastSuccess, toastError } from "../../hook/toastify";
 
-interface DataType {
+interface DataType
+{
     key: string;
     title: string;
     image: Image;
 }
 
-const CategoryList = () => {
+const CategoryList = () =>
+{
     const dispatch = useAppDispatch();
     const categoryState = useAppSelector(
-        (state) => state.categories.categories
+        ( state ) => state.categories.categories
     );
 
     const {
         data: category,
         isLoading: isCategoryListLoading,
         isSuccess: isCategoryListSuccess,
-    } = useGetCategoryListQuery([]);
-    const [deleteCategoryApi, { isError: isDeleteCategoryError }] =
+    } = useGetCategoryListQuery( [] );
+    const [ deleteCategoryApi, { isError: isDeleteCategoryError } ] =
         useDeleteCategoryMutation();
     const dataSource = categoryState?.map(
-        ({ _id, title, image }: ICategory) => ({
+        ( { _id, title, image }: ICategory ) => ( {
             key: _id || "", // Thêm kiểm tra null hoặc undefined
             title,
             image: { uid: image?.uid || "", url: image?.url || "" }, // Đảm bảo image không bao giờ là undefined
-        })
+        } )
     );
 
-    const confirm = async (id: string) => {
-        try {
-            await deleteCategoryApi(id)
+    const confirm = async ( id: string ) =>
+    {
+        try
+        {
+            await deleteCategoryApi( id )
                 .unwrap()
-                .then(() => {
-                    dispatch(deleteCategory(id));
-                })
-                .then(() => {
-                    toastSuccess("Xóa danh mục thành công");
-                });
-        } catch (error) {
-            if (isDeleteCategoryError) {
-                toastError("Xoá danh mục thất bại!");
+                .then( () =>
+                {
+                    dispatch( deleteCategory( id ) );
+                } )
+                .then( () =>
+                {
+                    toastSuccess( "Xóa danh mục thành công" );
+                } );
+        } catch ( error )
+        {
+            if ( isDeleteCategoryError )
+            {
+                toastError( "Xoá danh mục thất bại!" );
             }
         }
     };
@@ -79,25 +89,25 @@ const CategoryList = () => {
             title: "Ảnh danh mục",
             dataIndex: "image",
             key: "image",
-            render: (image: Image) => (
+            render: ( image: Image ) => (
                 <div className="h-11 w-11 overflow-hidden ">
-                    <img className="" src={image?.url || ""} alt="img" />
+                    <img className="" src={ image?.url || "" } alt="img" />
                 </div>
             ),
         },
         {
             title: "Action",
             key: "action",
-            render: (_, record) => (
+            render: ( _, record ) => (
                 <Space size="middle">
-                    <Link to={`edit/${record.key}`}>
+                    <Link to={ `edit/${ record.key }` }>
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
                     </Link>
 
                     <Popconfirm
                         title="Xóa danh mục"
                         description="Bạn có chắc muốn xóa danh mục này?"
-                        onConfirm={() => confirm(record.key)}
+                        onConfirm={ () => confirm( record.key ) }
                         okText="Xóa"
                         cancelText="Hủy"
                     >
@@ -107,9 +117,10 @@ const CategoryList = () => {
             ),
         },
     ];
-    useEffect(() => {
-        dispatch(loadCategoryList(category?.data || []));
-    }, [isCategoryListSuccess]);
+    useEffect( () =>
+    {
+        dispatch( loadCategoryList( category?.data || [] ) );
+    }, [ isCategoryListSuccess ] );
 
     return (
         <div>
@@ -118,7 +129,7 @@ const CategoryList = () => {
                     Danh mục
                 </h1>
                 <Link
-                    to={"add"}
+                    to={ "add" }
                     className="flex items-center bg-[#1D1F2C] px-3.5 py-2.5 rounded-lg"
                 >
                     <AiOutlinePlus className="text-base font-semibold text-white mr-1" />
@@ -127,11 +138,11 @@ const CategoryList = () => {
                     </p>
                 </Link>
             </div>
-            {isCategoryListLoading ? (
-                <Skeleton active paragraph={{ rows: 7 }} />
+            { isCategoryListLoading ? (
+                <Skeleton active paragraph={ { rows: 7 } } />
             ) : (
-                <Table columns={columns} dataSource={dataSource || []} />
-            )}
+                <Table columns={ columns } dataSource={ dataSource || [] } />
+            ) }
         </div>
     );
 };
