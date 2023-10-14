@@ -8,9 +8,9 @@ router.post( '/register', register )
 router.post( '/login', logIn )
 
 router.post( '/verify', verify )
-router.get( '/getAllUser', authMiddlware, isAdmin, getAllUser )
+router.get( '/getAllUser', getAllUser )
 router.get( '/getOneUser/:id', authMiddlware, isAdmin, getOneUser )
-router.delete( '/removeUser/:id', authMiddlware, isAdmin, removeUser )
+router.delete( '/removeUser/:id', removeUser )
 router.put( '/updateUser/:id', authMiddlware, isAdmin, updateUser )
 
 
