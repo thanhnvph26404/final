@@ -2,153 +2,329 @@
 
 const HomePage = () => {
   return (
-    <div className="">
-      <div className="w-full relative text-center ">
-        <img src="/img.jpg" alt="" className="w-full  sm:w-[1700px] h-[800px]" />
-        <div className="absolute top-[200px] left-[50%] text-white transform -translate-x-1/2">
-          <p className=" md:text-[50px] lg:text-[60px] font-[Noto Sans] font-bold">Collection is here</p>
-        </div>
-        <div className="absolute top-[300px] left-[50%] text-white transform -translate-x-1/2">
-          <p className=" md:text-[20px] lg:text-[30px] font-[Noto Sans] ">The time is now for it to be okay to be great. People in this world shun people for
-            being great. For being a bright color. For standing out.</p>
-        </div>
-        <div className="absolute top-[65%] left-[50%] bg-gray-600 transform -translate-x-1/2 -translate-y-1/2 text-white md:w-[50px] lg:w-[100px] border">
-          <a href="#" className="text-[10px] md:text-[12px] lg:text-[20px] font-[Roboto] ">Explore</a>
-        </div>
-
+    <div className="mx-auto">
+      {/* banner */}
+      <div className="flex items-center justify-center sm:justify-start">
+        <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />
       </div>
-      <div className="mt-[30px]">
-        <h1 className="text-center text-[40px] font-[Noto Sans] font-bold ">Shop by Category</h1>
-        <p className="text-center  font-montserrat font-sans text-[20px] font-medium " >Browse all categories <i className="fa-solid fa-chevron-right fa-sm"></i></p>
-      </div>
-
-      <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+      {/* Danh mục sản phẩm */}
+      <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
+      {/* Card */}
+      <div className="flex flex-col sm:flex-row mx-auto justify-center mt-[80px] mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
         {/* Card 1 */}
-        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-          <div className="relative h-100 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-            <div className="absolute top-[60%] left-[30%] text-center  ">
-              <a href=""><p className="text-white ">Pre fall</p></a>
-              <a href=""><p className="text-white font-[Noto Sans] text-[25px] font-bold">Silk Dresses</p></a>
-              <a href=""><p className="text-white mt-6 text-[15px] ">See Products <i className="fa-solid fa-chevron-right fa-sm" ></i></p></a>
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 shadow-md">
+          <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 shadow-lg group">
+            <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
+              <img className="object-cover w-full opacity-70" src="/pl1.jpg" alt="profile-picture" />
+              <a href="#">
+                <p className="absolute text-white top-[40%] left-[25%] text-[25px] font-medium text-center">Polo Trơn Basic</p>
+                <p className="text-white pt-20 font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i className="fas fa-chevron-circle-right fa-2x"></i>
+                </p>
+              </a>
             </div>
-            <img className="object-cover  w-full" src="/img3.jpg" alt="profile-picture" />
           </div>
         </div>
 
         {/* Card 2 */}
-        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-          <div className="relative h-100 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-            <div className="absolute top-[60%] left-[30%] text-center  ">
-              <a href=""><p className="text-white ">Designers</p></a>
-              <a href=""><p className="text-white font-[Noto Sans] text-[25px] font-bold">Suits</p></a>
-              <a href=""><p className="text-white mt-6 text-[15px] ">See Products <i className="fa-solid fa-chevron-right fa-sm" ></i></p></a>
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 shadow-md">
+          <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 shadow-lg group">
+            <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
+              <img className="object-cover w-full opacity-70" src="/pl2.jpg" alt="profile-picture" />
+              <a href="#">
+                <p className="absolute text-white top-[40%] left-[25%] text-[25px] font-medium text-center">Polo Trơn Basic</p>
+                <p className="text-white pt-20 font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i className="fas fa-chevron-circle-right fa-2x"></i>
+                </p>
+              </a>
             </div>
-            <img className="object-cover w-full" src="/img0.jpg" alt="profile-picture" />
           </div>
         </div>
 
         {/* Card 3 */}
-        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-          <div className="relative h-100 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-            <div className="absolute top-[60%] left-[30%] text-center  ">
-              <a href=""><p className="text-white ">Summer</p></a>
-              <a href=""><p className="text-white font-[Noto Sans] text-[25px] font-bold">Festival</p></a>
-              <a href=""><p className="text-white mt-6 text-[15px] ">See Products <i className="fa-solid fa-chevron-right fa-sm" ></i></p></a>
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 shadow-md">
+          <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 shadow-lg group">
+            <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
+              <img className="object-cover w-full opacity-70" src="/pl3.jpg" alt="profile-picture" />
+
+              <a href="#">
+                <p className="absolute text-white top-[40%] left-[25%] text-[25px] font-medium text-center">Polo Trơn Basic</p>
+                <p className="text-white pt-20 font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i className="fas fa-chevron-circle-right fa-2x"></i>
+                </p>
+              </a>
             </div>
-            <img className="object-cover  w-full" src="/img1.jpg" alt="profile-picture" />
+          </div>
+        </div>
+
+        {/* Card 4 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 shadow-md">
+          <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 shadow-lg group">
+            <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
+              <img className="object-cover w-full opacity-70" src="/pl4.jpg" alt="profile-picture" />
+              <a href="#">
+                <p className="absolute text-white top-[40%] left-[35%] text-[25px] font-medium text-center">Áo Thun</p>
+                <p className="text-white pt-20 font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <i className="fas fa-chevron-circle-right fa-2x"></i>
+                </p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div className="grid grid-cols-3 ">
+        <div>
+          <h1 className="text-4xl font-[Noto sans] text-[#23314B] font-medium  md:pt-[50px] lg:pt-[40px] md:[40px] lg:[60px] ml-[100px] mb-[50px]">Sản Phẩm Mới</h1>
+        </div>
+        <div>
+
+        </div>
+        <div>
+          <h2 className="mt-[40px] text-2xl hover:underline underline-offset-8">Xem toàn bộ sản phẩm <i className="fa-solid fa-arrow-right"></i></h2>
+        </div>
+      </div>
+
+      {/* sản phẩm mới */}
+
+      <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+        {/* Card 1 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
+
+        {/* Card 2 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp2.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
+
+        {/* Card 3 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp3.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
           </div>
         </div>
         {/* card 4 */}
-        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-          <div className="relative h-100 overflow-hidden rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg">
-            <div className="absolute top-[60%] left-[30%] text-center  ">
-              <a href=""><p className="text-white ">Sale</p></a>
-              <a href=""><p className="text-white font-[Noto Sans] text-[25px] font-bold">Showroom</p></a>
-              <a href=""><p className="text-white mt-6 text-[15px] ">See Products <i className="fa-solid fa-chevron-right fa-sm" ></i></p></a>
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp4.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
             </div>
-            <img className="object-cover  w-full" src="/img2.jpg" alt="profile-picture" />
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="relative">
-        <img src="/product.jpg" alt="" className="w-full h-auto sm:w-full sm:max-w-screen-xl mx-auto" />
-        <div className="absolute top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
-          <p className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold">Basic Starter Pack</p>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl font-[Noto Sans]">The time is now for it to be okay to be great. People in this world shun people for being great. For being a bright color. For standing out.</p>
-          <div className="mt-4 border  bg-gray-600 inline-block px-2 sm:px-4 py-1 sm:py-2 rounded-lg">
-            <a href="#" className="text-xs sm:text-sm md:text-base lg:text-xl font-[Roboto]">Explore New Collection</a>
-          </div>
-        </div>
-      </div>
+      {/* tất cả sản phẩm*/}
 
-      <div className="relative mt-[50px]">
-        <img src="/under.jpg" alt="" className="w-full h-auto sm:w-full sm:max-w-screen-xl mx-auto" />
-        <div className="absolute top-[55%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-center">
-          <p className="text-lg sm:text-2xl md:text-4xl lg:text-6xl font-bold">Exclusive Discounts for Membersc</p>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl font-[Noto Sans]">The time is now for it to be okay to be great. People in this world shun people for being great. For
-            being a bright color. For standing out. But the time is now to be okay to be the greatest you. </p>
-          <div className="mt-4 border  bg-gray-800 inline-block px-2 sm:px-4 py-1 sm:py-2 rounded-lg">
-            <a href="#" className="text-xs sm:text-sm md:text-base lg:text-xl font-[Roboto]"><i className="fa-solid fa-gift"></i> Get your code</a>
-          </div>
+      <div className="grid grid-cols-3 ">
+        <div>
+          <h1 className="text-4xl font-[Noto sans] text-[#23314B] font-medium  md:pt-[50px] lg:pt-[40px] md:[40px] lg:[60px] ml-[100px] mb-[50px]">Tất Cả Sản Phẩm</h1>
+        </div>
+        <div>
+
+        </div>
+        <div>
+          <h2 className="mt-[40px] text-2xl hover:underline underline-offset-8">Xem toàn bộ sản phẩm <i className="fa-solid fa-arrow-right"></i></h2>
         </div>
       </div>
 
 
+      {/* sản phẩm */}
 
+      <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+        {/* Card 1 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
 
+        {/* Card 2 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp2.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
 
-
-
-
-
-
-
-
-
-
-      <div className="mt-[200px] mb-10 text-center">
-        <p className="text-3xl text-green-900 font-bold">Feedback Corner</p>
+        {/* Card 3 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp3.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
+        {/* card 4 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp4.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
+        </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-4 ml-[100px] ">
-        <div className="w-full sm:w-1/2 md:w-4/5">
-          <div className="flex">
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-regular fa-star text-[#fff824] mb-4"></i></p>
+
+      {/* sản phẩm */}
+
+      <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+        {/* Card 1 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
           </div>
-          <p className="font-[Roboto] text-lg text-green-900">Emily Wilson</p>
-          <p className="font-[Roboto]">Trải nghiệm của khách hàng thật đặc biệt từ đầu đến cuối. Trang web thân thiện với người dùng, quy trình thanh toán diễn ra suôn sẻ và quần áo tôi đặt vừa vặn hoàn hảo. Tôi quá hài lòng!</p>
         </div>
-        <div className="w-full sm:w-1/2 md:w-4/5 ">
-          <div className="flex">
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-regular fa-star text-[#fff824] mb-4"></i></p>
+
+        {/* Card 2 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp2.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
           </div>
-          <p className="font-[Roboto] text-lg text-green-900">Sarah Thompson</p>
-          <p className="font-[Roboto]">Tôi hoàn toàn thích chất lượng và kiểu dáng của quần áo tôi mua từ trang web này. Dịch vụ khách hàng rất xuất sắc và tôi đã nhận được đơn đặt hàng nhanh chóng. Rất khuyến khích!</p>
         </div>
-        <div className="w-full sm:w-1/2 md:w-4/5">
-          <div className="flex">
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-solid fa-star text-[#fff824] mb-4"></i></p>
-            <p className="text-2xl ml-2"><i className="fa-regular fa-star text-[#fff824] mb-4"></i></p>
+
+        {/* Card 3 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp3.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
           </div>
-          <p className="font-[Roboto] text-lg text-green-900">Olivia Martinez</p>
-          <p className="font-[Roboto]">Tôi đã có trải nghiệm tuyệt vời khi mua sắm trên trang web này. Quần áo tôi mua rất thời trang và thoải mái. Rất hài lòng!</p>
+        </div>
+        {/* card 4 */}
+        <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md group">
+          <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 shadow-lg overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <img className="object-cover w-full" src="/sp4.jpg" alt="profile-picture" />
+            <p className="text-center font-[Noto sans] text-[20px] font-medium">Áo Polo</p>
+            <div className="flex space-x-4 pl-[60px] mb-4">
+              <p className="text-center font-[Noto sans] text-[20px] font-medium text-red-500">200.000đ</p>
+              <p className="text-center font-[Noto sans] text-[20px] font-medium line-through">350.000đ</p>
+            </div>
+            <button className="absolute top-[60%] right-0 bg-blue-800 text-white text-center py-2 hover:bg-green-500 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+              + Thêm nhanh
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* banner dưới */}
+      <div className="w-full relative text-center mb-[90px] ">
+        <img src="/bannerdown.jpg" alt="" className="w-full  sm:w-[1700px] h-[450px] mt-[100px]" />
+        <div className="absolute top-[120px] left-[50%] text-white transform -translate-x-1/2">
+          <p className="md:text-[10px] lg:text-[20px] font-[Noto Sans] font-bold">Định vị thương hiệu</p>
+          <p className=" md:text-[50px] lg:text-[60px] font-[Noto Sans] font-bold">New class of casual Polo</p>
+        </div>
+        <div className="absolute top-[250px] left-[50%] text-white transform -translate-x-1/2">
+          <p className=" md:text-[10px] lg:text-[20px] font-[Noto Sans] font-medium ">Polomanor định vị sự khác biệt đến từ những chiếc áo Polo đời thường hằng ngày, mỗi sản phẩm mang đủ 3 yếu tố:</p>
+          <p className=" md:text-[10px] lg:text-[20px] font-[Noto Sans] font-medium mt-5 ">Dễ phối - Sang trọng - Tiện lợi</p>
+        </div>
 
 
+      </div>
 
+      {/* một số hình ảnh */}
+      <div className="flex ml-[70px] mb-[100px] space-x-10  mt-8 sm:mt-12">
+        <div className="relative ">
+          <img className="w-full transition-transform transform-gpu hover:scale-105 rounded-xl " src="/imgleft.png" alt="Image" />
+          <p className="absolute top-[50%] text-center text-white text-[27px] font-medium ">Mỗi sản phẩm đến tay bạn là những chất xám và công sức của cả một tập thể phía sau</p>
+        </div>
+        <div>
+          <div className="relative  flex space-x-6">
+            <div>
+              <img className=" h-[270px] w-full transition-transform hover:scale-105 rounded-xl" src="/center.jpg" alt="" />
+            </div>
+            <div>
+              <img className=" h-[270px] w-full transition-transform  hover:scale-105 rounded-xl" src="/imgright.jpg" alt="" />
+            </div>
+          </div>
+          <div>
+            <img className=" h-[300px] w-full mt-[35px] transition-transform  hover:scale-105 rounded-xl" src="/bt.jpg" alt="" />
+          </div>
+        </div>
+      </div>
 
 
     </div>
