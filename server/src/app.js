@@ -10,12 +10,13 @@ import passwordRouter from "./routes/password";
 import categoryRouter from "./routes/categories";
 import uploadRouter from "./routes/upload";
 import contactRouter from "./routes/contact";
-import colorRouter from "./routes/color";
-
 import brandRouter from "./routes/brand";
+import attributeRouter from "./routes/atribute";
+import valueattributeRouter from "./routes/valueattibute";
+import productvariantRouter from "./routes/productvariant";
 
 
-import sizeRouter from "./routes/size";
+
 
 const app = express();
 
@@ -34,8 +35,12 @@ app.use('/images', uploadRouter)
 app.use("/voucher", voucherRouter);
 app.use("/products", ProductRouter);
 app.use("/contact", contactRouter);
-app.use("/color", colorRouter);
-app.use("/size", sizeRouter);
+app.use("/brand", brandRouter);
+app.use("/attribute", attributeRouter);
+app.use("/valueattribute", valueattributeRouter);
+app.use("/productvariant", productvariantRouter);
+
+
 
 
 

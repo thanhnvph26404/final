@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get( "/", getAll );
 router.get( "/:id", authMiddlware, isAdmin, getOne );
-router.post( "/", authMiddlware, isAdmin, create );
+router.post( "/",  create );
 router.put( "/:id", authMiddlware, isAdmin, updateProduct );
 router.delete( "/:id", authMiddlware, isAdmin, remove );
 
