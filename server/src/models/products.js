@@ -42,19 +42,13 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
-    sizes: [
+    ProductVariants: [
       {
-        size: {
-          type: mongoose.Schema.Types.Mixed,
-          required: true,
-        },
-        inventory: {
-          type: Number,
-          required: true,
-        },
-      },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ProductVariant",
+        required: true,
+      }
     ],
-
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

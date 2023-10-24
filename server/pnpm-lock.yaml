@@ -30,8 +30,8 @@ dependencies:
     specifier: ^1.2.0
     version: 1.2.0
   joi:
-    specifier: ^17.10.0
-    version: 17.10.0
+    specifier: ^17.10.2
+    version: 17.11.0
   jsonwebtoken:
     specifier: ^9.0.1
     version: 9.0.1
@@ -1008,8 +1008,8 @@ packages:
     engines: {node: '>= 0.6.0'}
     dev: false
 
-  /joi@17.10.0:
-    resolution: {integrity: sha512-hrazgRSlhzacZ69LdcKfhi3Vu13z2yFfoAzmEov3yFIJlatTdVGUW6vle1zjH8qkzdCn/qGw8rapjqsObbYXAg==}
+  /joi@17.11.0:
+    resolution: {integrity: sha512-NgB+lZLNoqISVy1rZocE9PZI36bL/77ie924Ri43yEvi9GUUMPeyVIr8KdFTMUlby1p0PBYMk9spIxEUQYqrJQ==}
     dependencies:
       '@hapi/hoek': 9.3.0
       '@hapi/topo': 5.1.0

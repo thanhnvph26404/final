@@ -1,11 +1,6 @@
 import joi from "joi";
 import { errorMessages } from "./component/function";
 
-const sizesSchema = joi.object( {
-  size: joi.any().required(),
-  inventory: joi.number().min( 0 ).required().messages( errorMessages( "Số lượng" ) ),
-} );
-
 export const productSchema = joi
   .object( {
     sold: joi
@@ -41,9 +36,8 @@ export const productSchema = joi
         } )
       )
       .messages( errorMessages( "Ảnh" ) ),
-    sizes: joi
+    ProductVariants: joi
       .array()
-      .items( sizesSchema )
       .required(),
     category: joi
       .string()
