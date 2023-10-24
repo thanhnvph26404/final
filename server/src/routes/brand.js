@@ -4,7 +4,7 @@ import { creatBrand, deleteBrand, getAllBrand, getOneBrand, updateBrand } from "
 const router = express.Router()
 router.get( "/", getAllBrand )
 router.get( "/:id", authMiddlware, isAdmin, getOneBrand )
-router.post( "/", authMiddlware, isAdmin, creatBrand )
+router.post( "/", creatBrand )
 router.put( "/:id", authMiddlware, isAdmin, updateBrand )
 router.delete( "/:id", authMiddlware, isAdmin, deleteBrand )
 export default router

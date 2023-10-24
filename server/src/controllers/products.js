@@ -47,7 +47,8 @@ export const getAll = async ( req, res ) =>
 {
     try
     {
-        const data = await Product.find();
+        const data = await Product.find().populate("category").populate("brand")
+            .populate({ path: "ProductVariants", populate: "AttributeValues" });
 
         if ( !data || data.length === 0 )
         {
@@ -73,7 +74,8 @@ export const getOne = async ( req, res ) =>
     try
     {
         const data = await Product.findById( req.params.id )
-            .populate( "category" ).populate( "brand" )
+            .populate("category").populate("brand").
+            populate({ path: "ProductVariants", populate: "attribute" })
         // .populate( {
         //     // path: "comments",
         //     populate: [
