@@ -10,8 +10,11 @@ import SignupPage from "./pages/website/SignupPage";
 
 import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage } from "./pages";
 import UserList from "./pages/admin/UserList";
+import VouCherList from "./pages/admin/vouchers/VoucherList";
 import ForgotPage from "./pages/website/ForgotPassword";
 import ResetPage from "./pages/website/Resetpassword";
+import AddVoucher from "./pages/admin/vouchers/AddVoucher";
+import EditVoucher from "./pages/admin/vouchers/EditVoucher";
 
 export const router = createBrowserRouter( [
     {
@@ -41,11 +44,16 @@ export const router = createBrowserRouter( [
         children: [
             { index: true, element: <Navigate to={ 'dashboard' } /> },
             { path: 'dashboard', element: <DashboardPage /> },
+            // Category
             { path: 'category', element: <CategoryList /> },
             { path: 'category/add', element: <AddCategory /> },
             { path: 'category/edit/:id', element: <EditCategory /> },
+            // User
             { path: 'customers', element: <UserList /> },
-
+            // Voucher
+            {path: 'vouchers', element: <VouCherList /> },
+            {path: 'vouchers/createVoucher', element: <AddVoucher /> },
+            {path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
         ]
     },
     {
