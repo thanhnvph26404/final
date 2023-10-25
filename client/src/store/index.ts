@@ -1,6 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { uploadImagesApi } from './upload/upload.service'
 import categorySlice from './categoies/categorySlice'
+import voucherSlice from './voucher/voucher'
+import { voucherApi } from './voucher/voucher.service'
 import
 {
     persistStore,
@@ -16,12 +18,13 @@ import storage from 'redux-persist/lib/storage'
 import { categoryApi } from './categoies/category.services'
 import authApi, { authReducer } from './Auth/Auth.services'
 import AuthSlice from './Auth/Auth.Slice'
+
 // import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: [ "auth" ]
+    whitelist: [ "" ]
 }
 
 const rootReducer = combineReducers( {
@@ -30,13 +33,16 @@ const rootReducer = combineReducers( {
     [ categoryApi.reducerPath ]: categoryApi.reducer,
     [ authApi.reducerPath ]: authReducer,
     users: AuthSlice,
+    vouchers: voucherSlice,
+    [voucherApi.reducerPath]: voucherApi.reducer,
+
 
 
 
 } )
 
 const middleware = [
-    uploadImagesApi.middleware, categoryApi.middleware, authApi.middleware
+    uploadImagesApi.middleware, categoryApi.middleware, authApi.middleware,voucherApi.middleware
 
 ]
 

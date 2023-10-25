@@ -1,45 +1,149 @@
-
-import { createBrowserRouter, Navigate } from "react-router-dom";
-
-
+import { createBrowserRouter, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { LayoutAdmin, LayoutWebsite } from "./components";
-
-
 import LoginPage from "./pages/website/LoginPage";
 import SignupPage from "./pages/website/SignupPage";
-
 import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage } from "./pages";
 import UserList from "./pages/admin/UserList";
+import VouCherList from "./pages/admin/vouchers/VoucherList";
 import ForgotPage from "./pages/website/ForgotPassword";
 import ResetPage from "./pages/website/Resetpassword";
+import AddVoucher from "./pages/admin/vouchers/AddVoucher";
+import EditVoucher from "./pages/admin/vouchers/EditVoucher";
+import { useEffect } from "react";
+import { useGetUserByTokenMutation } from "./store/Auth/Auth.services";
+import Profiles from "./pages/website/Profile/Profiles";
+import Account from "./pages/website/Profile/AccoutProfile";
+import YourComponent from "./pages/website/Profile/YourProfile";
+import Information from "./pages/website/Profile/information";
+import Changepassword from "./pages/website/Profile/Changepassword";
+import { toastError } from "./hook/toastify";
+import OrderAddress from "./pages/website/Profile/OrderAddress";
+import PurchaseHistory from "./pages/website/PurchaseHistory";
 
-export const router = createBrowserRouter( [
+
+
+const PriviteRouter = ({ isAuth }: any) => {
+    const navigate = useNavigate()
+    const [getUser] = useGetUserByTokenMutation();
+
+    const token = localStorage.getItem("token")
+
+    useEffect(() => {
+        if (token) {
+            getUser(token)
+                .unwrap()
+                .then((response) => {
+                    if (response.data.role === "Admin") {
+                        navigate("/admin")
+                    } else {
+
+                        navigate("*")
+                    }
+
+                })
+                .catch((error) => {
+                    console.log(error);
+
+                    toastError("lỗi thao tác")
+                });
+        }
+    }, [getUser, token]);
+
+    return token ? <Outlet /> : <Navigate to={"/login"} />
+
+}
+
+export const router = createBrowserRouter([
     {
-        path: '/',
         element: <LayoutWebsite />,
         children: [
-            { index: true, element: <Navigate to={ '/' } /> },
-            { path: '/', element: <HomePage /> },
+            { index: true, element: <Navigate to={'home'} /> },
+            { path: 'home', element: <HomePage /> },
+            { path: 'purchase', element: <PurchaseHistory /> },
+            {
+                path: "profile",
+                element: (
+                    <YourComponent>
+                        {(currentUser) => (
+                            <>
+                                <Profiles nameUser={currentUser?.name} imageUser={currentUser?.image?.url} />
+                            </>
+                        )}
+                    </YourComponent>
+                ),
+                children: [
 
+                    {
+                        path: "account",
+                        element: (
+                            <YourComponent>
+                                {(currentUser) => (
+                                    <Account currentUser={currentUser} />
+                                )}
+                            </YourComponent>
+                        ),
+                    },
+                    {
 
+                        path: "information",
+                        element: (
+                            <YourComponent>
+                                {(currentUser) => (
+                                    <Information currentUser={currentUser} />
+                                )}
+                            </YourComponent>
+                        ),
+                    },
+                    {
+                        path: "order-address",
+                        element: (
+                            <YourComponent>
+                                {(currentUser) => (
+                                    <OrderAddress currentUser={currentUser} />
+                                )}
+                            </YourComponent>
+                        ),
+                    },
+                    {
+                        path: "change-password",
+                        element: (
+                            <YourComponent>
+                                {(currentUser) => (
+                                    <Changepassword emailUser={currentUser?.email} />
+                                )}
+                            </YourComponent>
+                        ),
+                    },
+                ]
+            },
 
-
-
-
-
-
-        ]
+        ],
     },
     { path: 'forgot-password', element: <ForgotPage /> },
-    { path: "password/reset-password/:randomString", element: < ResetPage /> },
+    { path: "password/reset-password/:randomString", element: <ResetPage /> },
     { path: 'login', element: <LoginPage /> },
     { path: 'signup', element: <SignupPage /> },
 
+
     {
         path: '/admin',
-        element: <LayoutAdmin />,
+        element: <PriviteRouter token={false} />,
         children: [
-            { index: true, element: <Navigate to={ 'dashboard' } /> },
+            {
+                element: <LayoutAdmin />,
+                children: [
+                    { index: true, element: <Navigate to={'dashboard'} /> },
+                    { path: 'dashboard', element: <DashboardPage /> },
+                    { path: 'category', element: <CategoryList /> },
+                    { path: 'category/add', element: <AddCategory /> },
+                    { path: 'category/edit/:id', element: <EditCategory /> },
+                    { path: 'customers', element: <UserList /> },
+                    { path: 'vouchers', element: <VouCherList /> },
+                    { path: 'vouchers/createVoucher', element: <AddVoucher /> },
+                    { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
+                ]
+            },
+            { index: true, element: <Navigate to={'dashboard'} /> },
             { path: 'dashboard', element: <DashboardPage /> },
             { path: 'category', element: <CategoryList /> },
             { path: 'category/add', element: <AddCategory /> },
@@ -52,4 +156,4 @@ export const router = createBrowserRouter( [
         path: '*',
         element: <NotfoundPage />
     }
-] )
+])

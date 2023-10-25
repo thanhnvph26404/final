@@ -4,32 +4,52 @@ export const authMiddlware = async ( req, res, next ) =>
 {
     try
     {
-        
-        if (req?.headers?.authorization?.startsWith("Bearer "))
-        console.log('1');
+        if ( !req.headers.authorization )
         {
-            const token = req.headers.authorization.split("Bearer ")[1];
-            console.log('1');
-            if ( token )
-            {
-                const decoded = jwt.verify( token, process.env.SECRET_KEY );
-                const user = await User.findById( decoded?.id );
-                console.log( user );
-
-                req.user = user;
-                next();
-            } else
-            {
-                throw new Error( "bạn chưa đăng nhập " );
-            }
+            return res.status( 401 ).json( {
+                message: "Bạn chưa đăng nhập",
+            } );
         }
+
+        const token = req.headers.authorization.split( " " )[ 1 ];
+        const decoded = jwt.verify( token, process.env.SECRET_KEY );
+        const user = await User.findById( decoded.id );
+        console.log( user );
+
+        if ( !user )
+        {
+            return res.status( 401 ).json( {
+                message: "Người dùng không tồn tại",
+            } );
+        }
+
+        req.user = user;
+
+        next();
     } catch ( error )
     {
-        console.log('1');
-        return res.status( 401 ).json( { message: "Lỗi token " } );
+        if ( error instanceof jwt.TokenExpiredError )
+        {
+            return res.status( 401 ).json( {
+                message: "Token đã hết hạn!",
+            } );
+        } else if ( error instanceof jwt.NotBeforeError )
+        {
+            return res.status( 401 ).json( {
+                message: "Token chưa có hiệu lực!",
+            } );
+        } else if ( error instanceof jwt.JsonWebTokenError )
+        {
+            return res.status( 401 ).json( {
+                message: "Token không hợp lệ!",
+            } );
+        }
 
+        console.error( error );
+        return res.status( 500 ).json( {
+            message: "Đã có lỗi xảy ra!",
+        } );
     }
-
 }
 export const isAdmin = async ( req, res, next ) =>
 {

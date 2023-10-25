@@ -17,7 +17,7 @@ const LoginPage = () =>
             toastSuccess( "Đăng nhập thành công" );
             console.log( response );
 
-            localStorage.setItem( "token", JSON.stringify( response.token ) );
+            localStorage.setItem( "token", response.token );
 
             navigate( "/" );
         } catch ( error )
