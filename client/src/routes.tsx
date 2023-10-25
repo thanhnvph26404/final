@@ -12,16 +12,16 @@ import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, Notfo
 import UserList from "./pages/admin/UserList";
 import ForgotPage from "./pages/website/ForgotPassword";
 import ResetPage from "./pages/website/Resetpassword";
+import PurchaseHistory from "./pages/website/PurchaseHistory";
 
-export const router = createBrowserRouter( [
+export const router = createBrowserRouter([
     {
         path: '/',
         element: <LayoutWebsite />,
         children: [
-            { index: true, element: <Navigate to={ '/' } /> },
-            { path: '/', element: <HomePage /> },
-
-
+            { index: true, element: <Navigate to={'home'} /> },
+            { path: 'home', element: <HomePage /> },
+            { path: 'purchase', element: <PurchaseHistory /> },
 
 
 
@@ -35,11 +35,12 @@ export const router = createBrowserRouter( [
     { path: 'login', element: <LoginPage /> },
     { path: 'signup', element: <SignupPage /> },
 
+
     {
         path: '/admin',
         element: <LayoutAdmin />,
         children: [
-            { index: true, element: <Navigate to={ 'dashboard' } /> },
+            { index: true, element: <Navigate to={'dashboard'} /> },
             { path: 'dashboard', element: <DashboardPage /> },
             { path: 'category', element: <CategoryList /> },
             { path: 'category/add', element: <AddCategory /> },
@@ -52,4 +53,4 @@ export const router = createBrowserRouter( [
         path: '*',
         element: <NotfoundPage />
     }
-] )
+])
