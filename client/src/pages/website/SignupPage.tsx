@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSignupMutation } from "../../store/Auth/Auth.services";
 import { toastSuccess, toastError } from "../../hook/toastify";
-import { Form, Input, Row, Col } from 'antd';
+import { Form, Input } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons';
 
 const SignupPage = () =>

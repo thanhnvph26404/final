@@ -24,7 +24,7 @@ import AuthSlice from './Auth/Auth.Slice'
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: [ "auth" ]
+    whitelist: [ "" ]
 }
 
 const rootReducer = combineReducers( {

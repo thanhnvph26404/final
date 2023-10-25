@@ -8,7 +8,7 @@ export interface Signup
 }
 export interface Login
 {
-    token ( token: any ): string;
+    [ x: string ]: any;
     _id?: string,
     email: string,
     password: string
@@ -31,6 +31,7 @@ export interface IUser
     favorites?: string[];
     comments?: ICommentUser[];
     role?: string;
+    isBlocked: boolean
 }
 export interface IImageUser
 {

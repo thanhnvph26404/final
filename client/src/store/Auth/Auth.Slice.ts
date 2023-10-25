@@ -2,7 +2,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Ipuser, IUser } from "./Auth.interface";
 
 const initialState: Ipuser = {
-    users: []
+    users: [],
+
 }
 
 const authSlice = createSlice( {
@@ -19,7 +20,7 @@ const authSlice = createSlice( {
         //     const newCategory = action.payload
         //     state.categories = state.categories.map( ( category ) => category._id === newCategory._id ? newCategory : category )
         // },
-        deleteUser: ( state, action: PayloadAction<string> ) =>
+        blockUser: ( state, action: PayloadAction<string> ) =>
         {
             state.users = state.users.filter( ( user ) => user._id !== action.payload )
             console.log( state.users );
@@ -29,5 +30,5 @@ const authSlice = createSlice( {
     }
 } )
 
-export const { loaduserList, deleteUser } = authSlice.actions
+export const { loaduserList, blockUser } = authSlice.actions
 export default authSlice.reducer
