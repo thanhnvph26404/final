@@ -8,8 +8,7 @@ const LayoutWebsite = () =>
 {
   return (
     <div>
-      <Header />
-      <HomePage />
+      <Header currentUser={ null } />
       <Outlet />
       <Footer />
 

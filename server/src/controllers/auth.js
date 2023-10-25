@@ -202,24 +202,39 @@ export const removeUser = async ( req, res ) =>
 }
 export const updateUser = async ( req, res ) =>
 {
+  const { _id } = req.user;
+  const { name, email, phone } = req.body;
+
   try
   {
-    const id = req.params.id
+    const existingUser = await Auth.findOne( { email: email } );
 
-    const user = await Auth.findByIdAndUpdate( id, {
-      name: req?.body.name,
-      email: req?.body.email,
-      phone: req?.body.phone,
-      role: req?.body.role
+    const currentUser = await Auth.findById( _id );
+    //kiểm tra xem email có thay đổi hay k 
+    if ( currentUser.email !== email )
+    {
+      if ( existingUser && existingUser._id.toString() !== _id )
+      {
+        // Nếu email thay đổi thì sẽ check xem  email đã tồn tại và không thuộc về người dùng hiện tại
+        return res.status( 400 ).json( { message: "Email đã tồn tại trong hệ thống." } );
+      }
+      // Nếu email đã thay đổi, thì cập nhật
+      currentUser.email = email;
+    }
+
+    currentUser.name = name;
+    currentUser.phone = phone;
 
 
-    }, {
-      new: true
-    } )
+    // Kiểm tra xem email có thay đổi hay không
+
+
+    const updatedUser = await currentUser.save();
+
     res.status( 200 ).json( {
-      message: "update thành công ",
-      user
-    } )
+      message: "Cập nhật thành công",
+      user: updatedUser
+    } );
   } catch ( error )
   {
     console.log( error );
@@ -229,6 +244,7 @@ export const updateUser = async ( req, res ) =>
     } );
   }
 }
+
 
 // Đăng nhập
 export const logIn = async ( req, res ) =>
@@ -250,6 +266,12 @@ export const logIn = async ( req, res ) =>
     {
       return res.status( 404 ).json( {
         message: "Tài khoản hoặc mật khẩu không đúng",
+      } );
+    }
+    if ( user.isBlocked )
+    {
+      return res.status( 403 ).json( {
+        message: "Tài khoản của bạn đã bị chặn. Liên hệ với quản trị viên để biết thêm chi tiết.",
       } );
     }
 
@@ -279,3 +301,112 @@ export const logIn = async ( req, res ) =>
     } );
   }
 };
+export const getUserByToken = async ( req, res ) =>
+{
+  try
+  {
+    if ( !req.headers.authorization )
+    {
+      return res.status( 401 ).json( {
+        message: "Bạn chưa đăng nhập",
+      } );
+    }
+
+    const token = req.headers.authorization.split( " " )[ 1 ];
+    const decoded = jwt.verify( token, process.env.SECRET_KEY );
+    const user = await Auth.findById( decoded.id );
+    console.log( user );
+    if ( !user )
+    {
+      return res.status( 401 ).json( {
+        message: "Người dùng không tồn tại",
+      } );
+    }
+
+    return res.status( 200 ).json( {
+      message: "Thông tin người dùng",
+      data: user,
+    } );
+  } catch ( error )
+  {
+    if ( error instanceof jwt.TokenExpiredError )
+    {
+      return res.status( 401 ).json( {
+        message: "Token đã hết hạn!",
+      } );
+    } else if ( error instanceof jwt.NotBeforeError )
+    {
+      return res.status( 401 ).json( {
+        message: "Token chưa có hiệu lực!",
+      } );
+    } else if ( error instanceof jwt.JsonWebTokenError )
+    {
+      return res.status( 401 ).json( {
+        message: "Token không hợp lệ!",
+      } );
+    }
+
+    console.error( error );
+    return res.status( 500 ).json( {
+      message: "Đã có lỗi xảy ra!",
+    } );
+  }
+};
+export const BlockUser = async ( req, res ) =>
+{
+  const { id } = req.params
+  try
+  {
+    const block = await Auth.findByIdAndUpdate( id, {
+      isBlocked: true
+    }, { new: true } )
+    res.status( 200 ).json( {
+      message: "block thành công ",
+      block
+    } )
+  } catch ( error )
+  {
+    return res.status( 500 ).json( {
+      message: "Lỗi server: " + error.message,
+    } );
+  }
+}
+export const unBlockUser = async ( req, res ) =>
+{
+  const { id } = req.params
+  try
+  {
+    const block = await Auth.findByIdAndUpdate( id, {
+      isBlocked: false
+    }, { new: true } )
+    res.status( 200 ).json( {
+      message: "unblock thành công ",
+      block
+    } )
+  } catch ( error )
+  {
+    return res.status( 500 ).json( {
+      message: "Lỗi server: " + error.message,
+    } );
+  }
+}
+export const editAddressToken = async ( req, res ) =>
+{
+  const { _id } = req.user
+  console.log( _id );
+  try
+  {
+    const user = await Auth.findByIdAndUpdate( _id, {
+      address: req?.body?.address,
+    }, {
+      new: true
+    } )
+    res.json( user )
+
+  } catch ( error )
+  {
+    return res.status( 500 ).json( {
+      message: "Lỗi server: " + error.message,
+    } );
+  }
+} 
