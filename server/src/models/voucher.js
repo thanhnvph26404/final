@@ -17,11 +17,11 @@ const voucherSchema = new mongoose.Schema({
         type: Number,
         require: true
     },
-    apply: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        require: true
-    },
+    // apply: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "Category",
+    //     require: true
+    // },
     startDate: {
         type: String,
         require: true
