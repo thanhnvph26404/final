@@ -50,6 +50,24 @@ export const getAll = async (req, res) => {
   }
 };
 
+export const getOne = async (req, res) => {
+  try {
+      const result = await productVariant.findById(req.params.id).populate({ path: "AttributeValues", populate: "attribute" })
+
+      if (!result || result.length === 0) {
+          return res.status(404).json({
+              message: "Không có thông tin",
+          });
+      }
+
+      return res.status(200).json(result);
+  } catch (error) {
+      return res.status(500).json({
+          message: "Lỗi server: " + error.message,
+      });
+  }
+};
+
 
 export const remove = async (req, res) => {
   try {

@@ -14,14 +14,14 @@ export const valueAttributeApi = createApi({
         }),
         getSizes: builder.query({
             query: () => ({
-                url: `/65311f7434441c10b2810467`,
+                url: `/byidatribute/65311f7434441c10b2810467`,
                 method: 'GET',
             }),
             providesTags: ['valueattribute']
         }),
         getColors: builder.query({
             query: () => ({
-                url: `/65311f8034441c10b2810469`,
+                url: `/byidatribute/65311f8034441c10b2810469`,
                 method: 'GET',
             }),
             providesTags: ['valueattribute']
@@ -61,4 +61,8 @@ export const valueAttributeApi = createApi({
 
 })
 
-export const { useAddvalueattributeMutation, useDeletevalueattributeMutation, useEditvalueattributeMutation, useGetvalueattributeQuery, useGetvalueattributesQuery, useGetColorsQuery, useGetSizesQuery } = valueAttributeApi
+export const { useAddvalueattributeMutation,
+    useDeletevalueattributeMutation,
+    useEditvalueattributeMutation,
+    useGetvalueattributeQuery, useGetvalueattributesQuery,
+    useGetColorsQuery, useGetSizesQuery } = valueAttributeApi
