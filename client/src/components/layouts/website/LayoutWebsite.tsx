@@ -4,14 +4,13 @@ import Footer from "./Footer"
 import { HomePage } from "../../../pages"
 
 
-const LayoutWebsite = () =>
-{
+const LayoutWebsite = () => {
   return (
     <div>
       <Header currentUser={ null } />
       <HomePage />
+      <Outlet />
       <Footer />
-
     </div>
   )
 }
