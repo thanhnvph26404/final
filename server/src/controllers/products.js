@@ -47,35 +47,64 @@ export const getAll = async ( req, res ) =>
 {
     try
     {
-        const data = await Product.find().populate("category").populate("brand")
-            .populate({ path: "ProductVariants", populate: "AttributeValues" });
+        const queryObj = { ...req.query };
+        const excludeFields = [ "page", "sort", "limit", "fields" ];
+        excludeFields.forEach( ( el ) => delete queryObj[ el ] );
+        let queryStr = JSON.stringify( queryObj );
+        queryStr = queryStr.replace( /\b(gte|gt|lte|lt)\b/g, ( match ) => `$${ match }` );
+        let query = Product.find( JSON.parse( queryStr ) );
 
-        if ( !data || data.length === 0 )
+        // Xắp xếp
+        if ( req.query.sort )
         {
-            return res.status( 404 ).json( {
-                message: "Không có dữ liệu",
-            } );
+            const sortBy = req.query.sort.split( "," ).join( " " );
+            query = query.sort( sortBy );
+        } else
+        {
+            query = query.select( "-__v" );
         }
 
-        return res.status( 200 ).json( {
-            message: "Danh sách sản phẩm",
-            data: data,
+        // Phân trang
+        const page = req.query.page;
+        const limit = req.query.limit;
+        const skip = ( page - 1 ) * limit;
+        query = query.skip( skip ).limit( limit );
+
+        if ( req.query.page )
+        {
+            const productCount = await Product.countDocuments();
+            if ( skip >= productCount ) throw new Error( "This page does not exist" );
+        }
+
+        console.log( page, limit, skip );
+
+        // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
+        query = query.populate( "category" ).populate( "brand" ).populate( {
+            path: "ProductVariants",
+            populate: "AttributeValues",
+        } );
+
+        const products = await query;
+
+        res.status( 200 ).json( {
+            products,
         } );
     } catch ( error )
     {
-        return res.status( 500 ).json( {
-            message: "Lỗi server: " + error.message,
+        res.status( 500 ).json( {
+            message: "Server error: " + error.message,
         } );
     }
 };
+
 
 export const getOne = async ( req, res ) =>
 {
     try
     {
         const data = await Product.findById( req.params.id )
-            .populate("category").populate("brand").
-            populate({ path: "ProductVariants", populate: "attribute" })
+            .populate( "category" ).populate( "brand" ).
+            populate( { path: "ProductVariants", populate: "attribute" } )
         // .populate( {
         //     // path: "comments",
         //     populate: [
