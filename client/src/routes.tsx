@@ -19,13 +19,13 @@ import Changepassword from "./pages/website/Profile/Changepassword";
 import { toastError } from "./hook/toastify";
 import OrderAddress from "./pages/website/Profile/OrderAddress";
 import PurchaseHistory from "./pages/website/PurchaseHistory";
+import PaymentPage from "./pages/website/PaymentPage";
 import ListSize from "./pages/admin/size/listSize";
 import AddSize from "./pages/admin/size/addSize";
 import UpdateSize from "./pages/admin/size/updateSize";
 import ListColor from "./pages/admin/color/ListColor";
 import AddColor from "./pages/admin/color/AddColor";
 import UpdateColor from "./pages/admin/size/updateSize";
-
 
 
 
@@ -69,6 +69,7 @@ export const router = createBrowserRouter([
             { path: "", element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
+            { path: 'payment', element: <PaymentPage /> },
             {
                 path: "profile",
                 element: (
