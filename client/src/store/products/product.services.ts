@@ -4,7 +4,7 @@ import { IProduct } from './product.interface'
 export const productApi = createApi({
     reducerPath: 'productApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/product'
+        baseUrl: 'http://localhost:8080/products'
     }),
     tagTypes: ['product'],
     endpoints: (builder) => ({
@@ -46,4 +46,4 @@ export const productApi = createApi({
 
 })
 
-export const { useAddProductMutation , useDeleteProductMutation , useEditProductMutation, useGetProductQuery ,useGetProductsQuery } = productApi
+export const { useAddProductMutation, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery } = productApi
