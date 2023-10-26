@@ -5,9 +5,9 @@ import { create, getAll, getOne, remove, updateProduct } from "../controllers/pr
 const router = express.Router();
 
 router.get( "/", getAll );
-router.get( "/:id", authMiddlware, isAdmin, getOne );
+router.get( "/:id",  getOne );
 router.post( "/",  create );
-router.put( "/:id", authMiddlware, isAdmin, updateProduct );
-router.delete( "/:id", authMiddlware, isAdmin, remove );
+router.put( "/:id",  updateProduct );
+router.delete( "/:id",  remove );
 
 export default router;

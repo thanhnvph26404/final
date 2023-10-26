@@ -5,8 +5,8 @@ export const productSchema = joi
   .object( {
     sold: joi
       .number()
-      .min( 0 )
-      .required()
+      .min(0)
+      .default(0)
       .messages( errorMessages( "đã bán" ) ),
     name: joi.
       string()
