@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AiOutlineUser, } from "react-icons/ai";
 import { CiSettings, CiSearch } from "react-icons/ci";
 import { LiaShoppingBasketSolid } from "react-icons/lia"
@@ -95,33 +95,24 @@ const Header = ( { currentUser }: UserMenuProps ) =>
 
 
   // Thiết lập hẹn giờ để xóa token sau 15 phút
-  const tokenExpirationTime = 15 * 60 * 1000; // 15 phút (15 * 60 giây)
-  const tokenExpirationTimer = setTimeout( () =>
-  {
-    // Xóa token khỏi Local Storage sau 15 phút
-    localStorage.removeItem( "token" );
-  }, tokenExpirationTime );
+  // useEffect( () =>
+  // {
+  //   // Thêm một sự kiện "beforeunload" cho cửa sổ trình duyệt
+  //   window.addEventListener( "beforeunload", clearTokenOnUnload );
 
-  // Sự kiện kiểm tra khi người dùng tương tác với trang khác
-  document.addEventListener( "visibilitychange", () =>
-  {
-    if ( document.visibilityState === "hidden" )
-    {
-      // Người dùng đã tương tác với trang khác
-      // Xóa token khỏi Local Storage
-      localStorage.removeItem( "token" );
-      clearTimeout( tokenExpirationTimer ); // Hủy bỏ hẹn giờ
-    }
-  } );
+  //   return () =>
+  //   {
+  //     // Gỡ bỏ sự kiện khi component unmount
+  //     window.removeEventListener( "beforeunload", clearTokenOnUnload );
+  //   };
+  // }, [] );
 
-  // Sự kiện kiểm tra khi người dùng rời trang web
-  window.addEventListener( "beforeunload", () =>
-  {
-    // Người dùng đang rời trang web
-    // Xóa token khỏi Local Storage
-    localStorage.removeItem( "token" );
-    clearTimeout( tokenExpirationTimer ); // Hủy bỏ hẹn giờ
-  } );
+  // const clearTokenOnUnload = () =>
+  // {
+  //   // Xóa token khỏi Local Storage khi người dùng rời khỏi trang
+  //   localStorage.removeItem( "token" );
+  // };
+
   return (
     <>
 
@@ -414,6 +405,8 @@ const Header = ( { currentUser }: UserMenuProps ) =>
           </div>
           <hr />
         </form>
+        <Outlet />
+
       </div>
     </>
   );

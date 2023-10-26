@@ -7,7 +7,8 @@ import { HomePage } from "../../../pages"
 const LayoutWebsite = () => {
   return (
     <div>
-      <Header currentUser={null} />
+      <Header currentUser={ null } />
+      <HomePage />
       <Outlet />
       <Footer />
     </div>
