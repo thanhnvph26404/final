@@ -14,6 +14,8 @@ import brandRouter from "./routes/brand";
 import attributeRouter from "./routes/atribute";
 import valueattributeRouter from "./routes/valueattibute";
 import productvariantRouter from "./routes/productvariant";
+import orderRouter from "./routes/order";
+
 
 
 
@@ -39,6 +41,7 @@ app.use("/brand", brandRouter);
 app.use("/attribute", attributeRouter);
 app.use("/valueattribute", valueattributeRouter);
 app.use("/productvariant", productvariantRouter);
+app.use("/order", orderRouter);
 
 
 

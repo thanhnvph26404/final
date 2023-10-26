@@ -3,8 +3,10 @@ import { uploadImagesApi } from './upload/upload.service'
 import categorySlice from './categoies/categorySlice'
 import voucherSlice from './voucher/voucher'
 import { voucherApi } from './voucher/voucher.service'
-import
-{
+import { productApi } from './products/product.services'
+import { valueAttributeApi } from './valueAttribute/valueAttribute.services'
+import { productVariantApi } from './productVariant/productVariant.services'
+import {
     persistStore,
     persistReducer,
     FLUSH,
@@ -24,41 +26,46 @@ import AuthSlice from './Auth/Auth.Slice'
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: [ "" ]
+    whitelist: [""]
 }
 
-const rootReducer = combineReducers( {
-    [ uploadImagesApi.reducerPath ]: uploadImagesApi.reducer,
+const rootReducer = combineReducers({
+    [uploadImagesApi.reducerPath]: uploadImagesApi.reducer,
     categories: categorySlice,
-    [ categoryApi.reducerPath ]: categoryApi.reducer,
-    [ authApi.reducerPath ]: authReducer,
+    [categoryApi.reducerPath]: categoryApi.reducer,
+    [authApi.reducerPath]: authReducer,
     users: AuthSlice,
     vouchers: voucherSlice,
     [voucherApi.reducerPath]: voucherApi.reducer,
+    [productApi.reducerPath]: productApi.reducer,
+    [valueAttributeApi.reducerPath]: valueAttributeApi.reducer,
+    [productVariantApi.reducerPath]: productVariantApi.reducer,
 
-
-
-
-} )
+})
 
 const middleware = [
-    uploadImagesApi.middleware, categoryApi.middleware, authApi.middleware,voucherApi.middleware
-
+    uploadImagesApi.middleware,
+    categoryApi.middleware,
+    authApi.middleware,
+    voucherApi.middleware,
+    productApi.middleware,
+    valueAttributeApi.middleware,
+    productVariantApi.middleware
 ]
 
-const persistedReducer = persistReducer( persistConfig, rootReducer )
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
-export const store = configureStore( {
+export const store = configureStore({
     reducer: persistedReducer,
-    middleware: ( getDefaultMiddleware ) =>
-        getDefaultMiddleware( {
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
             serializableCheck: {
-                ignoredActions: [ FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER ],
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
             },
-        } ).concat( ...middleware ),
-} )
+        }).concat(...middleware),
+})
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
-export default persistStore( store );
+export default persistStore(store);
