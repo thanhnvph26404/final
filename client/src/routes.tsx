@@ -2,7 +2,10 @@ import { createBrowserRouter, Navigate, Outlet, useNavigate } from "react-router
 import { LayoutAdmin, LayoutWebsite } from "./components";
 import LoginPage from "./pages/website/LoginPage";
 import SignupPage from "./pages/website/SignupPage";
-import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage } from "./pages";
+
+
+import { AddCategory, CategoryList, DashboardPage, EditCategory, HomePage, NotfoundPage, ProductByCategoryPage, ProductPage } from "./pages";
+
 import UserList from "./pages/admin/UserList";
 import VouCherList from "./pages/admin/vouchers/VoucherList";
 import ForgotPage from "./pages/website/ForgotPassword";
@@ -66,10 +69,13 @@ export const router = createBrowserRouter([
     {
         element: <LayoutWebsite />,
         children: [
+
             { path: "", element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
             { path: 'payment', element: <PaymentPage /> },
+            {path: 'products/:category', element: <ProductByCategoryPage/>},
+            {path: 'products', element: <ProductPage/>},
             {
                 path: "profile",
                 element: (
@@ -128,6 +134,7 @@ export const router = createBrowserRouter([
             },
 
         ],
+
     },
     { path: 'forgot-password', element: <ForgotPage /> },
     { path: "password/reset-password/:randomString", element: <ResetPage /> },
