@@ -19,6 +19,7 @@ import Changepassword from "./pages/website/Profile/Changepassword";
 import { toastError } from "./hook/toastify";
 import OrderAddress from "./pages/website/Profile/OrderAddress";
 import PurchaseHistory from "./pages/website/PurchaseHistory";
+import PaymentPage from "./pages/website/PaymentPage";
 
 
 
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
             { index: true, element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
+            { path: 'payment', element: <PaymentPage /> },
             {
                 path: "profile",
                 element: (
