@@ -32,6 +32,8 @@ import UpdateSize from "./pages/admin/size/updateSize";
 import ListColor from "./pages/admin/color/ListColor";
 import AddColor from "./pages/admin/color/AddColor";
 import UpdateColor from "./pages/admin/size/updateSize";
+import ListProduct from "./pages/admin/products/ListProduct";
+import AddProduct from "./pages/admin/products/addProduct";
 
 
 
@@ -171,6 +173,8 @@ export const router = createBrowserRouter([
                     { path: 'color', element: <ListColor /> },
                     { path: 'color/add', element: <AddColor /> },
                     { path: 'color/update/:id', element: <UpdateColor /> },
+                    { path: 'products', element: <ListProduct /> },
+                    { path: 'products/add', element: <AddProduct /> },
                 ]
             }
         ]
