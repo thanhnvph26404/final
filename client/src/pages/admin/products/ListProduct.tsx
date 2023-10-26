@@ -6,8 +6,6 @@ import { useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
 
 
-
-
 const ListProduct = () => {
 
     const { data } = useGetProductsQuery()
