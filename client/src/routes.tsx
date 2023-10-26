@@ -22,6 +22,9 @@ import Changepassword from "./pages/website/Profile/Changepassword";
 import { toastError } from "./hook/toastify";
 import OrderAddress from "./pages/website/Profile/OrderAddress";
 import PurchaseHistory from "./pages/website/PurchaseHistory";
+
+import CartPage from "./pages/website/CartPage";
+
 import PaymentPage from "./pages/website/PaymentPage";
 import ListSize from "./pages/admin/size/listSize";
 import AddSize from "./pages/admin/size/addSize";
@@ -73,10 +76,14 @@ export const router = createBrowserRouter([
             { path: "", element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
+
+            { path: 'cart', element: <CartPage /> },
+
             { path: 'payment', element: <PaymentPage /> },
             {path: 'products/:category', element: <ProductByCategoryPage/>},
             {path: 'products', element: <ProductPage/>},
-            {
+
+           {
                 path: "profile",
                 element: (
                     <YourComponent>
