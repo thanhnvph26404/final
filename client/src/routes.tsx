@@ -39,6 +39,7 @@ import AddProduct from "./pages/admin/products/addProduct";
 
 
 
+
 const PriviteRouter = ({ isAuth }: any) => {
     const navigate = useNavigate()
     const [getUser] = useGetUserByTokenMutation();
@@ -82,10 +83,10 @@ export const router = createBrowserRouter([
             { path: 'cart', element: <CartPage /> },
 
             { path: 'payment', element: <PaymentPage /> },
-            {path: 'products/:category', element: <ProductByCategoryPage/>},
-            {path: 'products', element: <ProductPage/>},
+            { path: 'products/:category', element: <ProductByCategoryPage /> },
+            { path: 'products', element: <ProductPage /> },
 
-           {
+            {
                 path: "profile",
                 element: (
                     <YourComponent>
