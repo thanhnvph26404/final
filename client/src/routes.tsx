@@ -20,6 +20,14 @@ import { toastError } from "./hook/toastify";
 import OrderAddress from "./pages/website/Profile/OrderAddress";
 import PurchaseHistory from "./pages/website/PurchaseHistory";
 import PaymentPage from "./pages/website/PaymentPage";
+import ListSize from "./pages/admin/size/listSize";
+import AddSize from "./pages/admin/size/addSize";
+import UpdateSize from "./pages/admin/size/updateSize";
+import ListColor from "./pages/admin/color/ListColor";
+import AddColor from "./pages/admin/color/AddColor";
+import UpdateColor from "./pages/admin/size/updateSize";
+
+
 
 
 
@@ -58,7 +66,7 @@ export const router = createBrowserRouter([
     {
         element: <LayoutWebsite />,
         children: [
-            { index: true, element: <Navigate to={'home'} /> },
+            { path: "", element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
             { path: 'payment', element: <PaymentPage /> },
@@ -134,7 +142,7 @@ export const router = createBrowserRouter([
             {
                 element: <LayoutAdmin />,
                 children: [
-                    { index: true, element: <Navigate to={'dashboard'} /> },
+                    { path: "", element: <Navigate to={'dashboard'} /> },
                     { path: 'dashboard', element: <DashboardPage /> },
                     { path: 'category', element: <CategoryList /> },
                     { path: 'category/add', element: <AddCategory /> },
@@ -143,15 +151,14 @@ export const router = createBrowserRouter([
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
+                    { path: 'size', element: <ListSize /> },
+                    { path: 'size/add', element: <AddSize /> },
+                    { path: 'size/update/:id', element: <UpdateSize /> },
+                    { path: 'color', element: <ListColor /> },
+                    { path: 'color/add', element: <AddColor /> },
+                    { path: 'color/update/:id', element: <UpdateColor /> },
                 ]
-            },
-            { index: true, element: <Navigate to={'dashboard'} /> },
-            { path: 'dashboard', element: <DashboardPage /> },
-            { path: 'category', element: <CategoryList /> },
-            { path: 'category/add', element: <AddCategory /> },
-            { path: 'category/edit/:id', element: <EditCategory /> },
-            { path: 'customers', element: <UserList /> },
-
+            }
         ]
     },
     {

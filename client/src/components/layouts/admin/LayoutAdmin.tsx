@@ -33,16 +33,25 @@ const items = [
       },
       {
         key: '4',
+        label: 'Cỡ',
+        path: 'size',
+      }, {
+        key: '5',
+        label: 'Màu',
+        path: 'color',
+      },
+      {
+        key: '6',
         label: 'Danh mục',
         path: 'category',
       },
       {
-        key: '5',
+        key: '7',
         label: 'Voucher',
         path: 'vouchers',
       },
       {
-        key: '6',
+        key: '8',
         label: 'Đơn hàng',
         path: 'orders',
       },
@@ -75,40 +84,39 @@ const items = [
   // Thêm các mục menu khác ở đây
 ];
 
-const LayoutAdmin = () =>
-{
-  const [ collapsed, setCollapsed ] = useState( false );
+const LayoutAdmin = () => {
+  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   return (
-    <Layout style={ { minHeight: '100vh' } } >
-      <Sider collapsible collapsed={ collapsed } theme='light' style={ { background: colorBgContainer } } onCollapse={ ( value ) => setCollapsed( value ) } >
+    <Layout style={{ minHeight: '100vh' }} >
+      <Sider collapsible collapsed={collapsed} theme='light' style={{ background: colorBgContainer }} onCollapse={(value) => setCollapsed(value)} >
         <div className="demo-logo-vertical" />
         <div className=' text-2xl text-center py-4'>Astro</div>
-        <Menu defaultSelectedKeys={ [ '1' ] } mode="inline">
-          { items.map( ( item ) =>
+        <Menu defaultSelectedKeys={['1']} mode="inline">
+          {items.map((item) =>
             item.children ? (
-              <Menu.SubMenu key={ item.key } icon={ item.icon } title={ item.label }>
-                { item.children.map( ( childItem ) => (
-                  <Menu.Item key={ childItem.key }>
-                    <Link to={ childItem.path }>{ childItem.label }</Link>
+              <Menu.SubMenu key={item.key} icon={item.icon} title={item.label}>
+                {item.children.map((childItem) => (
+                  <Menu.Item key={childItem.key}>
+                    <Link to={childItem.path}>{childItem.label}</Link>
                   </Menu.Item>
-                ) ) }
+                ))}
               </Menu.SubMenu>
             ) : (
-              <Menu.Item key={ item.key } icon={ item.icon }>
-                <Link to={ item.path }>{ item.label }</Link>
+              <Menu.Item key={item.key} icon={item.icon}>
+                <Link to={item.path}>{item.label}</Link>
               </Menu.Item>
             )
-          ) }
+          )}
         </Menu>
       </Sider>
-      <Layout style={ { background: '#F9F9FC' } }>
+      <Layout style={{ background: '#F9F9FC' }}>
         <Header />
-        <Content style={ { margin: '0 16px' } }>
+        <Content style={{ margin: '0 16px' }}>
 
-          <div style={ { padding: 24, minHeight: 360 } }>
+          <div style={{ padding: 24, minHeight: 360 }}>
             <Outlet />
           </div>
         </Content>

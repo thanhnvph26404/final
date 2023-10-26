@@ -51,6 +51,46 @@ export const getAll = async (req, res) => {
     }
 };
 
+export const getOne = async (req, res) => {
+  try {
+      const result = await ValueAttribute.findById(req.params.id);
+
+      if (!result || result.length === 0) {
+          return res.status(404).json({
+              message: "Không có thông tin",
+          });
+      }
+
+      return res.status(200).json(result);
+  } catch (error) {
+      return res.status(500).json({
+          message: "Lỗi server: " + error.message,
+      });
+  }
+};
+
+export const getbyidatribute = async (req, res) => {
+  try {
+    const data = await ValueAttribute.find().populate("attribute");
+    if (!data || data.length === 0) {
+      return res.status(404).json({
+        message: "Không có danh sách",
+      });
+    }
+
+    const newdata = data.filter((item)=> item.attribute._id == req.params.id )
+
+    return res.status(200).json({
+      data: newdata,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Lỗi server: " + error.message,
+    });
+  }
+};
+
+
 export const remove = async (req, res) => {
     try {
       const data = await ValueAttribute.findByIdAndDelete(req.params.id);
