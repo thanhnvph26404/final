@@ -9,7 +9,7 @@ const LayoutWebsite = () =>
   return (
     <div>
       <Header currentUser={ null } />
-      <Outlet />
+      <HomePage />
       <Footer />
 
     </div>
