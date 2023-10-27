@@ -108,7 +108,7 @@ const SignupPage = () =>
                         </div>
                     </div>
                     <div className="md:block hidden w-1/2">
-                        <img className="rounded-2xl" src="./images/backgrround-thoi-trang-vintage-cuc-dep_044610084.jpeg" alt="" />
+                        <img className="rounded-2xl" src="./images/polotron.png" alt="" />
                     </div>
                 </div>
             </section>

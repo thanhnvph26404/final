@@ -10,10 +10,7 @@ export const profile = [
         url: "account",
         Icon: AiOutlineProfile,
         list: [
-            {
-                name: "Thông tin cá nhân",
-                url: "information",
-            },
+
             {
                 name: "Đổi mật khẩu",
                 url: "change-password",
@@ -24,12 +21,7 @@ export const profile = [
         title: "Đơn hàng",
         url: "orders",
         Icon: AiOutlineGift,
-        list: [
-            {
-                name: "Địa chỉ giao hàng",
-                url: "order-address",
-            },
-        ],
+
     },
     {
         title: "Phương thức thanh toán",

@@ -30,7 +30,6 @@ const OrderAddress = ( { currentUser }: addressProps ) =>
                     .unwrap()
                     .then( ( response ) =>
                     {
-                        console.log( response );
 
                         toastSuccess( 'Cập nhật địa chỉ thành công' );
                         navigate( '/profile/account' );

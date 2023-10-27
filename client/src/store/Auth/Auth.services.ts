@@ -5,6 +5,7 @@ const authApi = createApi( {
     tagTypes: [ "Auth" ],
     baseQuery: fetchBaseQuery( {
         baseUrl: "http://localhost:8080",
+
     } ),
     endpoints: ( builder ) => ( {
         signup: builder.mutation<Signup, Signup>( {

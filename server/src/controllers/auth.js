@@ -323,9 +323,9 @@ export const getUserByToken = async ( req, res ) =>
       } );
     }
 
-    return res.status( 200 ).json( {
-      message: "Thông tin người dùng",
-      data: user,
+    res.status( 200 ).json( {
+      message: "Cập nhật thành công",
+      data: user
     } );
   } catch ( error )
   {
