@@ -74,24 +74,16 @@ const Header = ( { currentUser }: UserMenuProps ) =>
   {
     setIssOpen( false );
   };
-  const [ loggedIn, setLoggedIn ] = useState( false );
 
   const logOut = () =>
   {
     localStorage.removeItem( "token" );
     navigate( "/login" );
   };
-  useEffect( () =>
-  {
-    const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
-    if ( check )
-    {
-      setLoggedIn( true ); // Đã đăng nhập
-    } else
-    {
-      setLoggedIn( false ); // Chưa đăng nhập
-    }
-  }, [] );
+
+  const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
+
+
 
 
   // Thiết lập hẹn giờ để xóa token sau 15 phút
@@ -118,7 +110,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
 
       <div className="   text-black  text-base bg-[#ffffff]">
         <Marquee className='d-flex bg-black-500 text-center text-white text-sm font-medium py-3'>
-          <p>FREE ship cho đơn hàng 500k </p>
+          <p className="ml-40">FREE ship cho đơn hàng 500k </p>
           <span className="text-white ml-40 ">.</span>
           <p className="ml-40">Tặng quần Boxer cho đơn hàng 500k </p>
           <span className="text-white ml-40 ">.</span>
@@ -145,6 +137,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                     </Link>
                   </li>
 
+
                   <li className="relative z-50">
                     <button className="ml-1 flex items-center" onClick={ togglesDropdown }>
                       Tất cả sản phẩm
@@ -161,7 +154,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                             </Link>
                           </li>
                           <li className="mt-2">
-                            <Link to="admin" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
+                            <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                               Tất cả sản phẩm
                               <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
                             </Link>
@@ -228,20 +221,20 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                   <CiSearch className="w-6 h-6" />
                 </span>
               </div>
-              { loggedIn ? (
+              { check ? (
                 <div className="relative z-10">
                   <button className="flex items-center rounded-full px-2 ml-2 text-blue-gray-900 hover:bg-blue-gray-100 focus:outline-none focus:bg-blue-gray-100" onClick={ toggleDropdown }>
                     <RiUserLine className="h-6 w-6" />
                   </button>
                   { issOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-lg shadow-lg">
+                    <div className="absolute right-0 mt-2 w-52 bg-white border border-gray-300 rounded-lg shadow-lg">
                       {/* Các mục menu dropdown */ }
                       <div className="flex flex-col">
                         <ul>
                           <li>
                             <Link to="profile" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
                               <AiOutlineUser className="w-5 h-5 mr-2" />
-                              Profile
+                              Thông tin cá nhân
                             </Link>
                           </li>
                           <li>
@@ -254,13 +247,13 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                           <li>
                             <Link to="#" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
                               <img src="./2-layers.svg" className="w-5 h-5 mr-2" />
-                              ChangeLog
+                              Nhật kí
                             </Link>
                           </li>
                           <li>
                             <Link to="#" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
                               <BiHelpCircle className="w-5 h-5 mr-2" />
-                              Support
+                              Hỗ trợ
                             </Link>
                           </li>
                           <li>
@@ -405,7 +398,6 @@ const Header = ( { currentUser }: UserMenuProps ) =>
           </div>
           <hr />
         </form>
-        <Outlet />
 
       </div>
     </>

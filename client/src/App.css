@@ -3,8 +3,7 @@
     border: 1px solid #ff0000;
     border-radius: 8px;
     background: var(--neutral-gray-gray-50, #F0F1F3);
-    display: flex;
-    padding: 4px 10px;
+    padding: 4px 4px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -15,9 +14,7 @@
     color: green;
     border: 1px solid green;
     border-radius: 8px;
-
     background: var(--neutral-gray-gray-50, #F0F1F3);
-    display: flex;
     padding: 4px 10px;
     flex-direction: column;
     justify-content: center;

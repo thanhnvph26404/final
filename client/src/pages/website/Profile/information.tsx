@@ -3,19 +3,17 @@ import { IUser } from "../../../store/Auth/Auth.interface";
 import { useEditUserMutation } from "../../../store/Auth/Auth.services";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 import { useNavigate } from "react-router-dom";
-
 type UserProps = {
     currentUser: IUser | null;
 };
-
 const Information = ( { currentUser }: UserProps ) =>
 {
+
     const [ edituser ] = useEditUserMutation();
     const token = localStorage.getItem( "token" );
-    const [ form ] = Form.useForm(); // Sử dụng Form của Ant Design
+    const [ form ] = Form.useForm();
     const navigate = useNavigate();
 
-    // Quy tắc kiểm tra cho các trường
 
 
     const updateUser = () =>
@@ -37,7 +35,6 @@ const Information = ( { currentUser }: UserProps ) =>
                     {
                         toastSuccess( "Cập nhật thành công" );
                         navigate( "/profile/account" );
-                        console.log( response );
                     } )
                     .catch( ( error ) =>
                     {
@@ -60,30 +57,26 @@ const Information = ( { currentUser }: UserProps ) =>
                         <Form.Item
                             name="name"
                             rules={ [ { required: true, message: "trường name không được để trống " } ] }
-                            initialValue={ currentUser?.name }
+                            initialValue={ currentUser?.name } // Sử dụng giá trị `currentUser?.name` để điền giá trị mặc định
                         >
-                            <Input
-                                placeholder="Tên"
-                            />
+                            <Input placeholder="Tên" />
                         </Form.Item>
                         <Form.Item
                             name="email"
-                            rules={ [ { required: true, message: "trường email không được để trống " },
-                            { type: "email", message: "vui lòng nhập đúng định dạng " } ] }
-                            initialValue={ currentUser?.email }
+                            rules={ [
+                                { required: true, message: "trường email không được để trống " },
+                                { type: "email", message: "vui lòng nhập đúng định dạng " },
+                            ] }
+                            initialValue={ currentUser?.email } // Sử dụng giá trị `currentUser?.email` để điền giá trị mặc định
                         >
-                            <Input
-                                placeholder="Email"
-                            />
+                            <Input placeholder="Email" />
                         </Form.Item>
                         <Form.Item
                             name="phone"
                             rules={ [ { required: true, message: "trường phone không được để trống " } ] }
-                            initialValue={ currentUser?.phone }
+                            initialValue={ currentUser?.phone } // Sử dụng giá trị `currentUser?.phone` để điền giá trị mặc định
                         >
-                            <Input
-                                placeholder="Số điện thoại"
-                            />
+                            <Input placeholder="Số điện thoại" />
                         </Form.Item>
                     </div>
 
