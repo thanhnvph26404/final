@@ -79,11 +79,13 @@ export const getAll = async ( req, res ) =>
         console.log( page, limit, skip );
 
         // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
-        query = query.populate( "category" ).populate( "brand" ).populate( {
-            path: "ProductVariants",
-            populate: "AttributeValues",
-        } );
-
+        query = query
+            .populate( "category" )
+            .populate( "brand" )
+            .populate( {
+                path: "ProductVariants",
+                populate: "AttributeValues"
+            } );
         const products = await query;
 
         res.status( 200 ).json( {

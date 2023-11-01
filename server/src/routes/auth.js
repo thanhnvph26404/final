@@ -1,11 +1,12 @@
 import express, { Router } from "express"
 
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
-import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify } from "../controllers/auth"
+import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart } from "../controllers/auth"
 
 const router = express.Router()
 router.post( '/register', register )
 router.post( '/login', logIn )
+router.post( '/add-to-cart', authMiddlware, addToCart );
 
 router.post( '/verify', verify )
 router.put( '/block-user/:id', authMiddlware, isAdmin, BlockUser )

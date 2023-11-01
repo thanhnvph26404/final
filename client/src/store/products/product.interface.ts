@@ -1,15 +1,21 @@
 import { Image } from "../upload/upload.interface"
 
-
-export type IProduct = {
+export interface Iproductdata
+{
     _id?: string;
     name: string;
     price: number;
-    // giá đã giảm
     original_price: number,
     description: string;
-    brand: string
+    brand: string | undefined
     imgUrl: Image;
-    ProductVariants: string[]
-    category: string
+    ProductVariants: IProductVariants
+    category: string | undefined
+
+}
+export type IProductVariants = {
+    _id?: string;
+    AttributeValues: string;
+    inventory: number;
+
 };

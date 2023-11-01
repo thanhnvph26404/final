@@ -1,49 +1,58 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IProduct } from './product.interface'
+import { IProductVariant } from '../productVariant/productVariant.interface'
+import { Iproductdata } from './product.interface'
 
-export const productApi = createApi({
+export const productApi = createApi( {
     reducerPath: 'productApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/product'
-    }),
-    tagTypes: ['product'],
-    endpoints: (builder) => ({
-        getProducts: builder.query({
+    baseQuery: fetchBaseQuery( {
+        baseUrl: 'http://localhost:8080/products'
+    } ),
+    tagTypes: [ 'product' ],
+    endpoints: ( builder ) => ( {
+        getProducts: builder.query( {
             query: () => ``,
-            providesTags: ['product']
-        }),
-        getProduct: builder.query({
-            query: (id: string) => ({
-                url: `/${id}`,
+            providesTags: [ 'product' ]
+        } ),
+        getProduct: builder.query( {
+            query: ( id: string ) => ( {
+                url: `/${ id }`,
                 method: 'GET',
-            }),
-            providesTags: ['product']
-        }),
-        addProduct: builder.mutation<IProduct[], IProduct>({
-            query: (product) => ({
+            } ),
+            providesTags: [ 'product' ]
+        } ),
+        addProduct: builder.mutation<Iproductdata[], Iproductdata>( {
+            query: ( product ) => ( {
                 url: ``,
                 method: 'POST',
                 body: product
-            }),
-            invalidatesTags: ['product']
-        }),
-        editProduct: builder.mutation<IProduct[], IProduct>({
-            query: (product) => ({
-                url: `/${product._id}`,
+            } ),
+            invalidatesTags: [ 'product' ]
+        } ),
+        editProduct: builder.mutation<Iproductdata[], Iproductdata>( {
+            query: ( product ) => ( {
+                url: `/${ product._id }`,
                 method: 'PATCH',
                 body: product
-            }),
-            invalidatesTags: ['product']
-        }),
-        deleteProduct: builder.mutation<IProduct[], string>({
-            query: (id) => ({
-                url: `/${id}`,
+            } ),
+            invalidatesTags: [ 'product' ]
+        } ),
+        deleteProduct: builder.mutation<Iproductdata[], string>( {
+            query: ( id ) => ( {
+                url: `/${ id }`,
                 method: 'DELETE',
-            }),
-            invalidatesTags: ['product'],
-        })
-    })
+            } ),
+            invalidatesTags: [ 'product' ],
+        } ),
+        ProductVariant: builder.query<IProductVariant[], void>( {
+            query: () => ( {
+                url: `http://localhost:8080/productvariant`,
+                providesTags: [ 'product' ]
 
-})
+            } ),
 
-export const { useAddProductMutation , useDeleteProductMutation , useEditProductMutation, useGetProductQuery ,useGetProductsQuery } = productApi
+        } )
+    } )
+
+} )
+
+export const { useAddProductMutation, useProductVariantQuery, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery } = productApi
