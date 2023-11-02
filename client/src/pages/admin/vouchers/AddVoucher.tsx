@@ -32,7 +32,7 @@ const AddVoucher = () => {
             }).then(() => {
                 dispatch(addNewVoucher(formData))
             }).then(() => {
-                navigate('/admin/voucher')
+                navigate('/admin/vouchers')
             })
         } catch (error) {
             toastError('Thêm voucher thất bại')

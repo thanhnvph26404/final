@@ -69,22 +69,22 @@ const VouCherList = () => {
 
     const columns: ColumnsType<DataType> = [
         {
-            title: 'Name',
+            title: 'Tên mã giảm giá',
             dataIndex: 'name',
             key: 'name',
         },
         {
-            title: 'Code',
+            title: 'Mã giảm giá',
             dataIndex: 'code',
             key: 'code',
         },
         {
-            title: 'Discount',
+            title: 'Giảm giá',
             dataIndex: 'discount',
             key: 'discount',
         },
         {
-            title: 'Limit',
+            title: 'Số lượng giới hạn',
             dataIndex: 'limit',
             key: 'limit',
         },
@@ -99,7 +99,7 @@ const VouCherList = () => {
             key: 'endDate',
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
         },
@@ -135,7 +135,7 @@ const VouCherList = () => {
         <div>
             <div className="flex justify-between items-center mb-9">
                 <h1 className="text-2xl font-semibold text-[#1D1F2C]">
-                    Danh sách Voucher
+                    Danh sách mã giảm giá
                 </h1>
                 <Link
                     to={"createVoucher"}
