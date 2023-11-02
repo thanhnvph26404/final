@@ -1,105 +1,79 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema(
-    {
-        fullname: {
-            type: String,
-            required: true,
-        },
-        phoneNumber: {
-            type: String,
-            required: true,
-        },
-        city: {
-            type: String,
-            required: true,
-        },
-        district: {
-            type: String,
-            required: true,
-        },
-        commune: {
-            type: String,
-
-        },
-        detailAddress: {
-            type: String,
-            required: true,
-        },
-        orderStatus: {
-            type: String,
-            default: "Đang chờ duyệt",
-            enum: [
-                "Đang chờ duyệt",
-                "Đã nhận đơn",
-                "Đang giao hàng",
-                "Đã hoàn thành",
-            ],
-            required: true,
-        },
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Auth",
-        },
-        productOrder: [
-            {
-                product: {
-                    name: {
-                        type: String,
-                        required: true,
-                    },
-                    price: {
-                        type: Number,
-                        min: 0,
-                        required: true,
-                    },
-                    original_price: {
-                        type: Number,
-                        min: 0,
-                        required: true,
-                    },
-                    description: {
-                        type: String,
-                        required: true,
-                    },
-                    images: [
-                        {
-                            status: {
-                                type: String,
-                                default: "done",
-                            },
-                            name: {
-                                type: String,
-                                required: true,
-                            },
-                            uid: {
-                                type: String,
-                                required: true,
-                            },
-                            url: {
-                                type: String,
-                                required: true,
-                            },
-                        },
-                    ],
-                    category: {
-                        type: mongoose.Schema.Types.ObjectId,
-                        ref: "Category",
-                        required: true,
-                    },
-                    comments: [
-                        {
-                            type: mongoose.Schema.Types.ObjectId,
-                            ref: "Comment",
-                        },
-                    ],
-                },
-                quantity: Number,
-            }
-        ]
+const orderSchema = new mongoose.Schema( {
+    userId: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
     },
-    { timestamps: true }
-);
-
-export default mongoose.model("Order", orderSchema);
-
+    vouchers: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "voucher",
+        required: false  // Đặt required là false để cho phép giá trị null
+    },
+    products: [
+        {
+            productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+            name: String,
+            quantity: {
+                type: Number,
+                required: true,
+            },
+            images: [ {
+                uid: String,
+                url: String,
+            } ],
+            price: {
+                type: Number,
+                required: true,
+            },
+            hasReviewed: {
+                type: Boolean,
+                default: false, // Ban đầu, đánh dấu là chưa đánh giá
+            },
+        }
+    ],
+    total: {
+        type: Number,
+        required: true
+    },
+    deposit: {
+        type: Number,
+        default: 0
+    },
+    status: {
+        type: String,
+        default: "đang xử lý",
+        enum: [
+            "Chờ thanh toán",
+            "Đang xử lý",
+            "Đang giao hàng",
+            "Đã giao hàng",
+            "Đã hủy",
+            "Đã hoàn tiền",
+            "Đã hoàn thành",
+        ],
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    notes: {
+        type: String
+    },
+    paymentId: {
+        type: String
+    },
+    paymentCode: {
+        type: String
+    },
+    payerId: {
+        type: String
+    }
+},
+    { timestamps: true, versionKey: false } );
+export default mongoose.model( "order", orderSchema );

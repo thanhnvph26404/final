@@ -108,7 +108,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
   return (
     <>
 
-      <div className="   text-black  text-base bg-[#ffffff]">
+      <div className="   text-black  text-base bg-[#ffffff] ">
         <Marquee className='d-flex bg-black-500 text-center text-white text-sm font-medium py-3'>
           <p className="ml-40">FREE ship cho đơn hàng 500k </p>
           <span className="text-white ml-40 ">.</span>

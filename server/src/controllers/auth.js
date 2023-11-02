@@ -7,6 +7,11 @@ import { sendVerifyEmail } from "../middleware/sendEmail";
 import { registerSchema } from "../schemas/register";
 import { generateRandomCode } from "../components/function";
 import { loginSchema } from "../schemas/login";
+import Product from "../models/products";
+import Cart from "../models/cart";
+import ProductVariants from "../models/productVariant";
+import order from "../models/order";
+
 
 config();
 // đăng kí
@@ -409,4 +414,134 @@ export const editAddressToken = async ( req, res ) =>
       message: "Lỗi server: " + error.message,
     } );
   }
-} 
+}
+// Add a route for adding items to the cart
+export const addToCart = async ( req, res ) =>
+{
+  try
+  {
+    const userId = req.user._id;
+    const { productId, productVariantId, quantity } = req.body;
+
+    let cart = await Cart.findOne( { userId } );
+
+
+
+
+    const productInfo = await Product.findById( productId );
+    const productVariantInfo = await ProductVariants.findById( productVariantId ).populate( "AttributeValues" );
+
+    if ( !productInfo || !productVariantInfo )
+    {
+      return res.status( 404 ).json( {
+        message: "Sản phẩm hoặc biến thể không tồn tại",
+      } );
+    }
+    if ( !cart )
+    {
+      cart = new Cart( { userId } );
+    }
+    if ( !cart.items )
+    {
+      cart.items = [];
+    }
+    const existingItem = cart.items.find( ( item ) => item.product === productId && item.productVariant === productVariantId );
+
+    if ( existingItem )
+    {
+      existingItem.quantity += quantity;
+    } else
+    {
+      const newItem = {
+        product: productId,
+        productVariant: productVariantId,
+        quantity: quantity,
+        productInfo: {
+          images: productInfo.images,
+          name: productInfo.name,
+          brand: productInfo.brand,
+          category: productInfo.category,
+        },
+        productVariantInfo: {
+
+          attributeValues: productVariantInfo.AttributeValues
+        },
+      };
+
+      cart.items.push( newItem );
+    }
+
+    const calculateTotal = async () =>
+    {
+      return Promise.all(
+        cart.items.map( async ( item ) =>
+        {
+          return productInfo.price * item.quantity;
+        } )
+      );
+    };
+
+    const itemTotals = await calculateTotal();
+    const newTotal = itemTotals.reduce( ( total, itemTotal ) => total + itemTotal, 0 );
+    cart.total = newTotal;
+
+    await cart.save();
+
+    return res.status( 200 ).json( {
+      cart: {
+        _id: cart._id,
+        userId: cart.userId,
+        voucherId: cart.voucherId,
+        total: cart.total,
+        items: cart.items.map( ( item ) => ( {
+          productVariantId: item.productVariant,
+          productId: item.product,
+          quantity: item.quantity,
+          _id: item._id,
+          productInfo: item.productInfo,
+          productVariantInfo: item.productVariantInfo,
+        } ) ),
+        createdAt: cart.createdAt,
+        updatedAt: cart.updatedAt,
+      },
+    } );
+  } catch ( error )
+  {
+    console.error( error );
+    return res.status( 500 ).json( {
+      message: "Lỗi máy chủ: " + error.message,
+    } );
+  }
+};
+
+export const emptyCart = async ( req, res ) =>
+{
+  const { _id } = req.user
+  try
+  {
+    const user = await Auth.findOne( { _id } );
+    const cart = await Cart.findOneAndRemove( { userId: user._id } )
+    res.json( cart )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+}
+export const updateOderStatus = async ( req, res ) =>
+{
+  const { status } = req.body
+  const { id } = req.params
+  try
+  {
+    const findOder = await order.findByIdAndUpdate( id, {
+      status: status,
+    }, { new: true } )
+    res.json( findOder )
+  } catch ( error )
+  {
+    throw new Error( error )
+
+
+  }
+}
+

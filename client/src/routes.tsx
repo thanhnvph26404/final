@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { LayoutAdmin, LayoutWebsite } from "./components";
+import { LayoutAdmin, LayoutWebsite, ListProduct } from "./components";
 import LoginPage from "./pages/website/LoginPage";
 import SignupPage from "./pages/website/SignupPage";
 
@@ -32,6 +32,7 @@ import UpdateSize from "./pages/admin/size/updateSize";
 import ListColor from "./pages/admin/color/ListColor";
 import AddColor from "./pages/admin/color/AddColor";
 import UpdateColor from "./pages/admin/size/updateSize";
+import ProductList from "./pages/admin/products/ListProduct";
 
 
 
@@ -174,6 +175,8 @@ export const router = createBrowserRouter( [
                     { path: "", element: <Navigate to={ 'dashboard' } /> },
                     { path: 'dashboard', element: <DashboardPage /> },
                     { path: 'category', element: <CategoryList /> },
+                    { path: 'products', element: <ProductList /> },
+
                     { path: 'category/add', element: <AddCategory /> },
                     { path: 'category/edit/:id', element: <EditCategory /> },
                     { path: 'customers', element: <UserList /> },

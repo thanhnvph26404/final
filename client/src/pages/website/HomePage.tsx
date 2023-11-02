@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom"
 const HomePage = () =>
 {
   return (
-    <div className="mx-auto">
+    <div className="mx-auto ">
       {/* banner */ }
       <div className="flex items-center justify-center sm:justify-start">
         <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />

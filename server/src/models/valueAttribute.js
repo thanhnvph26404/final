@@ -1,15 +1,15 @@
 import mongoose from "mongoose"
 
-const valueAttributeSchema = new mongoose.Schema({
+const valueAttributeSchema = new mongoose.Schema( {
     attribute: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Attribute",
         required: true,
-      },
-    value: {    
+    },
+    value: {
         type: String,
         required: true,
     }
-})
+} )
 
-export default mongoose.model("ValueAttribute" , valueAttributeSchema)
+export default mongoose.model( "ValueAttribute", valueAttributeSchema )
