@@ -1,24 +1,39 @@
 import mongoose from "mongoose";
 
+const cartItemSchema = new mongoose.Schema( {
+    productVariantId: { type: mongoose.Types.ObjectId, ref: 'ProductVariant' },
+    productId: { type: mongoose.Types.ObjectId, ref: 'Product' },
+    quantity: Number,
+    productInfo: {
+        images: [ {
+            uid: String,
+            url: String,
+        } ],
+        name: String,
+        brand: { type: mongoose.Types.ObjectId, ref: 'Brand' },
+        category: { type: mongoose.Types.ObjectId, ref: 'Category' }
+    },
+    productVariantInfo: {
+        attributeValues: [ {
+            attribute: { type: mongoose.Types.ObjectId, ref: 'Attribute' },
+
+        } ]
+    }
+} );
+
 const cartSchema = new mongoose.Schema( {
     userId: {
         type: mongoose.Types.ObjectId,
         ref: "User",
-        require: true
+        required: true
     },
     voucherId: {
         type: mongoose.Types.ObjectId,
-        ref: "voucher",
+        ref: "Voucher",
         default: null
     },
-    productVariantId: { type: mongoose.Types.ObjectId, ref: 'ProductVariant' },
-    productId: { type: mongoose.Types.ObjectId, ref: 'Product' },
-    quantity: Number,
+    total: Number,
+    items: [ cartItemSchema ]
+}, { timestamps: true, versionKey: false } );
 
-    total: {
-
-        type: Number,
-        default: null
-    }
-}, { timestamps: true, versionKey: false } )
-export default mongoose.model( "Cart", cartSchema )
+export default mongoose.model( "Cart", cartSchema );
