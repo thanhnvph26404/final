@@ -12,6 +12,7 @@ import ForgotPage from "./pages/website/ForgotPassword";
 import ResetPage from "./pages/website/Resetpassword";
 import AddVoucher from "./pages/admin/vouchers/AddVoucher";
 import EditVoucher from "./pages/admin/vouchers/EditVoucher";
+
 import { useEffect } from "react";
 import { useGetUserByTokenMutation } from "./store/Auth/Auth.services";
 import Profiles from "./pages/website/Profile/Profiles";
@@ -33,6 +34,7 @@ import ListColor from "./pages/admin/color/ListColor";
 import AddColor from "./pages/admin/color/AddColor";
 import UpdateColor from "./pages/admin/size/updateSize";
 import ProductList from "./pages/admin/products/ListProduct";
+import ProductDetail from "./pages/website/ProductDetail";
 
 
 
@@ -78,19 +80,27 @@ const PriviteRouter = ( { isAuth }: any ) =>
 
 }
 
+
+
 export const router = createBrowserRouter( [
     {
         element: <LayoutWebsite />,
         children: [
 
+
             { path: "", element: <Navigate to={ 'home' } /> },
             { path: 'home', element: <HomePage /> },
+            { path: '/home/product-detail', element: <ProductDetail /> },
 
             { path: 'cart', element: <CartPage /> },
 
             { path: 'payment', element: <PaymentPage /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
+
+            // { index: true, element: <Navigate to={ 'home' } /> },    
+            
+
 
 
 
@@ -162,6 +172,7 @@ export const router = createBrowserRouter( [
         ],
 
     },
+
 
 
 
