@@ -100,26 +100,13 @@ export const getAll = async ( req, res ) =>
 
 export const getOne = async ( req, res ) =>
 {
+    console.log(req.params.id);
     try
     {
         const data = await Product.findById( req.params.id )
             .populate( "category" ).populate( "brand" ).
-            populate( { path: "ProductVariants", populate: "attribute" } )
-        // .populate( {
-        //     // path: "comments",
-        //     populate: [
-        //         {
-        //             path: "user",
-        //         },
-        //         {
-        //             path: "feed_back",
-        //             populate: {
-        //                 path: "user",
-        //             },
-        //         },
-        //     ],
-        // } );
-
+            populate( { path: "ProductVariants", populate: "AttributeValues" } )
+        
         if ( !data || data.length === 0 )
         {
             return res.status( 404 ).json( {

@@ -79,9 +79,7 @@ export const router = createBrowserRouter([
             { path: "", element: <Navigate to={'home'} /> },
             { path: 'home', element: <HomePage /> },
             { path: 'purchase', element: <PurchaseHistory /> },
-
             { path: 'cart', element: <CartPage /> },
-
             { path: 'payment', element: <PaymentPage /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
