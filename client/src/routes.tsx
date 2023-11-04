@@ -39,6 +39,7 @@ import Inspection from "./pages/website/Policy/Inspection";
 import Exchange from "./pages/website/Policy/ExchangePage";
 import Warranty from "./pages/website/Policy/Warranty";
 import Privacy from "./pages/website/Policy/Privacy";
+import Rules from "./pages/website/Policy/Rules";
 
 
 
@@ -98,6 +99,7 @@ export const router = createBrowserRouter([
             { path: 'exchange', element: <Exchange /> },
             { path: 'warranty', element: <Warranty /> },
             { path: 'privacy', element: <Privacy /> },
+            { path: 'rules', element: <Rules /> },
 
             // { index: true, element: <Navigate to={ 'home' } /> },    
 
