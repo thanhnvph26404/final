@@ -102,13 +102,16 @@ export const getAll = async ( req, res ) =>
 
 export const getOne = async ( req, res ) =>
 {
-    console.log(req.params.id);
+    console.log( req.params.id );
     try
     {
-        const data = await Product.findById( req.params.id )
-            .populate( "category" ).populate( "brand" ).
-            populate( { path: "ProductVariants", populate: "AttributeValues" } )
-        
+        const data = await Product.findById( req.params.id ).populate( "category" ).populate( {
+            path: "ProductVariants",
+            populate: "AttributeValues"
+        } );
+
+
+
         if ( !data || data.length === 0 )
         {
             return res.status( 404 ).json( {
@@ -148,7 +151,8 @@ export const updateProduct = async ( req, res ) =>
         }
         const data = await Product.findByIdAndUpdate( req.params.id, req.body, {
             new: true
-        } );
+        } )
+            ;
         if ( !data )
         {
             return res.status( 404 ).json( {
