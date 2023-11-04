@@ -105,6 +105,7 @@ export const getOne = async ( req, res ) =>
             .populate( "category" ).populate( "brand" ).
             populate( "ProductVariants" )
 
+
         if ( !data || data.length === 0 )
         {
             return res.status( 404 ).json( {
@@ -144,7 +145,8 @@ export const updateProduct = async ( req, res ) =>
         }
         const data = await Product.findByIdAndUpdate( req.params.id, req.body, {
             new: true
-        } );
+        } )
+            ;
         if ( !data )
         {
             return res.status( 404 ).json( {
