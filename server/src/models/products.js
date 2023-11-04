@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema(
     ProductVariants: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "ValueAttribute",
+        ref: "ProductVariant",
         required: true,
       }
     ],
