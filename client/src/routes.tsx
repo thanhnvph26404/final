@@ -37,6 +37,7 @@ import ProductList from "./pages/admin/products/ListProduct";
 import ProductDetail from "./pages/website/ProductDetail";
 import Inspection from "./pages/website/Policy/Inspection";
 import Exchange from "./pages/website/Policy/ExchangePage";
+import Warranty from "./pages/website/Policy/Warranty";
 
 
 
@@ -94,6 +95,7 @@ export const router = createBrowserRouter([
             { path: 'products', element: <ProductPage /> },
             { path: 'inspection', element: <Inspection /> },
             { path: 'exchange', element: <Exchange /> },
+            { path: 'warranty', element: <Warranty /> },
 
             // { index: true, element: <Navigate to={ 'home' } /> },    
 
