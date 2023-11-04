@@ -42,6 +42,13 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
+    variants: [
+      {
+        size: String,
+        color: String,
+        quantity: Number
+      }
+    ],
     ProductVariants: [
       {
         type: mongoose.Schema.Types.ObjectId,
