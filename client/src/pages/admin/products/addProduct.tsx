@@ -13,7 +13,7 @@ const AddProduct = () => {
     const { data: colors } = useGetColorsQuery()
     const { data: sizes } = useGetSizesQuery()
 
-    console.log(categories);
+    console.log(categories)
 
     const [loadings, setLoadings] = useState<boolean>();
     const validateMessages = {

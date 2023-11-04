@@ -94,7 +94,6 @@ export const router = createBrowserRouter([
             { path: '/home/product-detail', element: <ProductDetail /> },
 
             { path: 'cart', element: <CartPage /> },
-
             { path: 'payment', element: <PaymentPage /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
