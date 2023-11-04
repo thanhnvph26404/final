@@ -1,163 +1,118 @@
-import { IoPencilSharp } from "react-icons/io5";
-import { FaTrashCan } from "react-icons/fa6";
-import { AiOutlinePlus } from "react-icons/ai";
-
-
-
-
-import { Space, Table, Popconfirm, Skeleton } from "antd";
+import { Space, Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
+
 import { Link } from "react-router-dom";
-import { Image } from "../../../store/upload/upload.interface";
-import { useDeleteProductMutation, useGetProductsQuery, useProductVariantQuery } from "../../../store/products/product.services";
+import { useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
-import { toastError, toastSuccess } from "../../../hook/toastify";
-import { useEffect, useState } from "react";
 
 
-const ProductList = () =>
-{
+const ListProduct = () => {
 
-    const {
-        data: product,
-        isLoading: isCategoryListLoading,
-    } = useGetProductsQuery( [] );
-    const {
-        data: productss,
-    } = useProductVariantQuery();
-    console.log( productss );
+    const { data } = useGetProductsQuery()
+    console.log(data);
 
 
+    const removeProduct = (id: string) => {
+        console.log(id);
 
-    const [ deleteproductApi, { isError: isDeleteCategoryError } ] =
-        useDeleteProductMutation();
-    const combineData = () =>
-    {
-        if ( product && productss )
-        {
-            return product?.products?.map(
-                ( { _id, name, imgUrl, price, brand, category, ProductVariants }: Iproductdata ) => ( {
-                    key: _id || "",
-                    name,
-                    price,
-                    brand,
-                    category: category,
-                    ProductVariants,
-                    image: { uid: imgUrl?.uid || "", url: imgUrl?.url || "" },
-                } )
-            );
-        }
-        return [];
     };
-
-    const confirm = async ( id: string ) =>
-    {
-        try
-        {
-            await deleteproductApi( id )
-                .unwrap()
-                .then( () =>
-                {
-                    toastSuccess( "Xóa sản phẩm thành công" );
-                } );
-        } catch ( error )
-        {
-            if ( isDeleteCategoryError )
-            {
-                toastError( "Xoá sản phẩm  thất bại!" );
-            }
-        }
-    };
-
-    const dataSource = combineData();
-
 
     const columns: ColumnsType<Iproductdata> = [
         {
-            title: "Tên sản phẩm ",
-            dataIndex: "name",
-            key: "name",
+            title: "ảnh sản phẩm",
+            dataIndex: "imgUrl",
+            key: "imgUrl",
+            render: (text) => <p>{text}</p>,
+            // render: (imgUrls) => <img src={imgUrls[0]} alt="" style={{ width: 100 }} />,
         },
         {
-            title: "giá tiền ",
+            title: "tên sản phẩm",
+            dataIndex: "name",
+            key: "name",
+            render: (text) => <p>{text}</p>,
+        },
+        {
+            title: "Giá đã giảm",
             dataIndex: "price",
             key: "price",
         },
         {
-            title: "Thương hiệu  ",
-            dataIndex: "brand",
-            key: "brand",
-            render: ( brand ) => brand?.title
-
-        },
+            title: "Giá gốc",
+            dataIndex: "original_price",
+            key: "original_price",
+            render: (text) => <p>{text}</p>,
+        }
+        ,
         {
-            title: "danh mục ",
+            title: "danh mục",
             dataIndex: "category",
             key: "category",
-            render: ( category ) => category?.title
+            ellipsis: true,
+            render: (category) => <div >{category.title}</div>,
         },
         {
-            title: "biến thể  ",
-            dataIndex: "ProductVariants",
-            key: "ProductVariants",
+            title: "brand",
+            dataIndex: "brand",
+            key: "brand",
+            ellipsis: true,
+            render: (brand) => <div >{brand.title}</div>,
         },
         {
-            title: "Ảnh ",
-            dataIndex: "image",
-            key: "image",
-            render: ( image: Image ) => (
-                <div className="h-11 w-11 overflow-hidden ">
-                    <img className="" src={ image?.url || "" } alt="img" />
-                </div>
-            ),
+            title: "mổ tả",
+            dataIndex: "description",
+            key: "description",
+            ellipsis: true,
+            render: (text) => <div >{text}</div>,
         },
         {
-            title: "Action",
+            title: "hành động",
             key: "action",
-            render: ( { key: id }: { key: any } ) => (
-                <Space size="middle">
-                    <Link to={ `edit/${ id }` }>
-                        <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Link>
-
-                    <Popconfirm
-                        title="Xóa danh mục"
-                        description="Bạn có chắc muốn xóa sản phẩm này?"
-                        onConfirm={ () => confirm( id ) }
-                        okText="Xóa"
-                        cancelText="Hủy"
+            render: (record) => (
+                <Space size="middle" className="w-12">
+                    <Button
+                        type="primary"
+                        style={{ backgroundColor: "red" }}
+                        onClick={() => {
+                            const delProduct = confirm("Bạn có muốn xoá không?");
+                            if (delProduct) {
+                                removeProduct(record._id);
+                            }
+                        }}
                     >
-                        <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Popconfirm>
+                        Remove
+                    </Button>
+                    <Button type="primary"
+                        className="bg-blue-500"
+                    >
+
+                        <Link to={`/admin/products/${record._id}/update`}>Update</Link>
+                    </Button>
                 </Space>
             ),
         },
     ];
 
+    const ListProduct = data?.data?.map((item: any) => {
+        return {
+            key: item._id,
+            ...item,
+
+        };
+    });
 
     return (
-        <div>
-            <div className="flex justify-between items-center mb-9">
-                <h1 className="text-2xl font-semibold text-[#1D1F2C]">
-                    Sản phẩm
-                </h1>
-                <Link
-                    to={ "add" }
-                    className="flex items-center bg-[#1D1F2C] px-3.5 py-2.5 rounded-lg"
-                >
-                    <AiOutlinePlus className="text-base font-semibold text-white mr-1" />
-                    <p className="text-sm font-semibold text-white">
-                        Thêm sản phẩm
-                    </p>
-                </Link>
-            </div>
-            { isCategoryListLoading ? (
-                <Skeleton active paragraph={ { rows: 7 } } />
-            ) : (
-                <Table columns={ columns } dataSource={ dataSource || [] } />
-            ) }
+        <div style={{ marginTop: 100, paddingRight: 50 }}>
+            <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
+                <Link to={"/admin/products/add"}>Add New Product</Link>
+            </Button>
+            <Table
+                style={{ backgroundColor: "white", marginTop: 100, }}
+                columns={columns}
+                dataSource={ListProduct}
+                pagination={{ pageSize: 6 }}
+            />
         </div>
     );
 };
 
-export default ProductList;
+export default ListProduct;
