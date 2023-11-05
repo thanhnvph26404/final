@@ -40,6 +40,7 @@ import Exchange from "./pages/website/Policy/ExchangePage";
 import Warranty from "./pages/website/Policy/Warranty";
 import Privacy from "./pages/website/Policy/Privacy";
 import Rules from "./pages/website/Policy/Rules";
+import Payment from "./pages/website/Payment";
 
 
 
@@ -93,6 +94,7 @@ export const router = createBrowserRouter([
             { path: 'cart', element: <CartPage /> },
 
             { path: 'payment', element: <PaymentPage /> },
+            { path: 'payments', element: <Payment /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
             { path: 'inspection', element: <Inspection /> },
