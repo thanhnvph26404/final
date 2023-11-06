@@ -10,9 +10,13 @@ const ProductDetail = () => {
     const [arrange, setArrange] = useState(false);
     const [progress, setProgress] = useState(0);
     const [kichCo, setKichCo] = useState('M');
+    const [mauSac, setmauSac] = useState('Trang');
 
     const handleChangeKichCo = (newSize: any) => {
         setKichCo(newSize);
+    };
+    const handleChangeMauSac = (newColor: any) => {
+        setmauSac(newColor);
     };
 
     const increaseQuantity = () => {
@@ -97,6 +101,15 @@ const ProductDetail = () => {
                             <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'L' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('L')}>L</button>
                             <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'XL' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('XL')}>XL</button>
                             <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'XXL' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('XXL')}>XXL</button>
+                        </div>
+                        <div className="mt-[30px]">
+                            <p className="text-[#23314BB3] text-[20px]">Màu sắc {mauSac} </p>
+                        </div>
+                        <div className="mt-[20px] space-x-10">
+                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Đen' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Đen')}>Đen</button>
+                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Trắng' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Trắng')}>Trắng</button>
+                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Be' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Be')}>Be</button>
+                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Cafe' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Cafe')}>Cafe</button>
                         </div>
                         <div className="mt-[30px]">
                             <p className="text-[#23314BB3] text-[20px] ">Số lượng:</p>
