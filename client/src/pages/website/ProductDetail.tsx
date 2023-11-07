@@ -10,6 +10,11 @@ const ProductDetail = () => {
     const [arrange, setArrange] = useState(false);
     const [progress, setProgress] = useState(0);
     const [kichCo, setKichCo] = useState('M');
+    const [isFormVisible, setIsFormVisible] = useState(false);
+
+    const handleToggleForm = () => {
+        setIsFormVisible(!isFormVisible);
+    };
 
     const handleChangeKichCo = (newSize: any) => {
         setKichCo(newSize);
@@ -302,22 +307,88 @@ const ProductDetail = () => {
 
                 </div>
                 <div>
-                    <button className="w-[200px] h-[45px] border-2 mt-2 bg-[#23314b] text-white font-thin hover:opacity-70">Thêm bình luận</button>
+                    <button className="w-[200px] h-[45px] border-2 mt-2 bg-[#23314b] text-white font-thin hover:opacity-70" onClick={handleToggleForm}>Thêm bình luận</button>
                 </div>
             </div>
-            {/* <div className="space-y-5">
+            <hr className="w-[1300px] ml-[100px] mt-10" />
+            {isFormVisible && (
+                <form action="" className="mt-[50px]">
+                    <h1 className="text-center text-[25.5px] text-[#23314b] font-semibold">THÊM BÌNH LUẬN</h1>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-5">Đánh giá</p>
+                    <div className="flex justify-center items-center mt-3">
+                        <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
+                        <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
+                        <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
+                        <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
+                        <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
+                    </div>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tiêu đề</p>
+                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                        <input
+                            type="text"
+                            className="p-4 border border-gray-300 w-[550px] h-[40px] "
+                            placeholder="Ghi tiêu đề cho đánh giá"
+                        />
+
+                    </div>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Đánh giá</p>
+                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                        <input
+                            type="text"
+                            className=" p-4 pb-20 border border-gray-300 w-[550px] h-[150px]"
+                            placeholder="Hãy chia sẻ nhận xét cho sản phẩm này bạn nhé!"
+                        />
+
+                    </div>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Hình ảnh/video (tùy chọn)</p>
+                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                        <input
+                            type="file"
+                            className="hidden"
+                            id="fileInput"
+                            accept=".jpg, .jpeg, .png, .gif"
+                        />
+                        <label htmlFor="fileInput" className="w-28 h-28 p-2 border border-gray-300 w-[550px] h-[150px] rounded-md cursor-pointer flex items-center justify-center mx-auto">
+                            <img src="/upload.jpg" alt="Tải lên" className="w-16 h-16 " />
+                        </label>
+                    </div>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tên (Hiển thị công khai dưới tên
+                        Nguyễn Văn A)</p>
+                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                        <input
+                            type="text"
+                            className="p-4 border border-gray-300 w-[550px] h-[40px] "
+                            placeholder="Nhập tên của bạn"
+                        />
+                    </div>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Email</p>
+                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                        <input
+                            type="text"
+                            className="p-4 border border-gray-300 w-[550px] h-[40px] "
+                            placeholder="Nhập email của bạn"
+                        />
+                    </div>
+                    <div className="flex justify-center items-center mt-5">
+                        <button className="mr-4 px-4 py-2 border border-black border-[color]-900 bg-white text-black rounded-md hover:bg-red-200 hover:text-white transition duration-200">Hủy bình luận</button>
+                        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">Gửi bình luận</button>
+                    </div>
+                </form>
+            )}
+
+            <div className="space-y-5 " id="commentFormContainer">
+
                 <hr className="w-[1300px] ml-[100px]" />
-                <select name="" id="" className="w-[200px] h-[45px] border-2 ml-[100px] ">
+                {/* <select name="" id="" className="w-[200px] h-[45px] border-2 ml-[100px] ">
                     <option value="">Mới nhất</option>
                     <option value="">Đánh giá cao nhất</option>
                     <option value="">Đánh giá thấp nhất</option>
                     <option value="">Đánh giá có ảnh</option>
                     <option value="">Đánh giá có ảnh trước</option>
                     <option value="">Đánh giá có video trước</option>
-                </select>
-                <hr className="w-[1300px] ml-[100px]" />
-            </div> */}
-
+                </select> */}
+                {/* <hr className="w-[1300px] ml-[100px]" /> */}
+            </div>
         </div>
     )
 }
