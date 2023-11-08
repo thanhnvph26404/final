@@ -59,6 +59,7 @@ const productSchema = new mongoose.Schema(
     ],
 
     ProductVariants: [ productVariantSchema ], // Sử dụng mô hình biến thể sản phẩm
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
