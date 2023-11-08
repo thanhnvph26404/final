@@ -2,18 +2,35 @@
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { useGetProductsQuery } from "../../store/products/product.services";
+import { useAppDispatch } from "../../store/hook";
+import { Iproductdata } from "../../store/products/product.interface";
+import { useEffect } from "react";
 
 const HomePage = () => {
+
+  const dispatch = useAppDispatch();
+  const { isError, isLoading, data: productList } = useGetProductsQuery(null);
+  console.log(productList);
+  if (isLoading) {
+    return <>Loading...</>
+  }
+
+  if (isError) {
+    return <p>Error...</p>
+  }
+
+
 
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 5
+      items: 6
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 3
+      items: 5
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
@@ -31,9 +48,9 @@ const HomePage = () => {
       <div className="flex items-center justify-center sm:justify-start">
         <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />
       </div>
-      {/* Danh mục sản phẩm */ }
+      {/* Danh mục sản phẩm */}
       <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
-      {/* Card */ }
+      {/* Card */}
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-[80px] mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
         {/* Card 1 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 ">
@@ -117,29 +134,34 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* sản phẩm mới */ }
+      {/* sản phẩm mới */}
 
       <Carousel responsive={responsive}>
         <div>
-          <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
-            <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-              <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
+          {(productList.products as Iproductdata[] || []).map(product => {
+            return <div className="" >
+              <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
+                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
 
-              <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
-              <p className="text-center text-[20px] font-semibold">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-              <div className="flex space-x-4 pl-[80px] mb-4">
-                <p className="flex justify-center gap-2">
-                  <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                  <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                </p>
+                  <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+
+                  <p className="text-center text-[20px] font-semibold" key={product._id}>{product.name}</p>
+                  <div className="flex space-x-4 pl-[80px] mb-4">
+                    <p className="flex justify-center gap-2">
+                      <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price}₫</span>
+                      <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
+                    </p>
+                  </div>
+                  <button className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+                    + Thêm nhanh
+                  </button>
+                </div>
               </div>
-              <button className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
-                + Thêm nhanh
-              </button>
             </div>
-          </div>
+          })}
         </div>
-        {/* card2 */}
+        {/* card2
         <div>
           <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
             <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
@@ -160,7 +182,7 @@ const HomePage = () => {
           </div>
         </div>
         {/* card3 */}
-        <div>
+        {/* <div>
           <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
             <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
               <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -178,9 +200,9 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* card4 */}
-        <div>
+        {/* <div>
           <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
             <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
               <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -198,9 +220,9 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* card5 */}
-        <div>
+        {/* <div>
           <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
             <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
               <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -218,9 +240,9 @@ const HomePage = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         {/* card6 */}
-        <div>
+        {/* <div>
           <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
             <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
               <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -237,8 +259,8 @@ const HomePage = () => {
                 + Thêm nhanh
               </button>
             </div>
-          </div>
-        </div>
+          </div>  */}
+        {/* </div> */}
       </Carousel>
 
       {/*sản phẩm bán chạy*/}
@@ -263,7 +285,7 @@ const HomePage = () => {
       </div>
 
 
-      {/* sản phẩm */ }
+      {/* sản phẩm */}
 
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
         {/* Card 1 */}
@@ -342,7 +364,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* sản phẩm */ }
+      {/* sản phẩm */}
 
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
         {/* Card 1 */}
@@ -421,7 +443,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* banner dưới */ }
+      {/* banner dưới */}
       <div className="w-full relative text-center mb-[90px] ">
         <img src="/bannerdown.jpg" alt="" className="w-full  sm:w-[1700px] h-[450px] mt-[100px]" />
         <div className="absolute top-[120px] left-[50%] text-white transform -translate-x-1/2">
@@ -456,7 +478,6 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
 
     </div>
 
