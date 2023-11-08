@@ -8,7 +8,7 @@ export interface Iproductdata
     original_price: number,
     description: string;
     brand: string | undefined
-    imgUrl: Image;
+    images: Image;
     ProductVariants: IProductVariants
     category: string | undefined
 

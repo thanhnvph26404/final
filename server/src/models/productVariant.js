@@ -1,17 +1,12 @@
+import { number } from "joi"
 import mongoose from "mongoose"
 
 const productVariantSchema = new mongoose.Schema( {
-    Attribute: [
+    AttributeValues: [
         {
-            attribute: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Attribute",
-                required: true,
-            },
-            value: {
-                type: String,
-                required: true,
-            }
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "ValueAttribute",
+            required: true,
         }
     ],
     inventory: {
