@@ -421,90 +421,120 @@ export const addToCart = async ( req, res ) =>
   try
   {
     const userId = req.user._id;
-    const { productId, productVariantId, quantity } = req.body;
-
-    let cart = await Cart.findOne( { userId } );
-
-
-
+    const { productId, size, color, quantity } = req.body;
 
     const productInfo = await Product.findById( productId );
-    const productVariantInfo = await ProductVariants.findById( productVariantId ).populate( "AttributeValues" );
+    const existingCart = await Cart.findOne( { userId } );
 
-    if ( !productInfo || !productVariantInfo )
-    {
-      return res.status( 404 ).json( {
-        message: "Sản phẩm hoặc biến thể không tồn tại",
-      } );
-    }
-    if ( !cart )
-    {
-      cart = new Cart( { userId } );
-    }
-    if ( !cart.items )
-    {
-      cart.items = [];
-    }
-    const existingItem = cart.items.find( ( item ) => item.product === productId && item.productVariant === productVariantId );
-
-    if ( existingItem )
-    {
-      existingItem.quantity += quantity;
-    } else
-    {
-      const newItem = {
-        product: productId,
-        productVariant: productVariantId,
-        quantity: quantity,
-        productInfo: {
-          images: productInfo.images,
-          name: productInfo.name,
-          brand: productInfo.brand,
-          category: productInfo.category,
-        },
-        productVariantInfo: {
-
-          attributeValues: productVariantInfo.AttributeValues
-        },
-      };
-
-      cart.items.push( newItem );
-    }
-
-    const calculateTotal = async () =>
-    {
-      return Promise.all(
-        cart.items.map( async ( item ) =>
-        {
-          return productInfo.price * item.quantity;
-        } )
-      );
+    const cartItem = {
+      product: productId,
+      productVariant: {
+        size,
+        color,
+      },
+      quantity,
+      productInfo: {
+        images: productInfo.images,
+        name: productInfo.name,
+        brand: productInfo.brand,
+        category: productInfo.category,
+        price: productInfo.price,
+      },
     };
 
-    const itemTotals = await calculateTotal();
-    const newTotal = itemTotals.reduce( ( total, itemTotal ) => total + itemTotal, 0 );
-    cart.total = newTotal;
+    const variantExists = productInfo.ProductVariants.some(
+      ( variant ) => variant.size === size && variant.color === color
+    );
 
-    await cart.save();
+    if ( variantExists )
+    {
+      if ( existingCart )
+      {
+        const existingItemIndex = existingCart.items.findIndex(
+          ( item ) =>
+            item.product.toString() === productId &&
+            item.productVariant.size === size &&
+            item.productVariant.color === color
+        );
 
-    return res.status( 200 ).json( {
-      cart: {
-        _id: cart._id,
-        userId: cart.userId,
-        voucherId: cart.voucherId,
-        total: cart.total,
-        items: cart.items.map( ( item ) => ( {
-          productVariantId: item.productVariant,
-          productId: item.product,
-          quantity: item.quantity,
-          _id: item._id,
-          productInfo: item.productInfo,
-          productVariantInfo: item.productVariantInfo,
-        } ) ),
-        createdAt: cart.createdAt,
-        updatedAt: cart.updatedAt,
-      },
-    } );
+        if ( existingItemIndex !== -1 )
+        {
+          existingCart.items[ existingItemIndex ].quantity += quantity;
+        } else
+        {
+          existingCart.items.push( cartItem );
+        }
+
+        const productToUpdate = await Product.findById( productId );
+        const variantToUpdate = productToUpdate.ProductVariants.find(
+          ( variant ) => variant.size === size && variant.color === color
+        );
+
+        if ( variantToUpdate )
+        {
+          variantToUpdate.quantity -= quantity;
+
+          // Kiểm tra nếu quantity của size hoặc màu nhỏ hơn 0 thì thông báo
+          if ( variantToUpdate.quantity < 0 )
+          {
+            return res.status( 400 ).json( {
+              message: `Sản phẩm đã hết size hoặc màu bạn đã chọn (${ size }, ${ color }).`,
+            } );
+          }
+
+          await productToUpdate.save();
+        }
+        await existingCart.save();
+      } else
+      {
+        const newCart = new Cart( {
+          userId,
+          items: [ cartItem ],
+        } );
+
+        const productToUpdate = await Product.findById( productId );
+        const variantToUpdate = productToUpdate.ProductVariants.find(
+          ( variant ) => variant.size === size && variant.color === color
+        );
+
+        if ( variantToUpdate )
+        {
+          variantToUpdate.quantity -= quantity;
+
+          // Kiểm tra nếu quantity của size hoặc màu nhỏ hơn 0 thì thông báo
+          if ( variantToUpdate.quantity < 0 )
+          {
+            return res.status( 400 ).json( {
+              message: `Sản phẩm đã hết size hoặc màu bạn đã chọn (${ size }, ${ color }).`,
+            } );
+          }
+
+          await productToUpdate.save();
+        }
+        await newCart.save();
+      }
+
+      // Tính toán tổng tiền dựa trên số lượng sản phẩm trong giỏ hàng
+      if ( existingCart )
+      {
+        let total = 0;
+        for ( const item of existingCart.items )
+        {
+          total += item.productInfo.price * item.quantity;
+        }
+        existingCart.total = total;
+        await existingCart.save();
+      }
+
+      return res.status( 200 ).json( {
+        message: "Đã thêm sản phẩm vào giỏ hàng.",
+      } );
+    } else
+    {
+      return res.status( 400 ).json( {
+        message: "Size hoặc màu không hợp lệ cho sản phẩm này.",
+      } );
+    }
   } catch ( error )
   {
     console.error( error );
@@ -513,6 +543,7 @@ export const addToCart = async ( req, res ) =>
     } );
   }
 };
+
 
 export const emptyCart = async ( req, res ) =>
 {

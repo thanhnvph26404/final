@@ -1,5 +1,8 @@
-export type IProductVariant = {
+export type Size = {
     _id?: string
-    AttributeValues: [string],
-    inventory: number
+    size: string,
+}
+export type Color = {
+    _id?: string
+    color: string,
 }

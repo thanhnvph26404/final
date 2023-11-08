@@ -81,11 +81,7 @@ export const getAll = async ( req, res ) =>
         // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
         query = query
             .populate( "category" )
-            .populate( "brand" )
-            .populate( {
-                path: "ProductVariants",
-                populate: "AttributeValues"
-            } );
+            .populate( "brand" ).populate( "ProductVariants" )
         const products = await query;
 
         res.status( 200 ).json( {
@@ -105,12 +101,9 @@ export const getOne = async ( req, res ) =>
     console.log( req.params.id );
     try
     {
-        const data = await Product.findById( req.params.id ).populate( "category" ).populate( {
-            path: "ProductVariants",
-            populate: "AttributeValues"
-        } );
-
-
+        const data = await Product.findById( req.params.id )
+            .populate( "category" ).populate( "brand" ).
+            populate( "ProductVariants" )
 
         if ( !data || data.length === 0 )
         {
@@ -151,8 +144,7 @@ export const updateProduct = async ( req, res ) =>
         }
         const data = await Product.findByIdAndUpdate( req.params.id, req.body, {
             new: true
-        } )
-            ;
+        } );
         if ( !data )
         {
             return res.status( 404 ).json( {
