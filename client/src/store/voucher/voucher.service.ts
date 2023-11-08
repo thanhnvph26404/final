@@ -30,8 +30,8 @@ export const voucherApi = createApi({
         }),
         editVoucher: builder.mutation<IVoucher[], IVoucher>({
             query: (voucher) => ({
-                url: `/editVoucher/${voucher._id}`,
-                method: 'PATCH',
+                url: `/${voucher._id}`,
+                method: 'PUT',
                 body: voucher
             }),
             invalidatesTags: ['Voucher']
