@@ -6,7 +6,7 @@ const router = express.Router()
 router.get("/", getAll);
 router.get("/:id", getOne);
 router.post("/createVoucher", creatVoucher),
-router.put("/editVoucher/:id", updateVoucher)
+router.put("/:id", updateVoucher)
 router.post("/check-voucher", loginMiddleware, checkVoucher);
 router.delete("/:id", remove)
 

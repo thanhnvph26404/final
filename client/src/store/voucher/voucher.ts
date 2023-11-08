@@ -26,5 +26,5 @@ const voucherSlice = createSlice({
     }
 })
 
-export const { addNewVoucher,loadVoucherList,editVoucher,deleteVoucher } = voucherSlice.actions
+export const { addNewVoucher, loadVoucherList, editVoucher, deleteVoucher } = voucherSlice.actions
 export default voucherSlice.reducer

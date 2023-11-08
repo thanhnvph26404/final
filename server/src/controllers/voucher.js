@@ -48,12 +48,12 @@ export const updateVoucher = async (req, res) => {
                 errors
             })
         }
-        const checkCategory = await categories.findById(req.body.apply);
-        if (!checkCategory) {
-            return res.status(400).json({
-                message: "danh mục không tồn tại",
-            });
-        }
+        // const checkCategory = await categories.findById(req.body.apply);
+        // if (!checkCategory) {
+        //     return res.status(400).json({
+        //         message: "danh mục không tồn tại",
+        //     });
+        // }
         const vouchers = await voucher.findByIdAndUpdate(req.params.id, req.body, { new: true })
         if (!vouchers) {
             return res.status(404).json({
@@ -128,7 +128,8 @@ export const getAll = async (req, res) => {
 
 export const getOne = async (req, res) => {
     try {
-        const data = await Voucher.findById(req.params.id).populate("apply");
+        const data = await Voucher.findById(req.params.id)
+        // .populate("apply");
 
         if (!data) {
             return res.status(404).json({

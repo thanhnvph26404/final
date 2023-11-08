@@ -13,7 +13,7 @@ const UpdateColor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    const { data } = useGetvalueattributeQuery(id)
+    const { data } = useGetvalueattributeQuery(id!)
     console.log(id, data);
 
 
