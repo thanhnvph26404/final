@@ -1,16 +1,33 @@
-import React, {  useState } from "react";
+import { useState,useEffect } from "react";
 import { BsFilter } from "react-icons/bs";
-import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowLeft,MdOutlineKeyboardArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Slider from "react-slider";
 import { Link } from "react-router-dom";
+import { useGetProductsQuery, useSortByProductQuery } from "../store/products/product.services";
+import { Iproductdata } from "../store/products/product.interface";
+import { useAppDispatch } from "../store/hook";
+
+
 type Props = {};
 
 const ListProduct = (props: Props) => {
+    const dispatch = useAppDispatch();
     const [arrange, setArrange] = useState(false);
     const [filter, setFilter] = useState(false);
     const [avaiable, setAvaiable] = useState(false);
+    const {data: productList } = useGetProductsQuery(null);
+    // console.log(productList);
 
+    const {data: sortBy} = useSortByProductQuery(null)
+    console.log(sortBy);
+    
     const [value, setValue] = useState([0, 500000]);
+   
+    
+    
+
+    
+   
 
     const handleToggle = () => {
         setAvaiable(!avaiable);
@@ -21,13 +38,13 @@ const ListProduct = (props: Props) => {
     const handleTongleFilter = () => {
         setFilter(!filter);
     };
- 
+
     return (
         <section className="">
             <button className="group fixed z-30 top-3/4 left-1/2 transform -translate-x-1/2 lg:hidden">
                 <div className=" transition-all ease-in-out hover:text-[#23314b] group-hover:bg-transparent group-hover:border-[#23314b] flex items-center rounded-full text-sm md:text-[17px] font-semibold text-white gap-2 px-8 py-3 bg-[#23314b] border-2 border-transparent">
-                <BsFilter className=" inline-blocktext-lg group-hover:text-[#23314b] " />
-                <span className="inline-block" >Bộ lọc</span>
+                    <BsFilter className=" inline-blocktext-lg group-hover:text-[#23314b] " />
+                    <span className="inline-block" >Bộ lọc</span>
                 </div>
             </button>
             <div className="mx-12 max-sm:mx-7 mt-12 mb-16">
@@ -49,17 +66,16 @@ const ListProduct = (props: Props) => {
                             className={`inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] relative `}
                             onClick={handleTongleFilter}
                         >
-                            <MdOutlineKeyboardArrowDown className={`text-[#23314b] text-xs group-hover:text-white transform transition-transform duration-300 ${
-                                filter ? "rotate-180" : ""
-                            }`} />
+                            <MdOutlineKeyboardArrowDown className={`text-[#23314b] text-xs group-hover:text-white transform transition-transform duration-300 ${filter ? "rotate-180" : ""
+                                }`} />
                             {
                                 filter && (<div className="absolute w-[302px] z-20 border rounded-lg right-0 top-[170%] py-4  bg-white">
-                                <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
-                                <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ thấp đến cao)</p>
-                                <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ cao đến thấp)</p>
-                                <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
-                                
-                            </div>)
+                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
+                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ thấp đến cao)</p>
+                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ cao đến thấp)</p>
+                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
+
+                                </div>)
                             }
                         </span>
                     </div>
@@ -75,14 +91,12 @@ const ListProduct = (props: Props) => {
                                 className="relative"
                             >
                                 <div
-                                    className={`block w-10 h-5 bg-[#23314b26]  rounded-full shadow-inner ${
-                                        avaiable ? "bg-[#23314b]" : ""
-                                    }`}
+                                    className={`block w-10 h-5 bg-[#23314b26]  rounded-full shadow-inner ${avaiable ? "bg-[#23314b]" : ""
+                                        }`}
                                 ></div>
                                 <div
-                                    className={`dot absolute left-1 top-[3px] bg-white w-3.5 h-3.5  rounded-full transition ${
-                                        avaiable ? "translate-x-[134%]" : ""
-                                    }`}
+                                    className={`dot absolute left-1 top-[3px] bg-white w-3.5 h-3.5  rounded-full transition ${avaiable ? "translate-x-[134%]" : ""
+                                        }`}
                                 ></div>
                             </label>
 
@@ -99,9 +113,8 @@ const ListProduct = (props: Props) => {
                             <div className="flex justify-between ">
                                 <label htmlFor="price">Giá</label>
                                 <span
-                                    className={`inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] transform transition-transform duration-300 ${
-                                        arrange ? "rotate-180" : ""
-                                    }`}
+                                    className={`inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] transform transition-transform duration-300 ${arrange ? "rotate-180" : ""
+                                        }`}
                                     onClick={handleTongleArrange}
                                 >
                                     <MdOutlineKeyboardArrowDown className="text-[#23314b] text-xs group-hover:text-white" />
@@ -122,7 +135,7 @@ const ListProduct = (props: Props) => {
                                     <div className="flex items-center gap-5">
                                         <label
                                             htmlFor="min"
-                                            className="border rounded-lg w-[83px] px-3 py-2.5 block flex gap-1"
+                                            className="border rounded-lg w-[83px] px-3 py-2.5  flex gap-1"
                                         >
                                             <span className="text-base  text-[#23314bb3] font-thin ">
                                                 ₫
@@ -142,7 +155,7 @@ const ListProduct = (props: Props) => {
                                         </span>
                                         <label
                                             htmlFor="max"
-                                            className="border rounded-lg w-[83px] px-3  py-2.5 block flex gap-1"
+                                            className="border rounded-lg w-[83px] px-3  py-2.5  flex gap-1"
                                         >
                                             <span className="text-base  text-[#23314bb3] font-thin ">
                                                 ₫
@@ -163,92 +176,36 @@ const ListProduct = (props: Props) => {
                         </div>
                         <hr />
                     </div>
-                    {/* list product */}   
-                    <div className="flex-1">
-                    <div className=" grid grid-cols-2 gap-x-2 gap-y-8 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
+                    {/* list product */}
+                    {(productList?.products as Iproductdata[] || []).map((product => {
+                        return  <div className="flex-1" key={product._id}>
+                                <div className="  gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
+                                    <Link className="block group" to={``}>
+                                        <div className="relative ">
+                                            <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
+                                            <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
+                                            <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
+                                        </div>
+                                        <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">{product.name}</p>
+                                        <p className="flex justify-center gap-2">
+                                            <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price}₫</span>
+                                            <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
+                                        </p>
+                                    </Link>
+                                    
+
+                                
                             </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
-                            </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
-                            </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
-                            </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
-                            </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        <Link className="block group" to={``}>
-                            <div className="relative ">
-                                <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
-                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-                                <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
-                            </div>
-                            <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">Áo Thun Nam Basic Raglan Màu Be vải Cotton phom Regular Fit</p>
-                            <p className="flex justify-center gap-2">
-                                <span className="text-[#f83a3a] text-sm md:text-base font-extralight">199.000₫</span>
-                                <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">220.000₫</span>
-                            </p>
-                        </Link>
-                        
                         </div>
-                        <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">
-                            <span className="px-5"><MdOutlineKeyboardArrowLeft /></span>
-                            <span className="px-2">1 / 2</span>
-                            <span className="px-5"><MdOutlineKeyboardArrowRight/></span>
-                        </div>
-                    </div>
+                    }))}
                 </div>
+                                <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">
+                                    <span className="px-5"><MdOutlineKeyboardArrowLeft /></span>
+                                    <span className="px-2">1 / 2</span>
+                                    <span className="px-5"><MdOutlineKeyboardArrowRight /></span>
+                                </div>
             </div>
-           
+
         </section>
     );
 };

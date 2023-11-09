@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { IProductVariant } from '../productVariant/productVariant.interface'
-import { Iproductdata } from './product.interface'
+import { IProductState, Iproductdata } from './product.interface'
 
 export const productApi = createApi({
     reducerPath: 'productApi',
@@ -46,14 +46,25 @@ export const productApi = createApi({
         ProductVariant: builder.query<IProductVariant[], void>({
             query: () => ({
                 url: `http://localhost:8080/productvariant`,
-                providesTags: ['product']
+                providesTags: ['product'],
 
             }),
 
+        }),
+        sortByProduct: builder.query({
+            query: () => ({
+                url: 'http://localhost:8080/products',
+                method: 'GET',
+                provideTags: ['product'],
+                params: {
+                    sort: 'price'
+                }
+                
+            })
         })
     })
 
 })
 
-export const { useAddProductMutation, useProductVariantQuery, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery } = productApi
+export const { useAddProductMutation, useProductVariantQuery, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery,useSortByProductQuery } = productApi
 
