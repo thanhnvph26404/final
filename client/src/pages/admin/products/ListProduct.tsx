@@ -23,10 +23,15 @@ const ListProduct = () =>
     const columns: ColumnsType<Iproductdata> = [
         {
             title: "ảnh sản phẩm",
-            dataIndex: "imgUrl",
-            key: "imgUrl",
-            render: ( text ) => <p>{ text }</p>,
-            // render: (imgUrls) => <img src={imgUrls[0]} alt="" style={{ width: 100 }} />,
+            dataIndex: "images",
+            key: "images",
+            render: ( images ) => (
+                <div>
+                    { images.map( ( image: any, index: any ) => (
+                        <img key={ index } src={ image.url } alt={ `Product Image ${ index }` } style={ { width: 100 } } />
+                    ) ) }
+                </div>
+            ),
         },
         {
             title: "tên sản phẩm",

@@ -9,8 +9,9 @@ import { generateRandomCode } from "../components/function";
 import { loginSchema } from "../schemas/login";
 import Product from "../models/products";
 import Cart from "../models/cart";
-import ProductVariants from "../models/productVariant";
 import order from "../models/order";
+import Voucher from "../models/voucher";
+import uniqid from "uniqid"
 
 
 config();
@@ -425,6 +426,7 @@ export const addToCart = async ( req, res ) =>
 
     const productInfo = await Product.findById( productId );
     const existingCart = await Cart.findOne( { userId } );
+    console.log( productInfo );
 
     const cartItem = {
       product: productId,
@@ -575,4 +577,113 @@ export const updateOderStatus = async ( req, res ) =>
 
   }
 }
+export const applyCoupon = async ( req, res ) =>
+{
+  const { _id } = req.user;
+  const { voucher } = req.body;
+  const validcoupon = await Voucher.findOne( { code: voucher } )
+  if ( validcoupon === null ) throw new Error( "mã voucher không đúng " );
+  const user = await Auth.findOne( { _id } );
+  let totals = await order.findOne( { userId: user._id } ).populate( "products.product" )
+  console.log( totals );
+  if ( totals.paymentIntent.amount )
+  {
+    console.log( totals.paymentIntent.amount );
+    let totalAfterDiscount = ( totals.paymentIntent.amount - ( totals.paymentIntent.amount * validcoupon.discount ) / 100 ).toFixed( 2 );
+    await order.findOneAndUpdate( { userId: user._id }, { totalAfterDiscount }, { new: true } );
+    res.json( totalAfterDiscount )
 
+  } else
+  {
+    throw new Error( "lỗi khi giảm giá hoặc mã giảm giá đã hết hạn" )
+  }
+
+}
+export const createOrder = async ( req, res ) =>
+{
+  const { COD, discountCode } = req.body;
+  const { _id } = req.user;
+
+  try
+  {
+    if ( !COD )
+    {
+      throw new Error( "Create cash order failed" );
+    }
+
+    const user = await Auth.findById( _id );
+    let userCart = await Cart.findOne( { userId: user._id } );
+
+    let finalAmount = 0;
+    if ( userCart.total )
+    {
+      finalAmount = userCart.total;
+    } else
+    {
+      finalAmount = userCart.total;
+    }
+
+    // Check if a discount code is provided
+    if ( discountCode )
+    {
+      // Apply the discount code and update the final amount
+      const discount = await applyDiscountCode( user._id, finalAmount, discountCode );
+      console.log( discount );
+      finalAmount -= discount;
+    }
+
+    let newOrder = await new order( {
+      products: userCart.items,
+      paymentIntent: {
+        id: uniqid(),
+        method: "COD",
+        amount: finalAmount,
+        status: "thanh toán khi nhận hàng",
+        created: Date.now(),
+        currency: "VND",
+      },
+      userId: user._id,
+      status: "thanh toán khi nhận hàng",
+    } ).save();
+
+    let update = userCart.items.map( ( item ) =>
+    {
+      return {
+        updateOne: {
+          filter: { _id: item.product._id },
+          update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+        },
+      };
+    } );
+
+    const updated = await Product.bulkWrite( update, {} );
+    return res.json( { message: "success" } );
+  } catch ( error )
+  {
+    throw new Error( error );
+  }
+};
+
+// Function to apply discount code and return the discount amount
+const applyDiscountCode = async ( userId, amount, discountCode ) =>
+{
+  try
+  {
+    const validCoupon = await Voucher.findOne( { code: discountCode } );
+    if ( !validCoupon )
+    {
+      throw new Error( "Mã voucher không đúng" );
+    }
+
+    // Calculate the discount amount
+    const discount = ( amount * validCoupon.discount ) / 100;
+
+    // Update the order total with the discount
+    await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
+
+    return discount;
+  } catch ( error )
+  {
+    throw new Error( error );
+  }
+};

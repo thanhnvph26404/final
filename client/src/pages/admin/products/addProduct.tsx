@@ -18,10 +18,7 @@ const AddProduct = () =>
     const { data: categories } = useGetCategoryListQuery( [] );
     const { data: brands } = useGetBrandListQuery( [] );
     const { data: size } = useGetsizeListQuery( [] )
-    console.log( size );
-
     const { data: color } = useGetcolorListQuery( [] )
-    console.log( color );
 
 
     const [ addProductMutation ] = useAddProductMutation();
@@ -56,9 +53,9 @@ const AddProduct = () =>
         let newurls = [];
 
         // Check if data.images exists and has a fileList property
-        if ( data.images && data.images.fileList )
+        if ( data.imgUrl && data.imgUrl.fileList )
         {
-            newurls = await Promise.all( data.images.fileList.map( async ( item: any ) =>
+            newurls = await Promise.all( data.imgUrl.fileList.map( async ( item: any ) =>
             {
                 const formData = new FormData();
                 formData.append( "image", item.originFileObj );
@@ -67,14 +64,26 @@ const AddProduct = () =>
                     `https://api.imgbb.com/1/upload?key=${ API_key }`,
                     formData
                 );
-                return { uid: apiResponse.data.data.uid, url: apiResponse.data.data.url };
+                return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
             } ) )
+            console.log( newurls );
         }
+        // console.log( newurls );
+        console.log( data.imgUrl.fileList );
+
+
 
         const newProduct = {
-            ...data,
+            name: data.name,
+            price: data.price,
+            original_price: data.original_price,
+            description: data.description,
+            brand: data.brand,
             images: newurls,
+            category: data.category,
+            ProductVariants: data.ProductVariants
         };
+        console.log( newProduct );
 
         try
         {

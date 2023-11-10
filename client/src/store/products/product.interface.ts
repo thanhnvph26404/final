@@ -9,7 +9,7 @@ export interface Iproductdata
     description: string;
     brand: string | undefined
     images: Image;
-    ProductVariants: IProductVariants
+    ProductVariants: string[]
     category: string | undefined
 
 }

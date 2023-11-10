@@ -5,7 +5,7 @@ import { errorMessages } from "./component/function";
 export const voucherSchema = joi.object( {
     name: joi.string().required().messages( errorMessages( "Tên" ) ),
     code: joi.string().required().messages( errorMessages( "Mã" ) ),
-    discount: joi.string().required().messages( errorMessages( "Giảm giá" ) ),
+    discount: joi.number().required().messages( errorMessages( "Giảm giá" ) ),
     limit: joi.number().min( 0 ).required().messages( errorMessages( "Giới hạn" ) ),
     // apply: joi
     //     .string()

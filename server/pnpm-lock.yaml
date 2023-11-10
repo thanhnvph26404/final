@@ -65,6 +65,9 @@ dependencies:
   pnpm:
     specifier: ^8.7.0
     version: 8.7.0
+  uniqid:
+    specifier: ^5.4.0
+    version: 5.4.0
   uuid:
     specifier: ^9.0.0
     version: 9.0.0
@@ -1754,6 +1757,10 @@ packages:
 
   /underscore@1.12.1:
     resolution: {integrity: sha512-hEQt0+ZLDVUMhebKxL4x1BTtDY7bavVofhZ9KZ4aI26X9SRaE+Y3m83XUL1UP2jn8ynjndwCCpEHdUG+9pP1Tw==}
+    dev: false
+
+  /uniqid@5.4.0:
+    resolution: {integrity: sha512-38JRbJ4Fj94VmnC7G/J/5n5SC7Ab46OM5iNtSstB/ko3l1b5g7ALt4qzHFgGciFkyiRNtDXtLNb+VsxtMSE77A==}
     dev: false
 
   /universalify@0.1.2:

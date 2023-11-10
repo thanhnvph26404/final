@@ -102,7 +102,7 @@ export const router = createBrowserRouter( [
 
             { path: "", element: <Navigate to={ 'home' } /> },
             { path: 'home', element: <HomePage /> },
-            { path: '/home/product-detail', element: <ProductDetail /> },
+            { path: '/home/product-detail/:id', element: <ProductDetail /> },
 
             { path: 'cart', element: <CartPage /> },
             { path: 'payment', element: <PaymentPage /> },
