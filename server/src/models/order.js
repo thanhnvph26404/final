@@ -13,11 +13,10 @@ const orderSchema = new mongoose.Schema( {
     },
     products: [
         {
-            productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+            product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
             name: String,
             quantity: {
                 type: Number,
-                required: true,
             },
             images: [ {
                 uid: String,
@@ -25,7 +24,6 @@ const orderSchema = new mongoose.Schema( {
             } ],
             price: {
                 type: Number,
-                required: true,
             },
             hasReviewed: {
                 type: Boolean,
@@ -35,16 +33,12 @@ const orderSchema = new mongoose.Schema( {
     ],
     total: {
         type: Number,
-        required: true
-    },
-    deposit: {
-        type: Number,
-        default: 0
     },
     status: {
         type: String,
         default: "đang xử lý",
         enum: [
+            "thanh toán khi nhận hàng",
             "Chờ thanh toán",
             "Đang xử lý",
             "Đang giao hàng",
@@ -54,26 +48,28 @@ const orderSchema = new mongoose.Schema( {
             "Đã hoàn thành",
         ],
     },
+    totalAfterDiscount: {
+        type: Number
+    },
+    paymentIntent: {},
     phone: {
         type: String,
-        required: true
     },
     address: {
         type: String,
-        required: true
     },
-    notes: {
-        type: String
-    },
-    paymentId: {
-        type: String
-    },
-    paymentCode: {
-        type: String
-    },
-    payerId: {
-        type: String
-    }
+    // notes: {
+    //     type: String
+    // },
+    // paymentId: {
+    //     type: String
+    // },
+    // paymentCode: {
+    //     type: String
+    // },
+    // payerId: {
+    //     type: String
+    // }
 },
     { timestamps: true, versionKey: false } );
 export default mongoose.model( "order", orderSchema );

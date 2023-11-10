@@ -1,5 +1,25 @@
 import mongoose from "mongoose";
 
+const productVariantSchema = new mongoose.Schema(
+  {
+    size: {
+      type: String,
+      required: true,
+    },
+    color: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      min: 0,
+      required: true,
+    },
+  },
+
+  { _id: false }
+);
+
 const productSchema = new mongoose.Schema(
   {
     sold: {
@@ -28,27 +48,20 @@ const productSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
       required: true,
-
     },
     images: [
       {
         uid: {
           type: String,
-          required: true,
         },
         url: {
           type: String,
-          required: true,
         },
       },
     ],
-    ProductVariants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "ProductVariant",
-        required: true,
-      }
-    ],
+
+    ProductVariants: [ productVariantSchema ], // Sử dụng mô hình biến thể sản phẩm
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",

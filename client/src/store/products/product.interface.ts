@@ -8,11 +8,16 @@ export interface Iproductdata
     original_price: number,
     description: string;
     brand: string | undefined
-    imgUrl: Image;
-    ProductVariants: IProductVariants
+    images: Image;
+    ProductVariants: string[]
     category: string | undefined
 
 }
+export interface IProductState{
+    products: Iproductdata[],
+    sortBy: string
+}
+
 export type IProductVariants = {
     _id?: string;
     AttributeValues: string;

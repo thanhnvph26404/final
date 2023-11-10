@@ -1,7 +1,33 @@
 import { LockOutlined } from '@ant-design/icons'
+import { useAddToCartMutation } from '../../store/Auth/Auth.services';
+import { useEffect, useState } from 'react';
+import { ICartData } from '../../store/Cart/cartInterface';
+import { message } from 'antd';
 
 
-const CartPage = () => {
+const CartPage = () =>
+{
+    // const [ addtocart ] = useAddToCartMutation()
+    // const [ cartUser, setCurrentUser ] = useState<ICartData | null>( null );
+    // console.log( cartUser );
+    // const token = localStorage.getItem( "token" );
+
+    // useEffect( () =>
+    // {
+    //     if ( token )
+    //     {
+    //         addtocart( token )
+    //             .unwrap()
+    //             .then( ( response ) =>
+    //             {
+    //                 setCurrentUser( response.data );
+    //             } )
+    //             .catch( ( error ) =>
+    //             {
+    //                 message.error( error.data.message );
+    //             } );
+    //     }
+    // }, [ addtocart, token ] );
     return (
         <div className="p-4">
             <h1 className="text-center text-4xl sm:text-5xl py-4 font-semibold text-[#23314B]">Giỏ hàng</h1>
@@ -57,8 +83,7 @@ const CartPage = () => {
 
                     <hr className='my-4' />
 
-                    {/* Các sản phẩm khác */}
-                    {/* ... */}
+
                 </div>
 
                 <div className="w-full sm:w-1/4 mt-4 sm:mt-0">

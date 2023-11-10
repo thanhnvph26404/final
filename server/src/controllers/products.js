@@ -23,19 +23,57 @@ export const create = async ( req, res ) =>
             } );
         }
 
-        const data = await Product.create( req.body );
+        const variantsToBeAdded = req.body.ProductVariants;
 
-        if ( !data )
-        {
-            return res.status( 404 ).json( {
-                message: "Thêm sản phẩm thất bại",
-            } );
-        }
-
-        return res.status( 200 ).json( {
-            message: "Thêm sản phẩm thành công",
-            data: data,
+        // Check if product variant already exists with the same size and color
+        const existingVariant = await Product.findOne( {
+            "ProductVariants.size": variantsToBeAdded[ 0 ].size,
+            "ProductVariants.color": variantsToBeAdded[ 0 ].color,
         } );
+
+        if ( existingVariant )
+        {
+            // If variant exists, update the quantity or add new variant if not exists
+            variantsToBeAdded.forEach( ( variantToBeAdded ) =>
+            {
+                const matchedVariantIndex = existingVariant.ProductVariants.findIndex(
+                    ( variant ) => variant.size === variantToBeAdded.size && variant.color === variantToBeAdded.color
+                );
+
+                if ( matchedVariantIndex !== -1 )
+                {
+                    // If variant already exists, update the quantity
+                    existingVariant.ProductVariants[ matchedVariantIndex ].quantity += variantToBeAdded.quantity;
+                } else
+                {
+                    // If variant does not exist, add a new variant
+                    existingVariant.ProductVariants.push( variantToBeAdded );
+                }
+            } );
+
+            await existingVariant.save();
+            return res.status( 200 ).json( {
+                message: "Gộp biến thể sản phẩm thành công",
+                data: existingVariant,
+            } );
+        } else
+        {
+            // If variant does not exist, create a new product with variants
+            const data = await Product.create( req.body );
+
+            if ( data )
+            {
+                return res.status( 200 ).json( {
+                    message: "Thêm sản phẩm thành công",
+                    data: data,
+                } );
+            } else
+            {
+                return res.status( 404 ).json( {
+                    message: "Thêm sản phẩm thất bại",
+                } );
+            }
+        }
     } catch ( error )
     {
         return res.status( 500 ).json( {
@@ -43,6 +81,11 @@ export const create = async ( req, res ) =>
         } );
     }
 };
+
+
+
+
+
 export const getAll = async ( req, res ) =>
 {
     try
@@ -54,7 +97,7 @@ export const getAll = async ( req, res ) =>
         queryStr = queryStr.replace( /\b(gte|gt|lte|lt)\b/g, ( match ) => `$${ match }` );
         let query = Product.find( JSON.parse( queryStr ) );
 
-        // Xắp xếp
+        // Sắp xếp
         if ( req.query.sort )
         {
             const sortBy = req.query.sort.split( "," ).join( " " );
@@ -81,11 +124,7 @@ export const getAll = async ( req, res ) =>
         // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
         query = query
             .populate( "category" )
-            .populate( "brand" )
-            .populate( {
-                path: "ProductVariants",
-                populate: "AttributeValues"
-            } );
+            .populate( "brand" ).populate( "ProductVariants" )
         const products = await query;
 
         res.status( 200 ).json( {
@@ -102,13 +141,14 @@ export const getAll = async ( req, res ) =>
 
 export const getOne = async ( req, res ) =>
 {
-    console.log(req.params.id);
+    console.log( req.params.id );
     try
     {
         const data = await Product.findById( req.params.id )
             .populate( "category" ).populate( "brand" ).
-            populate( { path: "ProductVariants", populate: "AttributeValues" } )
-        
+            populate( "ProductVariants" )
+
+
         if ( !data || data.length === 0 )
         {
             return res.status( 404 ).json( {
@@ -148,7 +188,8 @@ export const updateProduct = async ( req, res ) =>
         }
         const data = await Product.findByIdAndUpdate( req.params.id, req.body, {
             new: true
-        } );
+        } )
+            ;
         if ( !data )
         {
             return res.status( 404 ).json( {

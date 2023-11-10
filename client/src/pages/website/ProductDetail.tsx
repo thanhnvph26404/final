@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useEffect } from "react";
-import { useParams } from 'react-router-dom';
-import { useGetProductQuery } from "../../store/products/product.services";
-
 import Popup from "reactjs-popup"
 import 'reactjs-popup/dist/index.css';
+import { useParams } from "react-router-dom";
+import { useGetProductQuery } from "../../store/products/product.services";
+import { Iproductdata } from "../../store/products/product.interface";
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -24,17 +24,20 @@ const ProductDetail = () => {
     //     return <p>Error...</p>
     // }
 
+
+    const [mauSac, setmauSac] = useState('Trang');
+
     const [quantity, setQuantity] = useState(0);
     const [arrange, setArrange] = useState(false);
     const [progress, setProgress] = useState(0);
     const [kichCo, setKichCo] = useState('M');
-
     const [isFormVisible, setIsFormVisible] = useState(false);
-    const [mauSac, setmauSac] = useState('Trang');
+    console.log(productdata);
 
     const handleToggleForm = () => {
         setIsFormVisible(!isFormVisible);
     };
+
 
     const handleChangeKichCo = (newSize: any) => {
         setKichCo(newSize);
@@ -68,7 +71,7 @@ const ProductDetail = () => {
         return () => {
             clearInterval(interval);
         };
-    }, [progress])
+    }, [progress]);
 
     return (
         <div className=" items-center">
