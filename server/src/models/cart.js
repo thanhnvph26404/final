@@ -1,39 +1,49 @@
 import mongoose from "mongoose";
 
-const cartItemSchema = new mongoose.Schema( {
-    productVariantId: { type: mongoose.Types.ObjectId, ref: 'ProductVariant' },
-    productId: { type: mongoose.Types.ObjectId, ref: 'Product' },
-    quantity: Number,
-    productInfo: {
-        images: [ {
-            uid: String,
-            url: String,
-        } ],
-        name: String,
-        brand: { type: mongoose.Types.ObjectId, ref: 'Brand' },
-        category: { type: mongoose.Types.ObjectId, ref: 'Category' }
-    },
-    productVariantInfo: {
-        attributeValues: [ {
-            attribute: { type: mongoose.Types.ObjectId, ref: 'Attribute' },
-
-        } ]
-    }
-} );
-
 const cartSchema = new mongoose.Schema( {
     userId: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Tham chiếu đến model User hoặc bạn có thể đổi thành tên model người dùng tương ứng
+        required: true,
     },
-    voucherId: {
-        type: mongoose.Types.ObjectId,
-        ref: "Voucher",
-        default: null
+    items: [
+        {
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Product", // Tham chiếu đến model Product hoặc bạn có thể đổi thành tên model sản phẩm tương ứng
+                required: true,
+            },
+            productVariant: {
+                size: String,
+                color: String,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+            },
+            productInfo: {
+                images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
+                name: String,
+                brand: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Brand", // Tham chiếu đến model Brand hoặc bạn có thể đổi thành tên model thương hiệu tương ứng
+                },
+                price: {
+                    type: Number,
+                    required: true,
+                },
+                category: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Category", // Tham chiếu đến model Category hoặc bạn có thể đổi thành tên model danh mục tương ứng
+                },
+            },
+        },
+    ],
+    total: {
+        type: Number,
+        default: 0,
     },
-    total: Number,
-    items: [ cartItemSchema ]
-}, { timestamps: true, versionKey: false } );
+} );
+
 
 export default mongoose.model( "Cart", cartSchema );

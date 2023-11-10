@@ -1,45 +1,42 @@
 
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
-import { useEditvalueattributeMutation, useGetvalueattributeQuery } from "../../../store/valueAttribute/valueAttribute.services";
+import { useEditColorMutation, useGetColorQuery } from "../../../store/valueAttribute/colorsevice";
+import { useEffect } from "react";
+import { toastSuccess } from "../../../hook/toastify";
 
 
-interface IForm {
-    _id: string;
-    value: string;
-}
+type FieldType = {
+    color: string
+};
+const Updatecolor = () =>
+{
+    const { id } = useParams<{ id: any }>();
 
-const UpdateSize = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
-    const { data } = useGetvalueattributeQuery(id)
-    const [editvalueattribute] = useEditvalueattributeMutation()
-    const [form] = Form.useForm();
+    const { data: colordata } = useGetColorQuery( id )
+    const [ editcolor ] = useEditColorMutation()
+    const onFinish = async ( values: any ) =>
+    {
+        const response = await editcolor( { ...values, _id: id } ).unwrap().then( () =>
+        {
+            console.log( response )
 
+            toastSuccess( "ok"
 
-    form.setFieldsValue({
-        _id: data?._id,
-        value: data?.value,
-    })
-
-    console.log(data);
-
-    const onFinish = (values: IForm) => {
-
-        const newSize = {
-            _id: values._id,
-            attribute: "65311f8034441c10b2810469",
-            value: values.value,
-        };
-        console.log(newSize);
-
-        editvalueattribute(newSize);
-        message.success("cập nhật Màu thành công");
-        navigate("/admin/color");
-
+            )
+        } )
     };
-    const onFinishFailed = (values: any) => {
-        console.log("errors", values);
+    const [ form ] = Form.useForm();
+
+    useEffect( () =>
+    {
+        form.setFieldsValue( colordata )
+    }, [ colordata ] )
+
+    const onFinishFailed = ( values: any ) =>
+    {
+        console.log( "errors", values );
     };
     const validateMessages = {
         required: '${label} is required!',
@@ -52,43 +49,35 @@ const UpdateSize = () => {
         }
     };
     return (
-        <div className="w-100" style={{ marginTop: 100, backgroundColor: "white" }}>
-            <h3 style={{ marginBottom: 50, marginTop: 20, color: "black" }}>
-                Update Category
+        <div className="w-100" style={ { marginTop: 100, backgroundColor: "white" } }>
+            <h3 style={ { marginBottom: 50, marginTop: 20, color: "black" } }>
+                Update color
             </h3>
             <Form
 
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                form={form}
-                style={{ maxWidth: 800 }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                validateMessages={validateMessages}
+                labelCol={ { span: 8 } }
+                wrapperCol={ { span: 16 } }
+                form={ form }
+                style={ { maxWidth: 800 } }
+                onFinish={ onFinish }
+                onFinishFailed={ onFinishFailed }
+                validateMessages={ validateMessages }
             >
-                <Form.Item
-                    label=""
-                    name="_id"
-                    initialValue={id}
-                    style={{ display: "none" }}
-                    rules={[{ required: true, message: "vui lòng nhập Màu !" }]}
-                >
-                    <Input />
-                </Form.Item>
 
-                <Form.Item
+
+                <Form.Item<FieldType>
                     label="Tên màu"
-                    name="value"
-                    rules={[
+                    name="color"
+                    rules={ [
                         { required: true, message: "vui lòng nhập Màu !" },
                         { max: 255 },
-                    ]}
+                    ] }
                     hasFeedback
                 >
                     <Input />
                 </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                <Form.Item wrapperCol={ { offset: 8, span: 16 } }>
                     <Button type="primary" htmlType="submit" className="bg-blue-500">
                         Cập nhập màu
                     </Button>
@@ -98,4 +87,4 @@ const UpdateSize = () => {
     );
 };
 
-export default UpdateSize;
+export default Updatecolor;

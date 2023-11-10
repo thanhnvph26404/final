@@ -1,5 +1,7 @@
-export interface Image {
-    uid: string
+export interface Image
+{
+
+    uid: string,
     url: string
 }
 
