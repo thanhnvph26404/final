@@ -44,6 +44,7 @@ import Rules from "./pages/website/Policy/Rules";
 import Payment from "./pages/website/Payment";
 
 import AddProduct from "./pages/admin/products/addProduct";
+import OrderSuccess from "./pages/website/OrderSuccess";
 
 
 
@@ -100,6 +101,7 @@ export const router = createBrowserRouter([
             { path: 'cart', element: <CartPage /> },
             { path: 'payment', element: <PaymentPage /> },
             { path: 'payments', element: <Payment /> },
+            // { path: 'ordersuccess', element: <OrderSuccess /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
             { path: 'inspection', element: <Inspection /> },
@@ -176,6 +178,7 @@ export const router = createBrowserRouter([
             { path: "password/reset-password/:randomString", element: <ResetPage /> },
             { path: 'login', element: <LoginPage /> },
             { path: 'signup', element: <SignupPage /> },
+            { path: 'ordersuccess', element: <OrderSuccess /> },
 
         ],
 
