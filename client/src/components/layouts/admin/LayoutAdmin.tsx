@@ -47,7 +47,7 @@ const items = [
       },
       {
         key: '7',
-        label: 'Voucher',
+        label: 'Mã giảm giá',
         path: 'vouchers',
       },
       {
