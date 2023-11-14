@@ -177,10 +177,11 @@ const ListProduct = (props: Props) => {
                         <hr />
                     </div>
                     {/* list product */}
-                    {(productList?.products as Iproductdata[] || []).map((product => {
-                        return  <div className="flex-1" key={product._id}>
-                                <div className="  gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
-                                    <Link className="block group" to={``}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 z-10">
+                    {(productList?.products as Iproductdata[] || []).map((product) => {
+                        return  <div className=" flex-1" key={product._id}>
+                                <div className="gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
+                                    <Link className="" to={``}>
                                         <div className="relative ">
                                             <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
                                             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -197,7 +198,8 @@ const ListProduct = (props: Props) => {
                                 
                             </div>
                         </div>
-                    }))}
+                    })}
+                    </div>
                 </div>
                                 <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">
                                     <span className="px-5"><MdOutlineKeyboardArrowLeft /></span>

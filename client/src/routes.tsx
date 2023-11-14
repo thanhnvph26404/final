@@ -43,6 +43,7 @@ import Rules from "./pages/website/Policy/Rules";
 import Payment from "./pages/website/Payment";
 
 import AddProduct from "./pages/admin/products/addProduct";
+import OrderList from "./pages/admin/orders/OrderList";
 
 import OrderSuccess from "./pages/website/OrderSuccess";
 
@@ -215,9 +216,13 @@ export const router = createBrowserRouter( [
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
+
+                    { path: 'orders', element: <OrderList /> },
+                                
                     // { path: 'size', element: <ListSize /> },
                     // { path: 'size/add', element: <AddSize /> },
                     // { path: 'size/update/:id', element: <UpdateSize /> },
+
                     { path: 'color', element: <ListColor /> },
                     { path: 'color/add', element: <AddColor /> },
                     { path: 'color/update/:id', element: <Updatecolor /> },
