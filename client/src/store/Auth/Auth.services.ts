@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { IUser, Login, Signup } from "./Auth.interface"
+import { ICartData } from "../Cart/cartInterface";
 const authApi = createApi( {
     reducerPath: "auth",
     tagTypes: [ "Auth" ],
@@ -182,10 +183,27 @@ const authApi = createApi( {
             },
             invalidatesTags: [ 'Auth' ],
         } ),
+        addToCart: builder.mutation( {
+            query: ( data: { productId: string | null, size: string | null, color: string | null, quantity: number | null } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/add-to-cart`,
+                    method: "POST",
+                    body: data,
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+
+            invalidatesTags: [ "Auth" ],
+        } ),
+
     } )
 } )
 export const {
-    useLoginMutation, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useAddToCartMutation, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

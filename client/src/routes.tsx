@@ -27,12 +27,11 @@ import PurchaseHistory from "./pages/website/PurchaseHistory";
 import CartPage from "./pages/website/CartPage";
 
 import PaymentPage from "./pages/website/PaymentPage";
-import ListSize from "./pages/admin/size/listSize";
-import AddSize from "./pages/admin/size/addSize";
-import UpdateSize from "./pages/admin/size/updateSize";
+// import ListSize from "./pages/admin/size/listSize";
+// import AddSize from "./pages/admin/size/addSize";
+// import UpdateSize from "./pages/admin/size/updateSize";
 import ListColor from "./pages/admin/color/ListColor";
 import AddColor from "./pages/admin/color/AddColor";
-import UpdateColor from "./pages/admin/size/updateSize";
 import ProductList from "./pages/admin/products/ListProduct";
 import ProductDetail from "./pages/website/ProductDetail";
 import Inspection from "./pages/website/Policy/Inspection";
@@ -46,6 +45,9 @@ import Payment from "./pages/website/Payment";
 import AddProduct from "./pages/admin/products/addProduct";
 import OrderList from "./pages/admin/orders/OrderList";
 
+import OrderSuccess from "./pages/website/OrderSuccess";
+
+import Updatecolor from "./pages/admin/color/UpdateColor";
 
 
 
@@ -53,54 +55,64 @@ import OrderList from "./pages/admin/orders/OrderList";
 
 
 
-const PriviteRouter = ({ isAuth }: any) => {
+
+
+const PriviteRouter = ( { isAuth }: any ) =>
+{
     const navigate = useNavigate()
-    const [getUser] = useGetUserByTokenMutation();
+    const [ getUser ] = useGetUserByTokenMutation();
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem( "token" )
 
-    useEffect(() => {
-        if (token) {
-            getUser(token)
+    useEffect( () =>
+    {
+        if ( token )
+        {
+            getUser( token )
                 .unwrap()
-                .then((response) => {
-                    console.log(response);
+                .then( ( response ) =>
+                {
+                    console.log( response );
 
-                    if (response.data.role === "Admin") {
-                        navigate("/admin")
-                    } else {
+                    if ( response.data.role === "Admin" )
+                    {
+                        navigate( "/admin" )
+                    } else
+                    {
 
-                        navigate("*")
+                        navigate( "*" )
                     }
 
-                })
-                .catch((error) => {
-                    console.log(error);
+                } )
+                .catch( ( error ) =>
+                {
+                    console.log( error );
 
-                    toastError("lỗi thao tác")
-                });
+                    toastError( "lỗi thao tác" )
+                } );
         }
-    }, [getUser, token]);
+    }, [ getUser, token ] );
 
-    return token ? <Outlet /> : <Navigate to={"/login"} />
+    return token ? <Outlet /> : <Navigate to={ "/login" } />
 
 }
 
 
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter( [
     {
         element: <LayoutWebsite />,
         children: [
 
 
-            { path: "", element: <Navigate to={'home'} /> },
+            { path: "", element: <Navigate to={ 'home' } /> },
             { path: 'home', element: <HomePage /> },
-            { path: '/home/product-detail', element: <ProductDetail /> },
+            { path: '/home/product-detail/:id', element: <ProductDetail /> },
 
             { path: 'cart', element: <CartPage /> },
             { path: 'payment', element: <PaymentPage /> },
             { path: 'payments', element: <Payment /> },
+            // { path: 'ordersuccess', element: <OrderSuccess /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
             { path: 'inspection', element: <Inspection /> },
@@ -117,11 +129,11 @@ export const router = createBrowserRouter([
                 path: "profile",
                 element: (
                     <YourComponent>
-                        {(currentUser) => (
+                        { ( currentUser ) => (
                             <>
-                                <Profiles imageUser={undefined} profiles={[]} />
+                                <Profiles imageUser={ undefined } profiles={ [] } />
                             </>
-                        )}
+                        ) }
                     </YourComponent>
                 ),
                 children: [
@@ -130,9 +142,9 @@ export const router = createBrowserRouter([
                         path: "account",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
+                                { ( currentUser ) => (
                                     <Account />
-                                )}
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -143,9 +155,9 @@ export const router = createBrowserRouter([
                         path: "information",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <Information currentUser={currentUser} />
-                                )}
+                                { ( currentUser ) => (
+                                    <Information currentUser={ currentUser } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -153,9 +165,9 @@ export const router = createBrowserRouter([
                         path: "order-address",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <OrderAddress currentUser={currentUser} />
-                                )}
+                                { ( currentUser ) => (
+                                    <OrderAddress currentUser={ currentUser } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -165,9 +177,9 @@ export const router = createBrowserRouter([
                         path: "change-password",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <Changepassword emailUser={currentUser?.email} />
-                                )}
+                                { ( currentUser ) => (
+                                    <Changepassword emailUser={ currentUser?.email } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -177,6 +189,7 @@ export const router = createBrowserRouter([
             { path: "password/reset-password/:randomString", element: <ResetPage /> },
             { path: 'login', element: <LoginPage /> },
             { path: 'signup', element: <SignupPage /> },
+            { path: 'ordersuccess', element: <OrderSuccess /> },
 
         ],
 
@@ -187,12 +200,12 @@ export const router = createBrowserRouter([
 
     {
         path: '/admin',
-        element: <PriviteRouter token={false} />,
+        element: <PriviteRouter token={ false } />,
         children: [
             {
                 element: <LayoutAdmin />,
                 children: [
-                    { path: "", element: <Navigate to={'dashboard'} /> },
+                    { path: "", element: <Navigate to={ 'dashboard' } /> },
                     { path: 'dashboard', element: <DashboardPage /> },
                     { path: 'category', element: <CategoryList /> },
                     { path: 'products', element: <ProductList /> },
@@ -203,14 +216,16 @@ export const router = createBrowserRouter([
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
+
                     { path: 'orders', element: <OrderList /> },
-                    
-                    { path: 'size', element: <ListSize /> },
-                    { path: 'size/add', element: <AddSize /> },
-                    { path: 'size/update/:id', element: <UpdateSize /> },
+                                
+                    // { path: 'size', element: <ListSize /> },
+                    // { path: 'size/add', element: <AddSize /> },
+                    // { path: 'size/update/:id', element: <UpdateSize /> },
+
                     { path: 'color', element: <ListColor /> },
                     { path: 'color/add', element: <AddColor /> },
-                    { path: 'color/update/:id', element: <UpdateColor /> },
+                    { path: 'color/update/:id', element: <Updatecolor /> },
                     { path: 'products', element: <ListProduct /> },
                     { path: 'products/add', element: <AddProduct /> },
                 ]
@@ -221,4 +236,4 @@ export const router = createBrowserRouter([
         path: '*',
         element: <NotfoundPage />
     }
-])
+] )

@@ -8,8 +8,8 @@ export interface Iproductdata
     original_price: number,
     description: string;
     brand: string | undefined
-    imgUrl: Image;
-    ProductVariants: IProductVariants
+    images: Image;
+    ProductVariants: string[]
     category: string | undefined
 
 }
