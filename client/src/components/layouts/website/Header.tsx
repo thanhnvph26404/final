@@ -279,7 +279,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
               ) }
 
               <Link className="ml-2 h-6 w-6" to="">
-                <Link to="">
+                <Link to="cart">
                   <span className="inline-block">
                     <LiaShoppingBasketSolid className="w-6 h-6" />
                   </span>

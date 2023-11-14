@@ -1,7 +1,7 @@
 import express, { Router } from "express"
 
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
-import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOderStatus } from "../controllers/auth"
+import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOderStatus, createOrder, applyCoupon } from "../controllers/auth"
 
 const router = express.Router()
 router.post( '/register', register )
@@ -19,6 +19,8 @@ router.post( "/get-user-token", authMiddlware, getUserByToken )
 router.put( '/updateUser', authMiddlware, updateUser )
 router.delete( "/emptyCart", authMiddlware, emptyCart )
 router.put( "/update-order/:id", authMiddlware, isAdmin, updateOderStatus )
+router.post( "/creatOrder", authMiddlware, createOrder )
+router.post( "/applycoupon", authMiddlware, applyCoupon )
 
 
 

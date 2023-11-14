@@ -5,8 +5,8 @@ export const productSchema = joi
   .object( {
     sold: joi
       .number()
-      .min(0)
-      .default(0)
+      .min( 0 )
+      .default( 0 )
       .messages( errorMessages( "đã bán" ) ),
     name: joi.
       string()
@@ -25,17 +25,17 @@ export const productSchema = joi
       .string()
       .required()
       .messages( errorMessages( "Mô tả" ) ),
-    images: joi
-      .array()
-      .min( 1 )
-      .required()
-      .items(
-        joi.object( {
-          uid: joi.string().required().messages( errorMessages( "Uid" ) ),
-          url: joi.string().required().messages( errorMessages( "Đường dẫn" ) ),
-        } )
-      )
-      .messages( errorMessages( "Ảnh" ) ),
+    // images: joi
+    //   .array()
+    //   .min( 1 )
+    //   .required()
+    //   .items(
+    //     joi.object( {
+    //       uid: joi.string().required().messages( errorMessages( "Uid" ) ),
+    //       url: joi.string().required().messages( errorMessages( "Đường dẫn" ) ),
+    //     } )
+    //   )
+    // .messages( errorMessages( "Ảnh" ) ),
     ProductVariants: joi
       .array()
       .required(),

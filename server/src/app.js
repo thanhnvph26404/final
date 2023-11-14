@@ -11,10 +11,13 @@ import categoryRouter from "./routes/categories";
 import uploadRouter from "./routes/upload";
 import contactRouter from "./routes/contact";
 import brandRouter from "./routes/brand";
-import attributeRouter from "./routes/atribute";
+import attributeRouter from "./routes/color";
 import valueattributeRouter from "./routes/valueattibute";
 import productvariantRouter from "./routes/productvariant";
 import orderRouter from "./routes/order";
+import size from "./routes/size";
+import color from "./routes/color";
+
 // import cartRouter from "./routes/cart";
 
 
@@ -45,6 +48,8 @@ app.use( "/attribute", attributeRouter );
 app.use( "/valueattribute", valueattributeRouter );
 app.use( "/productvariant", productvariantRouter );
 app.use( "/order", orderRouter );
+app.use( "/color", color );
+app.use( "/size", size );
 
 
 
