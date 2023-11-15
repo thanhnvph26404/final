@@ -14,31 +14,50 @@ const orderSchema = new mongoose.Schema( {
     products: [
         {
             product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-            name: String,
-            quantity: {
-                type: Number,
-            },
-            images: [ {
-                uid: String,
-                url: String,
-            } ],
-            price: {
-                type: Number,
-            },
             hasReviewed: {
                 type: Boolean,
                 default: false, // Ban đầu, đánh dấu là chưa đánh giá
+            },
+            productVariant: {
+                size: String,
+                color: String,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+            },
+            productInfo: {
+                images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
+                name: String,
+                brand: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Brand", // Tham chiếu đến model Brand hoặc bạn có thể đổi thành tên model thương hiệu tương ứng
+                },
+                price: {
+                    type: Number,
+                    required: true,
+                },
+                category: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "Category", // Tham chiếu đến model Category hoặc bạn có thể đổi thành tên model danh mục tương ứng
+                },
             },
         }
     ],
     total: {
         type: Number,
     },
+    paymentStatus: {
+        type: String,
+        default: "thanh toán khi nhận hàng",
+        enum: [ "thanh toán khi nhận hàng", "momo" ]
+
+
+    },
     status: {
         type: String,
-        default: "đang xử lý",
+        default: "Đang xử lý",
         enum: [
-            "thanh toán khi nhận hàng",
             "Chờ thanh toán",
             "Đang xử lý",
             "Đang giao hàng",

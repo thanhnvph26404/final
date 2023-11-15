@@ -17,6 +17,8 @@ import productvariantRouter from "./routes/productvariant";
 import orderRouter from "./routes/order";
 import size from "./routes/size";
 import color from "./routes/color";
+// import Payment from "./routes/payment";
+
 
 // import cartRouter from "./routes/cart";
 
@@ -50,6 +52,8 @@ app.use( "/productvariant", productvariantRouter );
 app.use( "/order", orderRouter );
 app.use( "/color", color );
 app.use( "/size", size );
+// app.use( "/payment", Payment );
+
 
 
 

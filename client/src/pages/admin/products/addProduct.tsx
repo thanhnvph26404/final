@@ -73,7 +73,7 @@ const AddProduct = () =>
 
 
 
-        const newProduct = {
+        const newProduct: any = {
             name: data.name,
             price: data.price,
             original_price: data.original_price,
@@ -94,9 +94,9 @@ const AddProduct = () =>
             {
                 navigate( '/admin/products' );
             } );
-        } catch ( error )
+        } catch ( error: any )
         {
-            toastError( 'Thêm sản phẩm thất bại!' );
+            toastError( error?.data?.message );
         } finally
         {
             setLoadings( false );

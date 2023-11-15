@@ -48,6 +48,7 @@ import OrderList from "./pages/admin/orders/OrderList";
 import OrderSuccess from "./pages/website/OrderSuccess";
 
 import Updatecolor from "./pages/admin/color/UpdateColor";
+import ListOrder from "./pages/admin/Order/Order";
 
 
 
@@ -228,6 +229,8 @@ export const router = createBrowserRouter( [
                     { path: 'color/update/:id', element: <Updatecolor /> },
                     { path: 'products', element: <ListProduct /> },
                     { path: 'products/add', element: <AddProduct /> },
+                    { path: 'orders', element: <ListOrder /> },
+
                 ]
             }
         ]

@@ -19,3 +19,13 @@
     align-items: center;
 
 }
+
+.cancelled-order {
+    color: red;
+    /* Text color for "Đã hủy" or "Đã hoàn tiền" */
+}
+
+.cancelled-row {
+    background-color: #ffe6e6;
+    /* Background color for the entire row */
+}
