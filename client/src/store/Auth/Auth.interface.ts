@@ -1,3 +1,5 @@
+import { Image } from "../upload/upload.interface";
+
 export interface Signup
 {
     _id?: string,
@@ -27,7 +29,7 @@ export interface IUser
     address?: string;
     image?: IImageUser;
     cards?: ICardUser[];
-    orders?: IOrderUser[];
+    orders?: IOrder[];
     favorites?: string[];
     comments?: ICommentUser[];
     role?: string;
@@ -51,27 +53,64 @@ export interface ICardUser
     main: boolean;
 }
 
-export interface IOrderUser
+// export interface IOrderUser
+// {
+//     _id?: string;
+//     userId: string;
+//     products: IProductsOrderUser[];
+//     totalPrice: number;
+//     paymentMethod: string;
+//     payment?: string;
+//     status: string;
+// }
+
+// export interface IProductsOrderUser
+// {
+//     _id?: string;
+//     product: string;
+//     name: string;
+//     price: number;
+//     quantity: number;
+// }
+
+export interface ICommentUser
+{
+    _id?: string;
+}
+export interface IOrder
 {
     _id?: string;
     userId: string;
-    products: IProductsOrderUser[];
-    totalPrice: number;
-    paymentMethod: string;
-    payment?: string;
+    vouchers?: string;
+    products: IProductsOrder[];
+    total: number;
     status: string;
+    totalAfterDiscount?: number;
+    paymentIntent?: any;
+    phone?: string;
+    address?: string;
+    payment?: string;
 }
 
-export interface IProductsOrderUser
+export interface IProductsOrder
 {
     _id?: string;
     product: string;
     name: string;
     price: number;
     quantity: number;
+    images?: Image;
+    hasReviewed?: boolean;
 }
+export const enumStatus = [
+    "Chờ thanh toán",
+    "Đang xử lý",
+    "Đang giao hàng",
+    "Đã giao hàng",
+    "Đã hủy",
+    "Đã hoàn tiền",
+    "Đã hoàn thành",
+];
 
-export interface ICommentUser
-{
-    _id?: string;
-}
+
+

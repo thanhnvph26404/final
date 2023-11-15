@@ -476,7 +476,7 @@ export const addToCart = async ( req, res ) =>
         {
           variantToUpdate.quantity -= quantity;
 
-          // Kiểm tra nếu quantity của size hoặc màu nhỏ hơn 0 thì thông báo
+          // Check if the quantity of size or color is less than 0 and return an error
           if ( variantToUpdate.quantity < 0 )
           {
             return res.status( 400 ).json( {
@@ -486,6 +486,16 @@ export const addToCart = async ( req, res ) =>
 
           await productToUpdate.save();
         }
+
+        await existingCart.save();
+
+        // Calculate total after updating the cart
+        let total = 0;
+        for ( const item of existingCart.items )
+        {
+          total += item.productInfo.price * item.quantity;
+        }
+        existingCart.total = total;
         await existingCart.save();
       } else
       {
@@ -503,7 +513,7 @@ export const addToCart = async ( req, res ) =>
         {
           variantToUpdate.quantity -= quantity;
 
-          // Kiểm tra nếu quantity của size hoặc màu nhỏ hơn 0 thì thông báo
+          // Check if the quantity of size or color is less than 0 and return an error
           if ( variantToUpdate.quantity < 0 )
           {
             return res.status( 400 ).json( {
@@ -513,19 +523,17 @@ export const addToCart = async ( req, res ) =>
 
           await productToUpdate.save();
         }
-        await newCart.save();
-      }
 
-      // Tính toán tổng tiền dựa trên số lượng sản phẩm trong giỏ hàng
-      if ( existingCart )
-      {
+        await newCart.save();
+
+        // Calculate total after saving the new cart
         let total = 0;
-        for ( const item of existingCart.items )
+        for ( const item of newCart.items )
         {
           total += item.productInfo.price * item.quantity;
         }
-        existingCart.total = total;
-        await existingCart.save();
+        newCart.total = total;
+        await newCart.save();
       }
 
       return res.status( 200 ).json( {
@@ -547,6 +555,7 @@ export const addToCart = async ( req, res ) =>
 };
 
 
+
 export const emptyCart = async ( req, res ) =>
 {
   const { _id } = req.user
@@ -560,23 +569,38 @@ export const emptyCart = async ( req, res ) =>
     throw new Error( error )
   }
 }
-export const updateOderStatus = async ( req, res ) =>
+
+
+export const updateOrderStatus = async ( req, res, next ) =>
 {
-  const { status } = req.body
-  const { id } = req.params
+  const { status } = req.body;
+  const { id } = req.params;
+
   try
   {
-    const findOder = await order.findByIdAndUpdate( id, {
-      status: status,
-    }, { new: true } )
-    res.json( findOder )
+    const updatedOrder = await order.findByIdAndUpdate( id, { status }, { new: true } );
+
+    // Check if the order status is "Đã hủy" or "Đã hoàn tiền"
+    if ( status === "Đã hủy" || status === "Đã hoàn tiền" )
+    {
+      // Iterate through the order items and update product quantities and sold values
+      for ( const item of updatedOrder.products )
+      {
+        const { product, quantity } = item;
+        await Product.updateOne(
+          { _id: product._id },
+          { $inc: { quantity, sold: -quantity } }
+        );
+      }
+    }
+
+    res.json( updatedOrder );
   } catch ( error )
   {
-    throw new Error( error )
-
-
+    return next( error );
   }
-}
+};
+
 export const applyCoupon = async ( req, res ) =>
 {
   const { _id } = req.user;
@@ -622,14 +646,18 @@ export const createOrder = async ( req, res ) =>
     {
       finalAmount = userCart.total;
     }
-
-    // Check if a discount code is provided
     if ( discountCode )
     {
       // Apply the discount code and update the final amount
-      const discount = await applyDiscountCode( user._id, finalAmount, discountCode );
-      console.log( discount );
-      finalAmount -= discount;
+      const discountResult = await applyDiscountCode( user._id, finalAmount, discountCode );
+      console.log( discountResult );
+      if ( discountResult.error )
+      {
+        // Handle the case where the discount code is not valid
+        return res.status( 400 ).json( { error: discountResult.error } );
+      }
+
+      finalAmount -= discountResult;
     }
 
     let newOrder = await new order( {
@@ -638,20 +666,23 @@ export const createOrder = async ( req, res ) =>
         id: uniqid(),
         method: "COD",
         amount: finalAmount,
-        status: "thanh toán khi nhận hàng",
+        status: "Đang xử lý",
         created: Date.now(),
         currency: "VND",
       },
       userId: user._id,
-      status: "thanh toán khi nhận hàng",
+      paymentStatus: "thanh toán khi nhận hàng",
     } ).save();
+
+    // Clear the user's cart after creating the order
+    await Cart.findOneAndDelete( { userId: user._id } );
 
     let update = userCart.items.map( ( item ) =>
     {
       return {
         updateOne: {
           filter: { _id: item.product._id },
-          update: { $inc: { quantity: -item.quantity, sold: +item.quantity } },
+          update: { $inc: { sold: +item.quantity } },
         },
       };
     } );
@@ -660,9 +691,11 @@ export const createOrder = async ( req, res ) =>
     return res.json( { message: "success" } );
   } catch ( error )
   {
-    throw new Error( error );
+    return res.status( 500 ).json( { error: "Internal server error" } );
   }
 };
+
+
 
 // Function to apply discount code and return the discount amount
 const applyDiscountCode = async ( userId, amount, discountCode ) =>
@@ -670,9 +703,24 @@ const applyDiscountCode = async ( userId, amount, discountCode ) =>
   try
   {
     const validCoupon = await Voucher.findOne( { code: discountCode } );
+
     if ( !validCoupon )
     {
       throw new Error( "Mã voucher không đúng" );
+    }
+
+    // Check if the voucher limit has been reached
+    if ( validCoupon.limit <= 0 )
+    {
+      throw new Error( "Số lượng voucher đã hết" );
+    }
+
+    // Check if the voucher is expired
+    const currentDate = new Date();
+    if ( currentDate > new Date( validCoupon.endDate ) )
+    {
+      console.log( "Voucher đã hết hạn" );
+      return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
     }
 
     // Calculate the discount amount
@@ -681,9 +729,39 @@ const applyDiscountCode = async ( userId, amount, discountCode ) =>
     // Update the order total with the discount
     await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
 
+    // Decrease the voucher limit
+    await Voucher.findOneAndUpdate( { code: discountCode }, { $inc: { limit: -1 } } );
+
     return discount;
   } catch ( error )
   {
     throw new Error( error );
   }
 };
+
+
+export const getOrders = async ( req, res ) =>
+{
+  const { _id } = req.user
+  try
+  {
+    const Order = await order.findOne( { userId: _id } ).populate( "products.product" ).exec();
+    res.json( {
+      Order
+    } )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+}
+export const getAllOrders = async ( req, res ) =>
+{
+  try
+  {
+    const Order = await order.find().populate( "products.product" ).populate( "userId" ).exec();
+    res.json( { Order } )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+} 

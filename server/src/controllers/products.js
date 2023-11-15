@@ -25,46 +25,69 @@ export const create = async ( req, res ) =>
 
         const variantsToBeAdded = req.body.ProductVariants;
 
-        // Check if product variant already exists with the same size and color
-        const existingVariant = await Product.findOne( {
-            "ProductVariants.size": variantsToBeAdded[ 0 ].size,
-            "ProductVariants.color": variantsToBeAdded[ 0 ].color,
+        // Check for duplicate variants with the same size and color
+        const duplicateVariants = variantsToBeAdded.filter( ( variant, index, self ) =>
+            index !== self.findIndex( ( v ) => v.size === variant.size && v.color === variant.color )
+        );
+
+        if ( duplicateVariants.length > 0 )
+        {
+            return res.status( 400 ).json( {
+                message: "Bạn đã nhập 2 trường biến thể giống nhau. Vui lòng nhập lại.",
+            } );
+        }
+
+        // Find the product with the same variants (size and color)
+        const existingProduct = await Product.findOne( {
+            $and: variantsToBeAdded.map( ( variant ) => ( {
+                "ProductVariants.size": variant.size,
+                "ProductVariants.color": variant.color,
+            } ) ),
         } );
 
-        if ( existingVariant )
+        if ( existingProduct )
         {
-            // If variant exists, update the quantity or add new variant if not exists
+            // Update the quantity for each matching variant
             variantsToBeAdded.forEach( ( variantToBeAdded ) =>
             {
-                const matchedVariantIndex = existingVariant.ProductVariants.findIndex(
-                    ( variant ) => variant.size === variantToBeAdded.size && variant.color === variantToBeAdded.color
+                const matchedVariantIndex = existingProduct.ProductVariants.findIndex(
+                    ( variant ) =>
+                        variant.size === variantToBeAdded.size &&
+                        variant.color === variantToBeAdded.color
                 );
 
                 if ( matchedVariantIndex !== -1 )
                 {
                     // If variant already exists, update the quantity
-                    existingVariant.ProductVariants[ matchedVariantIndex ].quantity += variantToBeAdded.quantity;
+                    existingProduct.ProductVariants[ matchedVariantIndex ].quantity +=
+                        variantToBeAdded.quantity;
                 } else
                 {
                     // If variant does not exist, add a new variant
-                    existingVariant.ProductVariants.push( variantToBeAdded );
+                    existingProduct.ProductVariants.push( variantToBeAdded );
                 }
             } );
 
-            await existingVariant.save();
-            return res.status( 200 ).json( {
-                message: "Gộp biến thể sản phẩm thành công",
-                data: existingVariant,
-            } );
+            await existingProduct.save();
         } else
         {
-            // If variant does not exist, create a new product with variants
-            const data = await Product.create( req.body );
+            // If product does not exist, create a new product with variants
+            const data = await Product.create( {
+                name: req.body.name,
+                price: req.body.price,
+                original_price: req.body.original_price,
+                description: req.body.description,
+                brand: req.body.brand,
+                images: req.body.images,
+                category: req.body.category,
+                comments: req.body.comments,
+                ProductVariants: variantsToBeAdded,
+            } );
 
             if ( data )
             {
                 return res.status( 200 ).json( {
-                    message: "Thêm sản phẩm thành công",
+                    message: "Thêm sản phẩm và biến thể thành công",
                     data: data,
                 } );
             } else
@@ -81,6 +104,9 @@ export const create = async ( req, res ) =>
         } );
     }
 };
+
+
+
 
 
 
