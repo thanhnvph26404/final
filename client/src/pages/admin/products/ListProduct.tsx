@@ -25,9 +25,9 @@ const ListProduct = () => {
             key: "images",
             render: (images) => (
                 <div className="">
-                    {images.map((image: any, index: any) => (
-                        <img key={index} src={image.url} alt={`Product Image ${index}`} style={{ width: 100 }} />
-                    ))}
+                    {/* {images.map((image: any, index: any) => ( */}
+                    <img src={images[0]?.url} alt={`Product Image`} style={{ width: 100 }} />
+                    {/* // ))} */}
                 </div>
             ),
         },
@@ -93,7 +93,7 @@ const ListProduct = () => {
                         className="bg-blue-500"
                     >
 
-                        <Link to={`/admin/products/edit/${record._id}`}>Update</Link>
+                        <Link to={`/admin/product/${record._id}`}>Update</Link>
                     </Button>
                 </Space>
             ),

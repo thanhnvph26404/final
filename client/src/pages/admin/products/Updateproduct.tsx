@@ -1,7 +1,7 @@
 import TextArea from "antd/es/input/TextArea";
 import { Form, Input, Button, Upload, Select, Space } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useGetCategoryListQuery } from "../../../store/categoies/category.services";
@@ -9,20 +9,44 @@ import { Iproductdata } from "../../../store/products/product.interface";
 import { useGetBrandListQuery } from "../../../store/Brand/brand.services";
 import { useGetsizeListQuery } from "../../../store/valueAttribute/Sizesevice";
 import { useGetcolorListQuery } from "../../../store/valueAttribute/colorsevice";
-import { useAddProductMutation } from "../../../store/products/product.services";
+import { useAddProductMutation, useGetProductQuery } from "../../../store/products/product.services";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 
-const AddProduct = () => {
+const UpdateProduct = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const { data: product, isLoading } = useGetProductQuery(id);
     const { data: categories } = useGetCategoryListQuery([]);
     const { data: brands } = useGetBrandListQuery([]);
     const { data: size } = useGetsizeListQuery([])
     const { data: color } = useGetcolorListQuery([])
-
-
     const [addProductMutation] = useAddProductMutation();
-
     const [loadings, setLoadings] = useState(false);
+
+    const [form] = Form.useForm();
+    const [fileList, setFileList] = useState<any[]>([])
+    if (!isLoading) {
+        const imgdefaul = product?.data?.images?.map((item) => {
+            return {
+                name: "image",
+                uid: `${item.uid}`,
+                status: 'done',
+                url: item.url,
+            }
+        });
+        if (imgdefaul) {
+            setFileList(imgdefaul)
+        }
+        form.setFieldsValue({
+            categoryId: product?.data?.category._id,
+            name: product?.data?.name,
+            price: product?.data?.price,
+            originPrice: product?.data?.originPrice,
+            description: product?.data?.description,
+            images: product?.data?.imgUrl
+        });
+
+    }
 
     const validateMessages = {
         required: '${label} is required!',
@@ -50,7 +74,7 @@ const AddProduct = () => {
 
         // Check if data.images exists and has a fileList property
         if (data.imgUrl && data.imgUrl.fileList) {
-            newurls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
+            newurls = await Promise.all(data?.imgUrl?.fileList?.map(async (item: any) => {
                 const formData = new FormData();
                 formData.append("image", item.originFileObj);
                 const API_key = "42d2b4a414af48bbc306d6456dd1f943";
@@ -96,7 +120,7 @@ const AddProduct = () => {
     return (
         <div className="w-100" style={{ marginTop: 100, backgroundColor: "white" }}>
             <h3 style={{ marginTop: 20, marginBottom: 50, color: "black" }}>
-                Thêm sản phẩm
+                sửa sản phẩm
             </h3>
             <Form
                 name="basic"
@@ -130,9 +154,9 @@ const AddProduct = () => {
                     hasFeedback
                 >
                     <Select id="">
-                        {categories?.data.map((Category: any) => (
-                            <Select.Option key={Category._id} value={Category._id}>
-                                {Category.title}
+                        {categories?.data?.map((Category: any) => (
+                            <Select.Option key={Category?._id} value={Category?._id}>
+                                {Category?.title}
                             </Select.Option>
                         ))}
                     </Select>
@@ -146,7 +170,7 @@ const AddProduct = () => {
                     hasFeedback
                 >
                     <Select id="">
-                        {brands?.brand.map((brand: any) => (
+                        {brands?.brand?.map((brand: any) => (
                             <Select.Option key={brand._id} value={brand._id}>
                                 {brand.title}
                             </Select.Option>
@@ -198,7 +222,7 @@ const AddProduct = () => {
                 <Form.List name="ProductVariants">
                     {(fields, { add, remove }) => (
                         <div>
-                            {fields.map(({ key, name, fieldKey, ...restField }) => (
+                            {fields?.map(({ key, name, fieldKey, ...restField }) => (
                                 <Space key={key} style={{ display: 'flex', marginBottom: 8 }}>
                                     <Form.Item
                                         {...restField}
@@ -207,7 +231,7 @@ const AddProduct = () => {
                                         rules={[{ required: true, message: 'Color is required' }]}
                                     >
                                         <Select id="">
-                                            {color?.data.map((color: any) => (
+                                            {color?.data?.map((color: any) => (
                                                 <Select.Option value={color.color}>
                                                     {color.color}
                                                 </Select.Option>
@@ -221,7 +245,7 @@ const AddProduct = () => {
                                         rules={[{ required: true, message: 'Size is required' }]}
                                     >
                                         <Select id="">
-                                            {size?.data.map((size: any) => (
+                                            {size?.data?.map((size: any) => (
                                                 <Select.Option value={size.size}>
                                                     {size.size}
                                                 </Select.Option>
@@ -261,4 +285,4 @@ const AddProduct = () => {
     );
 };
 
-export default AddProduct;
+export default UpdateProduct;
