@@ -6,11 +6,13 @@ import 'reactjs-popup/dist/index.css';
 import { useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
 import { Iproductdata } from "../../store/products/product.interface";
+import { useAddToCartMutation } from "../../store/Auth/Auth.services";
 
 const ProductDetail = () => {
-
+    const { id } = useParams();
+    const { data: product, error, isLoading } = useGetProductQuery(id);
+    const [AddToCartMutation] = useAddToCartMutation()
     const [mauSac, setmauSac] = useState();
-
     const [quantity, setQuantity] = useState(0);
     const [count, setcount] = useState(0);
     const [arrange, setArrange] = useState(false);
@@ -20,6 +22,7 @@ const ProductDetail = () => {
     const [listSize, setlistSize] = useState([]);
     const [image, setimage] = useState();
 
+    const ProductVariants = product?.data?.ProductVariants
 
     const handleToggleForm = () => {
         setIsFormVisible(!isFormVisible);
@@ -57,9 +60,7 @@ const ProductDetail = () => {
         setArrange(!arrange);
     };
 
-    const { id } = useParams();
-    const { data: product, error, isLoading } = useGetProductQuery(id);
-    const ProductVariants = product?.data?.ProductVariants
+
 
     //  lấy danh sách màu
     if (ProductVariants) {
@@ -82,6 +83,25 @@ const ProductDetail = () => {
         }
     }, [isLoading])
 
+
+    function addtocard() {
+        if (mauSac && kichCo && count) {
+            const cart = {
+                productId: id,
+                size: kichCo,
+                color: mauSac,
+                quantity: count
+            }
+
+            console.log(cart);
+
+
+            AddToCartMutation(cart)
+        }
+
+
+    }
+
     if (isLoading) {
 
         return <>Loading...</>
@@ -92,13 +112,6 @@ const ProductDetail = () => {
     }
 
 
-
-
-
-
-
-
-    console.log("listSize", listSize);
 
     // useEffect(() => {
     //     const interval = setInterval(() => {
@@ -196,7 +209,7 @@ const ProductDetail = () => {
                             </div>
                         </div>
                         <div className="mt-[50px]">
-                            <button className="border-2 bg-[#23314b] text-white border-[#23314BB3] w-[600px]   rounded-full text-[20px] font-semibold text-center h-[65px] hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b]">Thêm vào giỏ hàng</button>
+                            <button onClick={() => addtocard()} className="border-2 bg-[#23314b] text-white border-[#23314BB3] w-[600px]   rounded-full text-[20px] font-semibold text-center h-[65px] hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b]">Thêm vào giỏ hàng</button>
                         </div>
                     </div>
 
