@@ -17,13 +17,13 @@ const productVariantSchema = new mongoose.Schema(
     },
   },
 
-  { _id: false }
 );
 
 const productSchema = new mongoose.Schema(
   {
     sold: {
       type: Number,
+      default: "0",
       required: false,
     },
     name: {

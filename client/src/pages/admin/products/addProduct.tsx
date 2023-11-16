@@ -67,7 +67,7 @@ const AddProduct = () => {
 
 
 
-        const newProduct = {
+        const newProduct: any = {
             name: data.name,
             price: data.price,
             original_price: data.original_price,
@@ -89,6 +89,7 @@ const AddProduct = () => {
             toastError('Thêm sản phẩm thất bại!');
         } finally {
             setLoadings(false);
+
         }
     }
 

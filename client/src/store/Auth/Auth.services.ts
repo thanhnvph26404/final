@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
-import { IUser, Login, Signup } from "./Auth.interface"
+import { IOrder, IUser, Login, Signup } from "./Auth.interface"
 import { ICartData } from "../Cart/cartInterface";
 const authApi = createApi( {
     reducerPath: "auth",
@@ -199,11 +199,55 @@ const authApi = createApi( {
 
             invalidatesTags: [ "Auth" ],
         } ),
+        getOrder: builder.query<IOrder[], void>( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/getOrder`,
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                }
+            },
+            providesTags: [ "Auth" ],
+        } ),
+        getAllOrder: builder.query( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/getAllOrder`,
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+
+            providesTags: [ "Auth" ],
+        } ),
+        updateOrderStatus: builder.mutation<IOrder, { id: string; status: string }>( {
+            query: ( { id, status } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/update-order/${ id }`, // Thay đổi đường dẫn tùy thuộc vào API của bạn
+                    method: 'PUT',
+                    body: { status },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+            invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+        } ),
 
     } )
 } )
 export const {
-    useLoginMutation, useAddToCartMutation, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useAddToCartMutation, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

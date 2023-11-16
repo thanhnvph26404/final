@@ -43,8 +43,15 @@ import Rules from "./pages/website/Policy/Rules";
 import Payment from "./pages/website/Payment";
 
 import AddProduct from "./pages/admin/products/addProduct";
+import OrderList from "./pages/admin/orders/OrderList";
+
+import OrderSuccess from "./pages/website/OrderSuccess";
+
 import Updatecolor from "./pages/admin/color/UpdateColor";
+
 import UpdateProduct from "./pages/admin/products/Updateproduct";
+
+import ListOrder from "./pages/admin/Order/Order";
 
 
 
@@ -101,6 +108,7 @@ export const router = createBrowserRouter([
             { path: 'cart', element: <CartPage /> },
             { path: 'payment', element: <PaymentPage /> },
             { path: 'payments', element: <Payment /> },
+            // { path: 'ordersuccess', element: <OrderSuccess /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
             { path: 'inspection', element: <Inspection /> },
@@ -177,6 +185,7 @@ export const router = createBrowserRouter([
             { path: "password/reset-password/:randomString", element: <ResetPage /> },
             { path: 'login', element: <LoginPage /> },
             { path: 'signup', element: <SignupPage /> },
+            { path: 'ordersuccess', element: <OrderSuccess /> },
 
         ],
 
@@ -203,15 +212,23 @@ export const router = createBrowserRouter([
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
+
+                    { path: 'orders', element: <OrderList /> },
+                                
                     // { path: 'size', element: <ListSize /> },
                     // { path: 'size/add', element: <AddSize /> },
                     // { path: 'size/update/:id', element: <UpdateSize /> },
+
                     { path: 'color', element: <ListColor /> },
                     { path: 'color/add', element: <AddColor /> },
                     { path: 'color/update/:id', element: <Updatecolor /> },
                     { path: 'products', element: <ListProduct /> },
                     { path: 'products/add', element: <AddProduct /> },
+
                     { path: 'product/:id', element: <UpdateProduct /> },
+
+                    { path: 'orders', element: <ListOrder /> },
+
                 ]
             }
         ]
