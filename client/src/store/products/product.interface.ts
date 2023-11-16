@@ -10,10 +10,12 @@ export interface Iproductdata
     brand: string | undefined
     images: Image;
     ProductVariants: string[]
-    category: string | undefined
+    category: string | undefined,
+    sold?: number
 
 }
-export interface IProductState{
+export interface IProductState
+{
     products: Iproductdata[],
     sortBy: string
 }

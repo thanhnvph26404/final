@@ -1,5 +1,5 @@
 import { LockOutlined } from '@ant-design/icons'
-import { useGetCartQuery } from '../../store/Auth/Auth.services';
+import { useDeleteoneProductMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
 
 import { useAppDispatch } from '../../store/hook';
 import { addOrder } from '../../store/Order/Order.slice';
@@ -15,24 +15,25 @@ const CartPage = () =>
     const location = useLocation();
 
     const { data: cart, refetch } = useGetCartQuery( [] );
-
-    useEffect( () =>
-    {
-        const fetchData = async () =>
+    const [ removeOnecart ] = useDeleteoneProductMutation()
+    const remove = () =>
+        useEffect( () =>
         {
-            try
+            const fetchData = async () =>
             {
-                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
-                await refetch();
-                // Dữ liệu giỏ hàng đã được cập nhật
-            } catch ( error )
-            {
-                // Xử lý lỗi nếu có
-            }
-        };
+                try
+                {
+                    // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+                    await refetch();
+                    // Dữ liệu giỏ hàng đã được cập nhật
+                } catch ( error )
+                {
+                    // Xử lý lỗi nếu có
+                }
+            };
 
-        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
-    }, [ location.pathname, refetch ] );
+            fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+        }, [ location.pathname, refetch ] );
 
     return (
         <div className="p-4">

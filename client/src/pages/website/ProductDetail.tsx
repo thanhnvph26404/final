@@ -5,7 +5,6 @@ import Popup from "reactjs-popup"
 import 'reactjs-popup/dist/index.css';
 import { useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
-import { Iproductdata } from "../../store/products/product.interface";
 import { useAddToCartMutation } from "../../store/Auth/Auth.services";
 
 const ProductDetail = () =>
