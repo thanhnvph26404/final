@@ -6,13 +6,60 @@ import 'reactjs-popup/dist/index.css';
 import { useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
 import { Iproductdata } from "../../store/products/product.interface";
+import { useAddToCartMutation } from "../../store/Auth/Auth.services";
 
 const ProductDetail = () => {
     const { id } = useParams();
-
     const { data: product, error, isLoading } = useGetProductQuery(id);
+    const [AddToCartMutation] = useAddToCartMutation()
+    const [mauSac, setmauSac] = useState();
+    const [quantity, setQuantity] = useState(0);
+    const [count, setcount] = useState(0);
+    const [arrange, setArrange] = useState(false);
+    // const [progress, setProgress] = useState(0);
+    const [kichCo, setKichCo] = useState();
+    const [isFormVisible, setIsFormVisible] = useState(false);
+    const [listSize, setlistSize] = useState([]);
+    const [image, setimage] = useState();
+
     const ProductVariants = product?.data?.ProductVariants
-    console.log(ProductVariants);
+
+    const handleToggleForm = () => {
+        setIsFormVisible(!isFormVisible);
+    };
+    const handleChangeKichCo = (variant: any) => {
+        setKichCo(variant.size);
+        setQuantity(variant.quantity)
+        setcount(0)
+    };
+    const handleChangeMauSac = (newColor: any) => {
+        const sizes = ProductVariants.filter((item) => {
+            return item.color === newColor
+        })
+        setmauSac(newColor);
+        setlistSize(sizes)
+        handleChangeKichCo(sizes[0])
+    };
+    const handleChangeimage = (item: any) => {
+        setimage(item)
+    };
+
+    const increaseQuantity = () => {
+        if (quantity > count) {
+            setcount(count + 1);
+        }
+
+    };
+
+    const decreaseQuantity = () => {
+        if (count > 0) {
+            setcount(count - 1);
+        }
+    };
+    const handleTongleArrange = () => {
+        setArrange(!arrange);
+    };
+
 
 
     //  lấy danh sách màu
@@ -29,61 +76,42 @@ const ProductDetail = () => {
         listcolor.push(item.color)
     })
 
-    console.log("list color", listcolor);
-
-
-    // if (isLoading) {
-    //     return <>Loading...</>
-    // }
-
-    // if (error) {
-    //     return <p>Error...</p>
-    // }
-
-
-    const [mauSac, setmauSac] = useState();
-    const [quantity, setQuantity] = useState(0);
-    const [arrange, setArrange] = useState(false);
-    // const [progress, setProgress] = useState(0);
-    const [kichCo, setKichCo] = useState();
-    const [isFormVisible, setIsFormVisible] = useState(false);
-
-    const [listSize, setlistSize] = useState([]);
-
-    // auto select mau lúc đầu
-
-
-    const handleToggleForm = () => {
-        setIsFormVisible(!isFormVisible);
-    };
-    const handleChangeKichCo = (newSize: any) => {
-        setKichCo(newSize);
-    };
-    const handleChangeMauSac = (newColor: any) => {
-        const sizes = ProductVariants.filter((item) => {
-            return item.color === newColor
-        })
-        console.log(sizes);
-
-        setmauSac(newColor);
-        setlistSize(sizes)
-        setKichCo(sizes[0].size)
-    };
-
-    const increaseQuantity = () => {
-        setQuantity(quantity + 1);
-    };
-
-    const decreaseQuantity = () => {
-        if (quantity > 0) {
-            setQuantity(quantity - 1);
+    useEffect(() => {
+        // auto select mau lúc đầu
+        if (ProductVariants) {
+            handleChangeMauSac(ProductVariants[0]?.color)
         }
-    };
-    const handleTongleArrange = () => {
-        setArrange(!arrange);
-    };
+    }, [isLoading])
 
-    console.log("listSize", listSize);
+
+    function addtocard() {
+        if (mauSac && kichCo && count) {
+            const cart = {
+                productId: id,
+                size: kichCo,
+                color: mauSac,
+                quantity: count
+            }
+
+            console.log(cart);
+
+
+            AddToCartMutation(cart)
+        }
+
+
+    }
+
+    if (isLoading) {
+
+        return <>Loading...</>
+    }
+
+    if (error) {
+        return <p>Error...</p>
+    }
+
+
 
     // useEffect(() => {
     //     const interval = setInterval(() => {
@@ -105,14 +133,14 @@ const ProductDetail = () => {
                 <div className="pl-[20px] space-y-4 mt-[40px] w-[200px]">
                     {/* list images  */}
                     {product?.data?.images?.map((item: any) => (
-                        <img className="w-24 h-32" src={item.url} alt="" />
+                        <img className="w-24 h-32" src={item.url} alt="" onMouseMove={() => handleChangeimage(item.url)} />
                     ))}
 
                 </div>
                 <div className="flex">
                     <div className="md:w-[100px] lg:w-[600px]">
                         {/* main image */}
-                        <img className="md:w-32 lg:w-[800px] w-full" src={product?.data?.images[1]?.url} alt="" />
+                        <img className="md:w-32 lg:w-[800px] w-full" src={image ? image : product?.data?.images[0]?.url} alt="" />
                     </div>
                     <div className="mt-[50px]">
                         {/* name */}
@@ -164,24 +192,24 @@ const ProductDetail = () => {
                         </div>
                         <div className="mt-[20px] space-x-10">
                             {listSize?.map((item, index) => (
-                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === item.size ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item.size)}>{item.size}</button>
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === item.size ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item)}>{item.size}</button>
                             ))}
 
 
                         </div>
 
                         <div className="mt-[30px]">
-                            <p className="text-[#23314BB3] text-[20px] ">Số lượng:</p>
+                            <p className="text-[#23314BB3] text-[20px] ">Số lượng còn lại : {quantity} </p>
                             <div className="pt-4">
                                 <div className="flex border-2 border-slate-500 rounded-full  w-[150px] h-[50px] space-x-[40px] ">
                                     <button className="text-[30px] pl-[15px]" onClick={decreaseQuantity}>-</button>
-                                    <p className="text-[20px] pt-[8px]">{quantity}</p>
+                                    <p className="text-[20px] pt-[8px]">{count}</p>
                                     <button className="text-[25px]" onClick={increaseQuantity}>+</button>
                                 </div>
                             </div>
                         </div>
                         <div className="mt-[50px]">
-                            <button className="border-2 bg-[#23314b] text-white border-[#23314BB3] w-[600px]   rounded-full text-[20px] font-semibold text-center h-[65px] hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b]">Thêm vào giỏ hàng</button>
+                            <button onClick={() => addtocard()} className="border-2 bg-[#23314b] text-white border-[#23314BB3] w-[600px]   rounded-full text-[20px] font-semibold text-center h-[65px] hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b]">Thêm vào giỏ hàng</button>
                         </div>
                     </div>
 

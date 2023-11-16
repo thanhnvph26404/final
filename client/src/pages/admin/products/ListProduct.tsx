@@ -6,17 +6,15 @@ import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/pr
 import { Iproductdata } from "../../../store/products/product.interface";
 
 
-const ListProduct = () =>
-{
+const ListProduct = () => {
 
-    const { data } = useGetProductsQuery( [] )
-    const [ remove ] = useDeleteProductMutation()
-    console.log( data );
+    const { data } = useGetProductsQuery([])
+    const [remove] = useDeleteProductMutation()
+    console.log(data);
 
 
-    const removeProduct = ( id: string ) =>
-    {
-        remove( id )
+    const removeProduct = (id: string) => {
+        remove(id)
 
     };
 
@@ -25,11 +23,11 @@ const ListProduct = () =>
             title: "ảnh sản phẩm",
             dataIndex: "images",
             key: "images",
-            render: ( images ) => (
-                <div>
-                    { images.map( ( image: any, index: any ) => (
-                        <img key={ index } src={ image.url } alt={ `Product Image ${ index }` } style={ { width: 100 } } />
-                    ) ) }
+            render: (images) => (
+                <div className="">
+                    {/* {images.map((image: any, index: any) => ( */}
+                    <img src={images[0]?.url} alt={`Product Image`} style={{ width: 100 }} />
+                    {/* // ))} */}
                 </div>
             ),
         },
@@ -37,7 +35,7 @@ const ListProduct = () =>
             title: "tên sản phẩm",
             dataIndex: "name",
             key: "name",
-            render: ( text ) => <p>{ text }</p>,
+            render: (text) => <p>{text}</p>,
         },
         {
             title: "Giá đã giảm",
@@ -48,14 +46,14 @@ const ListProduct = () =>
             title: "Giá gốc",
             dataIndex: "original_price",
             key: "original_price",
-            render: ( text ) => <p>{ text }</p>,
+            render: (text) => <p>{text}</p>,
         }
         ,
         {
             title: "danh mục",
             dataIndex: "category",
             key: "category",
-            render: ( category ) => <p>{ category.title }</p>,
+            render: (category) => <p>{category.title}</p>,
 
 
         },
@@ -63,7 +61,7 @@ const ListProduct = () =>
             title: "brand",
             dataIndex: "brand",
             key: "brand",
-            render: ( brand ) => <p>{ brand?.title }</p>,
+            render: (brand) => <p>{brand?.title}</p>,
 
 
         },
@@ -72,24 +70,22 @@ const ListProduct = () =>
             dataIndex: "description",
             key: "description",
             ellipsis: true,
-            render: ( text ) => <div >{ text }</div>,
+            render: (text) => <div >{text}</div>,
         },
         {
             title: "hành động",
             key: "action",
-            render: ( record ) => (
+            render: (record) => (
                 <Space size="middle" className="w-12">
                     <Button
                         type="primary"
-                        style={ { backgroundColor: "red" } }
-                        onClick={ () =>
-                        {
-                            const delProduct = confirm( "Bạn có muốn xoá không?" );
-                            if ( delProduct )
-                            {
-                                removeProduct( record._id );
+                        style={{ backgroundColor: "red" }}
+                        onClick={() => {
+                            const delProduct = confirm("Bạn có muốn xoá không?");
+                            if (delProduct) {
+                                removeProduct(record._id);
                             }
-                        } }
+                        }}
                     >
                         Remove
                     </Button>
@@ -97,32 +93,31 @@ const ListProduct = () =>
                         className="bg-blue-500"
                     >
 
-                        <Link to={ `/admin/products/edit/${ record._id }` }>Update</Link>
+                        <Link to={`/admin/product/${record._id}`}>Update</Link>
                     </Button>
                 </Space>
             ),
         },
     ];
 
-    const ListProduct = data?.products?.map( ( item: any ) =>
-    {
+    const ListProduct = data?.products?.map((item: any) => {
         return {
             key: item._id,
             ...item,
 
         };
-    } );
+    });
 
     return (
-        <div style={ { marginTop: 100, paddingRight: 50 } }>
-            <Button type="primary" className="bg-blue-500" style={ { marginBottom: 30 } }>
-                <Link to={ "/admin/products/add" }>Add New Product</Link>
+        <div style={{ marginTop: 100, paddingRight: 50 }}>
+            <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
+                <Link to={"/admin/products/add"}>Add New Product</Link>
             </Button>
             <Table
-                style={ { backgroundColor: "white", marginTop: 100, } }
-                columns={ columns }
-                dataSource={ ListProduct }
-                pagination={ { pageSize: 6 } }
+                style={{ backgroundColor: "white", marginTop: 100, }}
+                columns={columns}
+                dataSource={ListProduct}
+                pagination={{ pageSize: 6 }}
             />
         </div>
     );
