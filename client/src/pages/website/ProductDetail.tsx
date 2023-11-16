@@ -10,11 +10,27 @@ import { Iproductdata } from "../../store/products/product.interface";
 const ProductDetail = () => {
     const { id } = useParams();
 
-    console.log(id);
-
-
     const { data: product, error, isLoading } = useGetProductQuery(id);
-    console.log(product);
+    const ProductVariants = product?.data?.ProductVariants
+    console.log(ProductVariants);
+
+
+    //  lấy danh sách màu
+    if (ProductVariants) {
+        var listcolor = [ProductVariants[0]?.color]
+    }
+    ProductVariants?.map((item, index, arr) => {
+        for (let i = 0; i < listcolor.length; i++) {
+            const element = listcolor[i];
+            if (element === item.color) {
+                return ""
+            }
+        }
+        listcolor.push(item.color)
+    })
+
+    console.log("list color", listcolor);
+
 
     // if (isLoading) {
     //     return <>Loading...</>
@@ -25,25 +41,33 @@ const ProductDetail = () => {
     // }
 
 
-    const [mauSac, setmauSac] = useState('Trang');
-
+    const [mauSac, setmauSac] = useState();
     const [quantity, setQuantity] = useState(0);
     const [arrange, setArrange] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const [kichCo, setKichCo] = useState('M');
+    // const [progress, setProgress] = useState(0);
+    const [kichCo, setKichCo] = useState();
     const [isFormVisible, setIsFormVisible] = useState(false);
-    console.log(productdata);
+
+    const [listSize, setlistSize] = useState([]);
+
+    // auto select mau lúc đầu
+
 
     const handleToggleForm = () => {
         setIsFormVisible(!isFormVisible);
     };
-
-
     const handleChangeKichCo = (newSize: any) => {
         setKichCo(newSize);
     };
     const handleChangeMauSac = (newColor: any) => {
+        const sizes = ProductVariants.filter((item) => {
+            return item.color === newColor
+        })
+        console.log(sizes);
+
         setmauSac(newColor);
+        setlistSize(sizes)
+        setKichCo(sizes[0].size)
     };
 
     const increaseQuantity = () => {
@@ -59,40 +83,45 @@ const ProductDetail = () => {
         setArrange(!arrange);
     };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (progress < 100) {
-                setProgress(progress + 1);
-            } else {
-                clearInterval(interval);
-            }
-        }, 10);
+    console.log("listSize", listSize);
 
-        return () => {
-            clearInterval(interval);
-        };
-    }, [progress]);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if (progress < 100) {
+    //             setProgress(progress + 1);
+    //         } else {
+    //             clearInterval(interval);
+    //         }
+    //     }, 10);
+
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, [progress]);
 
     return (
         <div className=" items-center">
             <div className="flex flex-col-2">
                 <div className="pl-[20px] space-y-4 mt-[40px] w-[200px]">
-                    <img className="" src="/plmaube.jpg" alt="" />
-                    <img className="" src="/plmauden.jpg" alt="" />
-                    <img className="" src="/plmautrang.jpg" alt="" />
-                    <img className="" src="/plxanhlam.jpg" alt="" />
-                    <img className="" src="/plxanhmin.jpg" alt="" />
+                    {/* list images  */}
+                    {product?.data?.images?.map((item: any) => (
+                        <img className="w-24 h-32" src={item.url} alt="" />
+                    ))}
+
                 </div>
                 <div className="flex">
                     <div className="md:w-[100px] lg:w-[600px]">
-                        <img className="md:w-32 lg:w-[800px] w-full" src="/plmaubeto.jpg" alt="" />
+                        {/* main image */}
+                        <img className="md:w-32 lg:w-[800px] w-full" src={product?.data?.images[1]?.url} alt="" />
                     </div>
                     <div className="mt-[50px]">
-                        <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{product?.name}</h1>
+                        {/* name */}
+                        <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{product?.data?.name}</h1>
                         <p className="flex gap-2 text-left mt-[40px]">
-                            <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.price}₫</span>
-                            <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.original_price}₫</span>
-                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm {product?.original_price - product?.price}₫</p>
+                            {/* price */}
+                            <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.price}₫</span>
+                            <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.original_price}₫</span>
+                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm {product?.data?.original_price - product?.data?.price}₫</p>
                         </p>
                         <div className="mt-[30px] flex">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-inject-url="https://cdn.kiwisizing.com/icons/tape3.min.svg?v=5-inject2" className="kiwi-svg kiwi-injectable w-[20px]" ><path d="M498.983 247.322h-56.407c-42.522 0-78.102-19.96-78.102-43.4v-8.678c0-43.4-79.837-78.102-182.237-78.102S0 151.864 0 195.254v121.492c0 43.4 79.837 78.102 182.237 78.102 81.8 0 149.198-22.152 173.006-53.183 14.65 21.223 47.693 35.827 87.333 35.827h56.407c6.942 0 13.017-6.075 13.017-12.15V260.34c0-6.942-6.075-13.017-13.017-13.017zM182.237 134.508c97.193 0 164.88 32.108 164.88 60.746S279.43 256 182.237 256s-164.88-32.108-164.88-60.746 67.688-60.746 164.88-60.746zM321.085 348.25v-14.148c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v22.693c-7.782 3.247-16.496 6.23-26.034 8.866v-22.88c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v26.034a11.67 11.67 0 0 0 .05 1.036c-8.233 1.73-16.944 3.207-26.085 4.4v-22.78c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v24.62a414.49 414.49 0 0 1-26.034 1.326V360.15c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v17.268a414.53 414.53 0 0 1-26.034-1.326v-24.62c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v22.78c-9.14-1.183-17.852-2.66-26.085-4.4a10.94 10.94 0 0 0 .051-1.036V342.78c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v22.88c-9.538-2.635-18.252-5.62-26.034-8.866V334.1c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v14.148c-16.7-9.767-26.034-20.874-26.034-31.504V229.1c6.853 6.23 15.663 12.006 26.083 17.2-.03.334-.05.675-.05 1.025v34.712c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678V253.82l1.832.693.278.1c7.457 2.75 15.452 5.244 23.924 7.448v19.974c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678V266.03c8.334 1.664 17.028 3.068 26.034 4.186V299.4c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-27.407a423.36 423.36 0 0 0 14.133.893l.252.012 6.598.255.17.005 4.88.12v17.443c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-17.44l5.052-.126 6.85-.267a423.36 423.36 0 0 0 14.133-.893v27.407c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-29.174c9.006-1.12 17.7-2.522 26.034-4.186v16.004c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678V262.06c8.47-2.204 16.465-4.698 23.92-7.447l.282-.102 1.83-.692v28.216c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-34.712c0-.35-.018-.7-.05-1.025 10.42-5.193 19.23-10.97 26.083-17.2v87.647c-.001 10.63-9.335 21.737-26.035 31.504zm121.5 11.886c-9.1 0-17.858-.92-26.034-2.582v-32.13c0-5.207-3.47-8.678-8.678-8.678s-8.678 3.47-8.678 8.678v27.164c-20.8-7.906-34.712-21.196-34.712-35.842v-77.48c4.914 4.44 10.754 8.424 17.356 11.852v30.915c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-23.776c5.484 1.744 11.287 3.163 17.356 4.22v19.557c0 5.207 3.47 8.678 8.678 8.678s8.678-3.47 8.678-8.678v-17.597c2.854.156 5.747.24 8.678.24h8.678v95.458h-8.678zm52.068 0H468.6v-95.458h26.034v95.458zm-312.406-130.17c34.712 0 69.424-12.15 69.424-34.712s-34.712-34.712-69.424-34.712-69.424 12.15-69.424 34.712 34.712 34.712 69.424 34.712zm0-52.068c32.108 0 52.068 11.28 52.068 17.356s-19.96 17.356-52.068 17.356-52.068-11.28-52.068-17.356 19.96-17.356 52.068-17.356z"></path></svg>
@@ -121,23 +150,26 @@ const ProductDetail = () => {
                             <hr className="w-[600px]" />
                         </div>
                         <div className="mt-[30px]">
-                            <p className="text-[#23314BB3] text-[20px]">Kích cỡ: {kichCo}</p>
-                        </div>
-                        <div className="mt-[20px] space-x-10">
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'M' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('M')}>M</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'L' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('L')}>L</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'XL' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('XL')}>XL</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === 'XXL' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo('XXL')}>XXL</button>
-                        </div>
-                        <div className="mt-[30px]">
                             <p className="text-[#23314BB3] text-[20px]">Màu sắc {mauSac} </p>
                         </div>
-                        <div className="mt-[20px] space-x-10">
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Đen' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Đen')}>Đen</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Trắng' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Trắng')}>Trắng</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Be' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Be')}>Be</button>
-                            <button className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === 'Cafe' ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac('Cafe')}>Cafe</button>
+                        <div className="mt-[30px]">
+                            <p className="text-[#23314BB3] text-[20px]">Kích cỡ: {kichCo}</p>
                         </div>
+
+                        <div className="mt-[20px] space-x-10">
+                            {listcolor?.map((color, index) => (
+
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === color ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac(color)}>{color}</button>
+                            ))}
+                        </div>
+                        <div className="mt-[20px] space-x-10">
+                            {listSize?.map((item, index) => (
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === item.size ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item.size)}>{item.size}</button>
+                            ))}
+
+
+                        </div>
+
                         <div className="mt-[30px]">
                             <p className="text-[#23314BB3] text-[20px] ">Số lượng:</p>
                             <div className="pt-4">
@@ -240,7 +272,7 @@ const ProductDetail = () => {
             </div>
             <div className="mt-[120px]">
                 <div className="">
-                    <div className="text-[216px] font-semibold text-center text-[#23314b] "> {`${progress}%`}</div>
+                    {/* <div className="text-[216px] font-semibold text-center text-[#23314b] "> {`${progress}%`}</div> */}
                     <p className="text-[#23314b] text-[28px] text-center font-semibold">Sản phẩm được kiểm duyệt kĩ trước khi giao hàng</p>
                 </div>
             </div>
