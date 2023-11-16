@@ -553,8 +553,74 @@ export const addToCart = async ( req, res ) =>
     } );
   }
 };
+export const removeFromCart = async ( req, res ) =>
+{
+  try
+  {
+    const userId = req.user._id;
+    const productId = req.params.id; // Lấy productId từ URL
+
+    // Tìm giỏ hàng của người dùng
+    const existingCart = await Cart.findOne( { userId } );
+
+    if ( !existingCart )
+    {
+      return res.status( 404 ).json( {
+        message: "Giỏ hàng không tồn tại.",
+      } );
+    }
+
+    // Tìm index của sản phẩm cần xóa trong mảng items của giỏ hàng
+    const itemIndex = existingCart.items.findIndex(
+      ( item ) => item.product.toString() === productId
+    );
+
+    if ( itemIndex === -1 )
+    {
+      return res.status( 404 ).json( {
+        message: "Sản phẩm không tồn tại trong giỏ hàng.",
+      } );
+    }
+
+    // Xóa sản phẩm khỏi mảng items
+    existingCart.items.splice( itemIndex, 1 );
+
+    // Cập nhật tổng giá trị sau khi xóa sản phẩm
+    let total = 0;
+    for ( const item of existingCart.items )
+    {
+      total += item.productInfo.price * item.quantity;
+    }
+    existingCart.total = total;
+
+    // Lưu thay đổi vào cơ sở dữ liệu
+    await existingCart.save();
+
+    return res.status( 200 ).json( {
+      message: "Đã xóa sản phẩm khỏi giỏ hàng.",
+    } );
+  } catch ( error )
+  {
+    console.error( error );
+    return res.status( 500 ).json( {
+      message: "Lỗi máy chủ: " + error.message,
+    } );
+  }
+};
 
 
+export const getUserCart = async ( req, res ) =>
+{
+  const { _id } = req.user
+  try
+  {
+    const getUser = await Cart.findOne( { userId: _id } ).populate( "items.product" ).populate( "userId" );
+    res.json( getUser )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+}
 
 export const emptyCart = async ( req, res ) =>
 {
@@ -625,7 +691,7 @@ export const applyCoupon = async ( req, res ) =>
 }
 export const createOrder = async ( req, res ) =>
 {
-  const { COD, discountCode } = req.body;
+  const { COD, discountCode, Address } = req.body;
   const { _id } = req.user;
 
   try
@@ -672,6 +738,7 @@ export const createOrder = async ( req, res ) =>
       },
       userId: user._id,
       paymentStatus: "thanh toán khi nhận hàng",
+      Address
     } ).save();
 
     // Clear the user's cart after creating the order
@@ -688,16 +755,12 @@ export const createOrder = async ( req, res ) =>
     } );
 
     const updated = await Product.bulkWrite( update, {} );
-    return res.json( { message: "success" } );
+    return res.json( { message: "success", newOrder } );
   } catch ( error )
   {
     return res.status( 500 ).json( { error: "Internal server error" } );
   }
 };
-
-
-
-// Function to apply discount code and return the discount amount
 const applyDiscountCode = async ( userId, amount, discountCode ) =>
 {
   try

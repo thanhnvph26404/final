@@ -71,10 +71,10 @@ const orderSchema = new mongoose.Schema( {
         type: Number
     },
     paymentIntent: {},
-    phone: {
+    Phone: {
         type: String,
     },
-    address: {
+    Address: {
         type: String,
     },
     // notes: {

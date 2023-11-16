@@ -21,6 +21,9 @@ const cartSchema = new mongoose.Schema( {
                 type: Number,
                 required: true,
             },
+            totalProduct: {
+                type: Number
+            },
             productInfo: {
                 images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
                 name: String,
@@ -36,6 +39,7 @@ const cartSchema = new mongoose.Schema( {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Category", // Tham chiếu đến model Category hoặc bạn có thể đổi thành tên model danh mục tương ứng
                 },
+
             },
         },
     ],

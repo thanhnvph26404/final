@@ -26,7 +26,6 @@ import PurchaseHistory from "./pages/website/PurchaseHistory";
 
 import CartPage from "./pages/website/CartPage";
 
-import PaymentPage from "./pages/website/PaymentPage";
 // import ListSize from "./pages/admin/size/listSize";
 // import AddSize from "./pages/admin/size/addSize";
 // import UpdateSize from "./pages/admin/size/updateSize";
@@ -52,6 +51,7 @@ import Updatecolor from "./pages/admin/color/UpdateColor";
 import UpdateProduct from "./pages/admin/products/Updateproduct";
 
 import ListOrder from "./pages/admin/Order/Order";
+import CheckoutPage from "./pages/website/PaymentPage";
 
 
 
@@ -106,7 +106,7 @@ export const router = createBrowserRouter([
             { path: '/home/product-detail/:id', element: <ProductDetail /> },
 
             { path: 'cart', element: <CartPage /> },
-            { path: 'payment', element: <PaymentPage /> },
+            { path: 'payment', element: <CheckoutPage /> },
             { path: 'payments', element: <Payment /> },
             // { path: 'ordersuccess', element: <OrderSuccess /> },
             { path: 'products/:category', element: <ProductByCategoryPage /> },
@@ -213,8 +213,8 @@ export const router = createBrowserRouter([
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
 
-                    { path: 'orders', element: <OrderList /> },
-                                
+                    { path: 'orderss', element: <OrderList /> },
+
                     // { path: 'size', element: <ListSize /> },
                     // { path: 'size/add', element: <AddSize /> },
                     // { path: 'size/update/:id', element: <UpdateSize /> },

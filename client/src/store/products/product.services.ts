@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 // import { IProductVariant } from '../productVariant/productVariant.interface'
-import { IProductState } from './product.interface'
 import { Iproductdata } from './product.interface'
 
 export const productApi = createApi( {
