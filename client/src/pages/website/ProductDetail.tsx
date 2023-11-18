@@ -444,7 +444,7 @@ const ProductDetail = () =>
                         <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
                         <p><i className="fa-solid fa-star text-[#0A2139] text-center text-2xl"></i></p>
                     </div>
-                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tiêu đề</p>
+                    {/* <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tiêu đề</p>
                     <div className="text-center text-[20.5px] text-[#23314b] mt-2">
                         <input
                             type="text"
@@ -452,8 +452,8 @@ const ProductDetail = () =>
                             placeholder="Ghi tiêu đề cho đánh giá"
                         />
 
-                    </div>
-                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Đánh giá</p>
+                    </div> */}
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Bình luận</p>
                     <div className="text-center text-[20.5px] text-[#23314b] mt-2">
                         <input
                             type="text"
@@ -462,8 +462,8 @@ const ProductDetail = () =>
                         />
 
                     </div>
-                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Hình ảnh/video (tùy chọn)</p>
-                    <div className="text-center text-[20.5px] text-[#23314b] mt-2">
+                    {/* <p className="text-center text-[20.5px] text-[#23314b] mt-8">Hình ảnh/video (tùy chọn)</p> */}
+                    {/* <div className="text-center text-[20.5px] text-[#23314b] mt-2">
                         <input
                             type="file"
                             className="hidden"
@@ -473,7 +473,7 @@ const ProductDetail = () =>
                         <label htmlFor="fileInput" className="w-28 h-28 p-2 border border-gray-300 w-[550px] h-[150px] rounded-md cursor-pointer flex items-center justify-center mx-auto">
                             <img src="/upload.jpg" alt="Tải lên" className="w-16 h-16 " />
                         </label>
-                    </div>
+                    </div> */}
                     <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tên (Hiển thị công khai dưới tên
                         Nguyễn Văn A)</p>
                     <div className="text-center text-[20.5px] text-[#23314b] mt-2">
