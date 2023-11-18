@@ -2,26 +2,22 @@ import { Select } from 'antd'
 import { useCreateOrderMutation, useGetCartQuery } from '../../store/Auth/Auth.services'
 import { useState } from 'react';
 import { toastSuccess } from '../../hook/toastify';
-const CheckoutPage = () =>
-{
+const CheckoutPage = () => {
 
-    const { data: cart } = useGetCartQuery( [] );
-    console.log( cart );
+    const { data: cart } = useGetCartQuery([]);
+    console.log(cart);
 
-    const [ createOrder ] = useCreateOrderMutation(); // Sử dụng useCreateOrderMutation để gọi hàm creatOrder
-    const [ discountCode, setDiscountCode ] = useState( '' );
-    const [ paymentMethod, setPaymentMethod ] = useState( '' ); // Khởi tạo giá trị ban đầu là trống
-    const [ shippingFee, setShippingFee ] = useState( 30000 ); // Khởi tạo phí vận chuyển là 30,000đ
+    const [createOrder] = useCreateOrderMutation(); // Sử dụng useCreateOrderMutation để gọi hàm creatOrder
+    const [discountCode, setDiscountCode] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState(''); // Khởi tạo giá trị ban đầu là trống
+    const [shippingFee, setShippingFee] = useState(30000); // Khởi tạo phí vận chuyển là 30,000đ
     const totalAmount = cart?.total + shippingFee;
 
-    const handlePaymentMethodChange = ( method: any ) =>
-    {
-        setPaymentMethod( method );
+    const handlePaymentMethodChange = (method: any) => {
+        setPaymentMethod(method);
     };
-    const handleCheckout = async () =>
-    {
-        try
-        {
+    const handleCheckout = async () => {
+        try {
             const paymentData: any = {
                 COD: paymentMethod === 'COD',
                 discountCode,
@@ -33,13 +29,21 @@ const CheckoutPage = () =>
             const totalAmount = cart?.total + shippingFee;
 
             // Gọi hàm createOrder từ Authservice để tạo đơn hàng
-            const response = await createOrder( { ...paymentData, totalAmount } );
-            console.log( 'Created order:', response );
+            const response = await createOrder({ ...paymentData, totalAmount });
+            console.log('Created order:', response);
+            if (paymentMethod === 'COD') {
+                // Navigate to the success page for COD
+                // Replace '/success-cod' with the actual URL you want to navigate to
+                window.location.href = '/OrderSuccess';
+            } else if (paymentMethod === 'vnpay') {
+                // Navigate to the failure page for VNPAY
+                // Replace '/failure-vnpay' with the actual URL you want to navigate to
+                window.location.href = '/failure-vnpay';
+            }
             // Có thể thực hiện các hành động cập nhật UI, hiển thị thông báo thành công,...
-        } catch ( error )
-        {
+        } catch (error) {
             // Xử lý lỗi khi gửi yêu cầu tạo đơn hàng
-            console.error( 'Error creating order:', error );
+            console.error('Error creating order:', error);
             // Có thể hiển thị thông báo lỗi, cập nhật UI để thông báo lỗi,...
         }
     };
@@ -52,26 +56,26 @@ const CheckoutPage = () =>
                         className='sm:w-[566px] sm:h-[50px] max-sm:w-[360px]'
                         defaultValue="vietnam"
                         // style={{ width: 566, height: 50 }}
-                        options={ [
+                        options={[
                             { value: 'vietnam', label: 'Việt Nam' }
-                        ] }
+                        ]}
                     />
                     <div className="mt-5">
-                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="email" value={ cart?.userId?.email } // Hiển thị email
+                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="email" value={cart?.userId?.email} // Hiển thị email
                             placeholder="email" />
-                        <input className="w-[274px] max-sm:mt-3 max-sm:w-[360px] h-[48px] rounded-md border border-gray-400 sm:ml-4" value={ cart?.userId?.name } // Hiển thị email
+                        <input className="w-[274px] max-sm:mt-3 max-sm:w-[360px] h-[48px] rounded-md border border-gray-400 sm:ml-4" value={cart?.userId?.name} // Hiển thị email
                             type="text" placeholder="  Tên" />
                     </div>
                     <div className='mt-5'>
-                        <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 " value={ cart?.userId?.address } // Hiển thị email
+                        <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 " value={cart?.userId?.address} // Hiển thị email
                             type="text" placeholder="  Địa chỉ" />
                     </div>
 
                     <div className="mt-5">
-                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="text" name="Address" value={ cart?.Address } placeholder="  Thành phố" />
+                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="text" name="Address" value={cart?.Address} placeholder="  Thành phố" />
                         <input className="w-[274px] h-[48px] max-sm:mt-3 max-sm:w-[360px] rounded-md border border-gray-400 sm:ml-4" type="text" placeholder="  Nhập 000, áp dụng cho mọi tỉnh thành" />
                     </div>
-                    <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5" type="text" value={ cart?.userId?.phone } // Hiển thị email
+                    <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5" type="text" value={cart?.userId?.phone} // Hiển thị email
                         placeholder="  Điện thoại" />
                     <h2 className="mt-5 text-xl font-semibold">Phương thức vận chuyển</h2>
                     <div className="border rounded-md border-black mt-5 flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
@@ -83,14 +87,14 @@ const CheckoutPage = () =>
                     <div className='w-[40%]'>
                         <div className=''>
                             <div className='method-list '>
-                                <label htmlFor='cod' className={ `radio-button flex py-3 ${ paymentMethod === 'COD' ? 'selected' : '' }` } onClick={ () => handlePaymentMethodChange( 'COD' ) }
+                                <label htmlFor='cod' className={`radio-button flex py-3 ${paymentMethod === 'COD' ? 'selected' : ''}`} onClick={() => handlePaymentMethodChange('COD')}
                                 >
 
                                     <input
                                         id='cod'
                                         type='radio'
                                         name='payment-method'
-                                        checked={ paymentMethod === 'COD' }
+                                        checked={paymentMethod === 'COD'}
                                         readOnly
                                         value='COD'
                                     />
@@ -112,8 +116,8 @@ const CheckoutPage = () =>
                                 </label>
                                 <label
                                     htmlFor='vnpay'
-                                    className={ `radio-button flex py-3 ${ paymentMethod === 'vnpay' ? 'selected' : '' }` }
-                                    onClick={ () => handlePaymentMethodChange( 'vnpay' ) }
+                                    className={`radio-button flex py-3 ${paymentMethod === 'vnpay' ? 'selected' : ''}`}
+                                    onClick={() => handlePaymentMethodChange('vnpay')}
                                 >
                                     <input
                                         type='radio'
@@ -141,35 +145,35 @@ const CheckoutPage = () =>
                         </div>
                     </div>
 
-                    <button onClick={ handleCheckout } className="border bg-[#23314B] max-sm:w-[360px] text-white w-[566px] h-[55px] mt-5 rounded-md hover:bg-blue-500">Hoàn tất đơn hàng</button>
+                    <button onClick={handleCheckout} className="border bg-[#23314B] max-sm:w-[360px] text-white w-[566px] h-[55px] mt-5 rounded-md hover:bg-blue-500">Hoàn tất đơn hàng</button>
                 </div>
 
             </div>
 
             <div className="border-l-2 border-gray-200 sm:ml-4 pl-4 sm:w-[50%] bg-[#F5F5F5] ">
                 <div className="mt-4">
-                    { cart?.items?.map( ( item: any, index: any ) => (
-                        <div key={ index } className="flex items-center p-2">
-                            <img className="w-[64px] h-[64px] border rounded-md border-gray-300" src={ item.product.images[ 0 ].url } alt="" />
+                    {cart?.items?.map((item: any, index: any) => (
+                        <div key={index} className="flex items-center p-2">
+                            <img className="w-[64px] h-[64px] border rounded-md border-gray-300" src={item.product.images[0].url} alt="" />
                             <div className="ml-4 mr-4 w-[50%]">
-                                <p>{ item.product.name }</p>
-                                <p>{ item.productVariant.size }</p>
-                                <p>{ item.productVariant.color }</p>
+                                <p>{item.product.name}</p>
+                                <p>{item.productVariant.size}</p>
+                                <p>{item.productVariant.color}</p>
                             </div>
                             <div className="w-1/4 sm:w-1/4 text-center ">
                                 <div className="flex flex-col items-center">
-                                    <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
+                                    <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{item.quantity}</p>
                                 </div>
                             </div>
-                            <p className='max-sm:mr-2'>{ item.productInfo.price }₫</p>
+                            <p className='max-sm:mr-2'>{item.productInfo.price}₫</p>
 
 
                         </div>
-                    ) ) }
+                    ))}
 
                 </div>
                 <div className='max-sm:flex max-sm:items-center max-sm:mt-5 max-sm:justify-between'>
-                    <input type="text" placeholder="  Mã giảm giá" onChange={ ( e ) => setDiscountCode( e.target.value ) } className="rounded-md sm:mt-5 sm:w-[270px] h-[48px] border border-gray-200" />
+                    <input type="text" placeholder="  Mã giảm giá" onChange={(e) => setDiscountCode(e.target.value)} className="rounded-md sm:mt-5 sm:w-[270px] h-[48px] border border-gray-200" />
                     <button className="border rounded-md border-gray-400 sm:ml-4 h-[48px] max-sm:mr-3 sm:w-[85px] bg-[#EDEDED]" >Áp dụng</button>
                 </div>
 
@@ -182,7 +186,7 @@ const CheckoutPage = () =>
                     </div>
                     <div className="flex justify-between">
                         <p className="font-mono text-xl">Tổng</p>
-                        <p className="font-semibold">{ totalAmount } đ</p>
+                        <p className="font-semibold">{totalAmount} đ</p>
                     </div>
                 </div>
             </div>
