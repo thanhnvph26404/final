@@ -52,6 +52,7 @@ import UpdateProduct from "./pages/admin/products/Updateproduct";
 
 import ListOrder from "./pages/admin/Order/Order";
 import CheckoutPage from "./pages/website/PaymentPage";
+import ChartPage from "./pages/admin/chart/BarChart";
 
 
 
@@ -228,6 +229,8 @@ export const router = createBrowserRouter([
                     { path: 'product/:id', element: <UpdateProduct /> },
 
                     { path: 'orders', element: <ListOrder /> },
+                    { path: 'chart', element: <ChartPage /> },
+
 
                 ]
             }
