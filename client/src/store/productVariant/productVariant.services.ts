@@ -4,7 +4,7 @@ import { IProductVariant } from './productVariant.interface'
 export const productVariantApi = createApi({
     reducerPath: 'productVariantApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8081/productVariant'
+        baseUrl: 'http://localhost:8080/productVariant'
     }),
     tagTypes: ['productVariant'],
     endpoints: (builder) => ({

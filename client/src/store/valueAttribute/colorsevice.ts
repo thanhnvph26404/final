@@ -4,7 +4,7 @@ import { Color } from '../productVariant/productVariant.interface'
 export const colorApi = createApi({
     reducerPath: 'colorApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8081/color'
+        baseUrl: 'http://localhost:8080/color'
     }),
     tagTypes: ['Color'],
     endpoints: (builder) => ({

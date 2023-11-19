@@ -4,7 +4,7 @@ import { ICategory } from './category.interface'
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8081/category'
+        baseUrl: 'http://localhost:8080/category'
     }),
     tagTypes: ['Category'],
     endpoints: (builder) => ({

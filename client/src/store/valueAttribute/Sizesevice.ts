@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const sizeApi = createApi({
     reducerPath: 'sizeApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8081/size'
+        baseUrl: 'http://localhost:8080/size'
     }),
     tagTypes: ['Size'],
     endpoints: (builder) => ({
