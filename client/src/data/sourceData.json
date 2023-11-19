@@ -1,0 +1,38 @@
+[
+    {
+      "label": "Ads",
+      "money": 10000
+    },
+    {
+      "label": "Subscriptions",
+      "money": 4500
+    },
+    {
+      "label": "abc",
+      "money": 23000
+    },
+    {
+      "label": "bcd",
+      "money": 1200
+    },
+    {
+      "label": "aaa",
+      "money": 23001
+    },
+    {
+      "label": "bbb",
+      "money": 48028
+    },
+    {
+      "label": "ccc",
+      "money": 9000
+    },
+    {
+      "label": "dđ",
+      "money": 19999
+    },
+    {
+      "label": "ee",
+      "money": 23456
+    }
+  ]
