@@ -1,15 +1,15 @@
 import TextArea from "antd/es/input/TextArea";
-import { Form, Input, Button, Upload, Select, Space } from "antd";
+import { Form, Input, Button, Upload, Select, Space, UploadProps } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useGetCategoryListQuery } from "../../../store/categoies/category.services";
-import { Iproductdata } from "../../../store/products/product.interface";
+
 import { useGetBrandListQuery } from "../../../store/Brand/brand.services";
 import { useGetsizeListQuery } from "../../../store/valueAttribute/Sizesevice";
 import { useGetcolorListQuery } from "../../../store/valueAttribute/colorsevice";
-import { useAddProductMutation, useGetProductQuery } from "../../../store/products/product.services";
+import { useEditProductMutation, useGetProductQuery } from "../../../store/products/product.services";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 
 const UpdateProduct = () => {
@@ -20,33 +20,39 @@ const UpdateProduct = () => {
     const { data: brands } = useGetBrandListQuery([]);
     const { data: size } = useGetsizeListQuery([])
     const { data: color } = useGetcolorListQuery([])
-    const [addProductMutation] = useAddProductMutation();
+    const [EditProductMutation] = useEditProductMutation();
     const [loadings, setLoadings] = useState(false);
 
-    const [form] = Form.useForm();
+    console.log(product);
     const [fileList, setFileList] = useState<any[]>([])
-    if (!isLoading) {
-        const imgdefaul = product?.data?.images?.map((item) => {
-            return {
-                name: "image",
-                uid: `${item.uid}`,
-                status: 'done',
-                url: item.url,
-            }
-        });
-        if (imgdefaul) {
-            setFileList(imgdefaul)
-        }
+
+    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+        setFileList(newFileList);
+    const [form] = Form.useForm();
+
+    const setFields = () => {
+
+        setFileList(product.data.images)
         form.setFieldsValue({
-            categoryId: product?.data?.category._id,
+            _id: product?.data?._id,
             name: product?.data?.name,
             price: product?.data?.price,
-            originPrice: product?.data?.originPrice,
+            original_price: product?.data?.original_price,
             description: product?.data?.description,
-            images: product?.data?.imgUrl
+            brand: product?.data?.brand?._id,
+            imgUrl: product?.data?.images,
+            category: product?.data?.category?._id,
+            ProductVariants: product?.data?.ProductVariants
         });
 
-    }
+
+    };
+
+    useEffect(() => {
+        setFields()
+    }, [isLoading])
+
+
 
     const validateMessages = {
         required: '${label} is required!',
@@ -69,29 +75,32 @@ const UpdateProduct = () => {
 
 
     const onSubmit = async (data: any) => {
-        setLoadings(true);
+        // setLoadings(true);
         let newurls = [];
 
         // Check if data.images exists and has a fileList property
         if (data.imgUrl && data.imgUrl.fileList) {
-            newurls = await Promise.all(data?.imgUrl?.fileList?.map(async (item: any) => {
-                const formData = new FormData();
-                formData.append("image", item.originFileObj);
-                const API_key = "42d2b4a414af48bbc306d6456dd1f943";
-                const apiResponse = await axios.post(
-                    `https://api.imgbb.com/1/upload?key=${API_key}`,
-                    formData
-                );
-                return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
+            console.log(data.imgUrl.fileList)
+            newurls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
+                if (item.originFileObj) {
+                    const formData = new FormData();
+                    formData.append("image", item.originFileObj);
+                    const API_key = "42d2b4a414af48bbc306d6456dd1f943"
+                    const apiResponse: any = await axios.post(
+                        `https://api.imgbb.com/1/upload?key=${API_key}`,
+                        formData
+                    )
+
+                    return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
+                }
+                else {
+                    return item
+                }
             }))
-            console.log(newurls);
+
         }
-        // console.log( newurls );
-        console.log(data.imgUrl.fileList);
-
-
-
         const newProduct = {
+            _id: data._id,
             name: data.name,
             price: data.price,
             original_price: data.original_price,
@@ -104,13 +113,13 @@ const UpdateProduct = () => {
         console.log(newProduct);
 
         try {
-            await addProductMutation(newProduct).unwrap().then(() => {
-                toastSuccess('Thêm sản phẩm thành công!');
+            await EditProductMutation(newProduct).unwrap().then(() => {
+                toastSuccess('sửa sản phẩm thành công!');
             }).then(() => {
                 navigate('/admin/products');
             });
         } catch (error) {
-            toastError('Thêm sản phẩm thất bại!');
+            toastError('sửa sản phẩm thất bại!');
         } finally {
             setLoadings(false);
         }
@@ -123,7 +132,8 @@ const UpdateProduct = () => {
                 sửa sản phẩm
             </h3>
             <Form
-                name="basic"
+                name="Form"
+                form={form}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
                 style={{ maxWidth: 800 }}
@@ -133,6 +143,19 @@ const UpdateProduct = () => {
                 validateMessages={validateMessages}
                 autoComplete="off"
             >
+                <Form.Item
+                    label="Tên sản Phẩm"
+                    name="_id"
+                    hidden
+                    rules={[
+                        { required: true },
+                        { whitespace: true },
+                        { min: 6, max: 255 },
+                    ]}
+                    hasFeedback
+                >
+                    <Input />
+                </Form.Item>
                 <Form.Item
                     label="Tên sản Phẩm"
                     name="name"
@@ -210,10 +233,12 @@ const UpdateProduct = () => {
                 <Form.Item
                     label="Ảnh sản phẩm"
                     name="imgUrl"
+
                     wrapperCol={{ offset: 3, span: 16 }}
                     rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
                 >
-                    <Upload accept="image/*" listType="picture-card" multiple beforeUpload={beforeUpload} maxCount={5}>
+                    <Upload fileList={fileList} accept="image/*" listType="picture-card" multiple beforeUpload={beforeUpload}
+                        onChange={handleChange} >
                         <Button icon={<UploadOutlined />} block>
                             Chọn ảnh
                         </Button>
@@ -231,8 +256,8 @@ const UpdateProduct = () => {
                                         rules={[{ required: true, message: 'Color is required' }]}
                                     >
                                         <Select id="">
-                                            {color?.data?.map((color: any) => (
-                                                <Select.Option value={color.color}>
+                                            {color?.data?.map((color: any, index) => (
+                                                <Select.Option key={index} value={color.color}>
                                                     {color.color}
                                                 </Select.Option>
                                             ))}
@@ -277,11 +302,11 @@ const UpdateProduct = () => {
                 </Form.List>
                 <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                     <Button type="primary" loading={loadings} className="bg-blue-500" htmlType="submit">
-                        Thêm  sản phẩm
+                        cập nhập sản phẩm
                     </Button>
                 </Form.Item>
             </Form>
-        </div>
+        </div >
     );
 };
 
