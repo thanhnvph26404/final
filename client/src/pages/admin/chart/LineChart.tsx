@@ -21,11 +21,11 @@ defaults.plugins.title.color = "black";
 const ChartPage2 = () => {
 
 
-    // const { data: productChart } = useGetProductsQuery(null)
+    const { data: productChart } = useGetProductsQuery(null)
     // console.log(productChart);
 
     const { data: OrderData } = useGetAllOrderQuery(null)
-    console.log(OrderData);
+    // console.log(OrderData);
    
 
 
@@ -35,7 +35,7 @@ const ChartPage2 = () => {
             <div>
                 <Line className=" "
                     data={{
-                        labels: sourceData.map((data) => data.month),
+                        labels: OrderData?.Order?.map((data:any) => data?.updatedAt),
                         datasets: [
                             {
                                 label: "Tổng số tiền bán được/tháng",

@@ -25,7 +25,7 @@ const ChartPage = () => {
 
 
     const { data: productChart } = useGetProductsQuery(null)
-    console.log(productChart);
+    // console.log(productChart);
 
     // const { data: OrderData } = useGetAllOrderQuery(null)
     // console.log(OrderData);
@@ -36,10 +36,10 @@ const ChartPage = () => {
     return (
         <div>
             <div className="flex">
-                <div className="h-[400px] w-[600px]">
+                <div className="h-[500px] w-[600px]">
                     <Bar 
                         data={{
-                            labels: sourceData.map((data) => data.month),
+                            labels: productChart?.products?.map((data:any) => data?.updatedAt),
                             datasets: [
                                 {
                                     label: "Số sản phẩm bán được/tháng",
