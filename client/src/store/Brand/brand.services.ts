@@ -4,7 +4,7 @@ import { Brand } from './brand.interface'
 export const brandApi = createApi({
     reducerPath: 'brandApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8081/brand'
+        baseUrl: 'http://localhost:8080/brand'
     }),
     tagTypes: ['Brand'],
     endpoints: (builder) => ({
