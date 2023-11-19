@@ -22,7 +22,7 @@ const ChartPage3 = () => {
 
 
     const { data: productChart } = useGetProductsQuery(null)
-    console.log(productChart);
+    // console.log(productChart);
 
     // const { data: OrderData } = useGetAllOrderQuery(null)
     // console.log(OrderData);
