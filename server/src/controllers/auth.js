@@ -796,6 +796,34 @@ export const createOrder = async ( req, res ) =>
 //     // Calculate the discount amount
 //     const discount = ( amount * validCoupon.discount ) / 100;
 
+// const applyDiscountCode = async ( userId, amount, discountCode ) =>
+// {
+//   try
+//   {
+//     const validCoupon = await Voucher.findOne( { code: discountCode } );
+
+//     if ( !validCoupon )
+//     {
+//       throw new Error( "Mã voucher không đúng" );
+//     }
+
+//     // Check if the voucher limit has been reached
+//     if ( validCoupon.limit <= 0 )
+//     {
+//       throw new Error( "Số lượng voucher đã hết" );
+//     }
+
+//     // Check if the voucher is expired
+//     const currentDate = new Date();
+//     if ( currentDate > new Date( validCoupon.endDate ) )
+//     {
+//       console.log( "Voucher đã hết hạn" );
+//       return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
+//     }
+
+//     // Calculate the discount amount
+//     const discount = ( amount * validCoupon.discount ) / 100;
+
 //     // Update the order total with the discount
 //     await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
 

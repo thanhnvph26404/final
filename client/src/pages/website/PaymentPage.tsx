@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useApplycouponMutation, useCreateOrderMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
 import { toastSuccess } from '../../hook/toastify';
+
 import
 {
     PayPalScriptProvider,
@@ -180,6 +181,7 @@ const CheckoutPage = () =>
 
             const response = await createOrder( { ...paymentData, calculatedTotalAmount } );
             navigate( "/ordersuccess" )
+
             console.log( 'Created order:', response );
             // Update UI or display success message...
         } catch ( error )
@@ -344,7 +346,6 @@ const CheckoutPage = () =>
                         </div>
                     </div>
 
-                    <button onClick={ handleCheckout } className="border bg-[#23314B] max-sm:w-[360px] text-white w-[566px] h-[55px] mt-5 rounded-md hover:bg-blue-500">Hoàn tất đơn hàng</button>
                 </div>
 
             </div>
