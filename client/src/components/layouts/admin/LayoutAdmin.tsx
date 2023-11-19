@@ -7,6 +7,7 @@ import { FaUser, FaCommentAlt } from 'react-icons/fa'
 import { Layout, Menu, theme } from 'antd';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import { PieChartOutlined } from '@ant-design/icons';
 
 const { Content, Sider } = Layout;
 
@@ -80,6 +81,12 @@ const items = [
     key: '12',
     icon: <BiSolidLike className='text-gray-85 text-lg  hover:text-[#1D1F2C]  ' />,
     path: 'feedback', // Đường dẫn tới phản hồi 
+  },
+  {
+    label: 'Thống kê',
+    key: '13',
+    icon: <PieChartOutlined  className='text-gray-85 text-lg  hover:text-[#1D1F2C]  ' />,
+    path: 'chart', // Đường dẫn tới phản hồi 
   },
   // Thêm các mục menu khác ở đây
 ];

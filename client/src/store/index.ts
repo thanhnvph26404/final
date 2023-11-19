@@ -25,6 +25,7 @@ import { sizeApi } from './valueAttribute/Sizesevice'
 import { brandApi } from './Brand/brand.services'
 import { orderReducer } from './Order/Order.slice'
 
+
 // import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
