@@ -3,14 +3,17 @@ import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 import { useEffect } from "react";
 import Popup from "reactjs-popup"
 import 'reactjs-popup/dist/index.css';
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
 import { useAddToCartMutation } from "../../store/Auth/Auth.services";
+import { toastError } from "../../hook/toastify";
 
 const ProductDetail = () =>
 {
     const { id } = useParams();
     const { data: product, error, isLoading } = useGetProductQuery( id! );
+    console.log( product );
+
     const [ AddToCartMutation ] = useAddToCartMutation()
     const [ mauSac, setmauSac ] = useState();
     const [ quantity, setQuantity ] = useState( 0 );
@@ -21,6 +24,7 @@ const ProductDetail = () =>
     const [ isFormVisible, setIsFormVisible ] = useState( false );
     const [ listSize, setlistSize ] = useState( [] );
     const [ image, setimage ] = useState();
+    const navigate = useNavigate()
 
     const ProductVariants = product?.data?.ProductVariants
 
@@ -106,17 +110,17 @@ const ProductDetail = () =>
     {
         if ( mauSac && kichCo && count )
         {
-            const cart = {
+            const cart: any = {
                 productId: id,
                 size: kichCo,
                 color: mauSac,
                 quantity: count
             }
-
-            console.log( cart );
-
-
+            navigate( '/cart' )
             AddToCartMutation( cart )
+        } else
+        {
+            toastError( "bạn chưa chọn số lượng sản phẩm " )
         }
 
 
@@ -132,22 +136,6 @@ const ProductDetail = () =>
     {
         return <p>Error...</p>
     }
-
-
-
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         if (progress < 100) {
-    //             setProgress(progress + 1);
-    //         } else {
-    //             clearInterval(interval);
-    //         }
-    //     }, 10);
-
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, [progress]);
 
 
     return (

@@ -15,25 +15,30 @@ const CartPage = () =>
     const location = useLocation();
 
     const { data: cart, refetch } = useGetCartQuery( [] );
-    const [ removeOnecart ] = useDeleteoneProductMutation()
-    const remove = () =>
-        useEffect( () =>
-        {
-            const fetchData = async () =>
-            {
-                try
-                {
-                    // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
-                    await refetch();
-                    // Dữ liệu giỏ hàng đã được cập nhật
-                } catch ( error )
-                {
-                    // Xử lý lỗi nếu có
-                }
-            };
+    console.log( cart );
 
-            fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
-        }, [ location.pathname, refetch ] );
+    const [ removeOnecart ] = useDeleteoneProductMutation()
+    const remove = ( id: any ) =>
+    {
+        removeOnecart( id )
+    }
+    useEffect( () =>
+    {
+        const fetchData = async () =>
+        {
+            try
+            {
+                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+                await refetch();
+                // Dữ liệu giỏ hàng đã được cập nhật
+            } catch ( error )
+            {
+                // Xử lý lỗi nếu có
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+    }, [ location.pathname, refetch ] );
 
     return (
         <div className="p-4">
@@ -68,7 +73,7 @@ const CartPage = () =>
                             <div className="w-1/4 sm:w-1/4 text-center mr-[55px]">
                                 <div className="flex flex-col items-center">
                                     <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
-                                    <button className="underline hover:text-red-500">Xóa</button>
+                                    <button className="underline hover:text-red-500" onClick={ () => remove( item.product._id ) }>Xóa</button>
                                 </div>
                             </div>
                             <div className="w-[267px] text-center mr-[15px] hidden sm:block">
