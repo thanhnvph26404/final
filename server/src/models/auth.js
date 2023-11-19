@@ -39,12 +39,10 @@ const userSchema = new mongoose.Schema(
         ref: "Card",
       },
     ],
-    vouchers: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Voucher",
-      },
-    ],
+    vouchers: [ {
+      type: Schema.Types.ObjectId, // Hoặc Schema.Types.String nếu bạn lưu trữ dưới dạng chuỗi
+      ref: 'Voucher' // Tham chiếu tới mô hình Voucher nếu đây là ObjectId
+    } ],
     orders: [
       {
         type: mongoose.Types.ObjectId,

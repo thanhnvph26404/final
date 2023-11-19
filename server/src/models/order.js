@@ -47,10 +47,13 @@ const orderSchema = new mongoose.Schema( {
     total: {
         type: Number,
     },
+    shipping: {
+        type: String
+    },
     paymentStatus: {
         type: String,
         default: "thanh toán khi nhận hàng",
-        enum: [ "thanh toán khi nhận hàng", "momo" ]
+        enum: [ "thanh toán khi nhận hàng", "Paypal" ]
 
 
     },
@@ -58,6 +61,7 @@ const orderSchema = new mongoose.Schema( {
         type: String,
         default: "Đang xử lý",
         enum: [
+            "thanh toán thành công",
             "Chờ thanh toán",
             "Đang xử lý",
             "Đang giao hàng",
@@ -66,9 +70,6 @@ const orderSchema = new mongoose.Schema( {
             "Đã hoàn tiền",
             "Đã hoàn thành",
         ],
-    },
-    totalAfterDiscount: {
-        type: Number
     },
     paymentIntent: {},
     Phone: {

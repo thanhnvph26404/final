@@ -6,6 +6,9 @@ const cartSchema = new mongoose.Schema( {
         ref: "User", // Tham chiếu đến model User hoặc bạn có thể đổi thành tên model người dùng tương ứng
         required: true,
     },
+    totalAfterDiscount: {
+        type: Number
+    },
     items: [
         {
             product: {
