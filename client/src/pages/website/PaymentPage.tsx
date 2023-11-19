@@ -8,10 +8,12 @@ import
     usePayPalScriptReducer
 } from "@paypal/react-paypal-js";
 import { Select } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 
 const CheckoutPage = () =>
 {
+    const navigate = useNavigate()
     const { data: cart } = useGetCartQuery( [] );
 
     const [ couponApplied, setCouponApplied ] = useState( false );
@@ -56,6 +58,8 @@ const CheckoutPage = () =>
                 const calculatedTotalAmount = couponApplied ? cart?.totalAfterDiscount + shippingFee : cart?.total + shippingFee;
 
                 const response = await createOrder( { ...paymentData, calculatedTotalAmount } );
+                navigate( "/ordersuccess" )
+
                 console.log( response );
             } catch ( error )
             {
@@ -175,6 +179,7 @@ const CheckoutPage = () =>
 
 
             const response = await createOrder( { ...paymentData, calculatedTotalAmount } );
+            navigate( "/ordersuccess" )
             console.log( 'Created order:', response );
             // Update UI or display success message...
         } catch ( error )
