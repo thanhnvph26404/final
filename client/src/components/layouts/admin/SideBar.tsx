@@ -162,10 +162,7 @@ const SubSideBar = () =>
           <BiSolidUserPin className='text-xl text-gray-85 group-hover:text-[#1D1F2C] group-hover:font-bold' />
           <h3 className='ml-3 text-sm font-semibold text-black-400 group-hover:text-[#1D1F2C] group-hover:font-bold'>Liên hệ</h3>
         </Link>
-        <Link to='' className='relative group flex  px-6 py-3 items-center h-12 mt-2.5 hover:bg-[#F0F1F3]  before:content-[""] before:w-1 before:absolute before:left-0 before:bg-gradient-to-b from-[#3250FF] to-[#2BB2FE] before:h-full before:opacity-0 hover:before:opacity-100' >
-          <BiSolidUserPin className='text-xl text-gray-85 group-hover:text-[#1D1F2C] group-hover:font-bold' />
-          <h3 className='ml-3 text-sm font-semibold text-black-400 group-hover:text-[#1D1F2C] group-hover:font-bold'>Thống kê</h3>
-        </Link>
+        
       </div>
 
     </div>

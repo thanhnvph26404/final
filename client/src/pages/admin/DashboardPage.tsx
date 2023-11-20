@@ -52,6 +52,7 @@ const DashboardPage = () => {
                 },
 
               ],
+              
             }}
             options={{
               plugins: {

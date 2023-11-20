@@ -25,7 +25,7 @@ const ChartPage = () => {
 
 
     const { data: productChart } = useGetProductsQuery(null)
-    // console.log(productChart);
+    console.log(productChart);
 
     // const { data: OrderData } = useGetAllOrderQuery(null)
     // console.log(OrderData);
@@ -39,10 +39,10 @@ const ChartPage = () => {
                 <div className="h-[500px] w-[600px]">
                     <Bar 
                         data={{
-                            labels: productChart?.products?.map((data:any) => data?.updatedAt),
+                            labels: productChart?.products?.map((data:any) => data?.createdAt),
                             datasets: [
                                 {
-                                    label: "Số sản phẩm bán được/tháng",
+                                    label: "Số sản phẩm bán được/năm",
                                     data: productChart?.products?.map((data: any) => data?.sold),
                                     backgroundColor: [
                                         "rgba(255, 0, 90, 1)",
@@ -50,8 +50,10 @@ const ChartPage = () => {
                                     ],
                                     borderRadius: 5,
                                 },
+                                
 
                             ],
+                            
                         }}
                         options={{
                             plugins: {
