@@ -54,6 +54,7 @@ import ListOrder from "./pages/admin/Order/Order";
 import CheckoutPage from "./pages/website/PaymentPage";
 import ChartPage from "./pages/admin/chart/BarChart";
 import ProductDetailAdmin from "./pages/admin/products/ProductDetailAdmin";
+import OrderDetail from "./pages/website/OrderDetail";
 
 
 
@@ -177,6 +178,7 @@ export const router = createBrowserRouter( [
                         ),
                     },
                     { path: 'orders', element: <PurchaseHistory /> },
+                    { path: 'orderDetail/:id', element: <OrderDetail /> },
 
                     {
                         path: "change-password",
@@ -222,7 +224,7 @@ export const router = createBrowserRouter( [
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
 
-                    { path: 'orderss', element: <OrderList /> },
+                    { path: 'orderss/:id', element: <OrderList /> },
 
                     // { path: 'size', element: <ListSize /> },
                     // { path: 'size/add', element: <AddSize /> },

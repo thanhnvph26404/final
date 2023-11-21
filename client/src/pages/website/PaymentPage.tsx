@@ -196,10 +196,10 @@ const CheckoutPage = () =>
         setShippingType( selectedShippingType );
 
         // Áp dụng giá vận chuyển tương ứng
-        if ( selectedShippingType === 'standard' )
+        if ( selectedShippingType === 'nhanh' )
         {
             setShippingFee( 30 ); // Giá vận chuyển cho giao hàng tiêu chuẩn
-        } else if ( selectedShippingType === 'express' )
+        } else if ( selectedShippingType === 'hỏa tốc' )
         {
             setShippingFee( 50 ); // Giá vận chuyển cho giao hàng hỏa tốc
         }
@@ -241,11 +241,11 @@ const CheckoutPage = () =>
                             id='standardShipping'
                             type='radio'
                             name='shippingType'
-                            checked={ shippingType === 'standard' }
+                            checked={ shippingType === 'nhanh' }
                             readOnly
                             onChange={ handleShippingChange }
 
-                            value='standard'
+                            value='nhanh'
                         />
                         <div className="border rounded-md border-black  flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
 
@@ -259,8 +259,8 @@ const CheckoutPage = () =>
                             type="radio"
                             id="expressShipping"
                             name="shippingType"
-                            value="express"
-                            checked={ shippingType === 'express' }
+                            value="hỏa tốc"
+                            checked={ shippingType === 'hỏa tốc' }
                             onChange={ handleShippingChange }
                         />
                         <div className="border rounded-md border-black  flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
@@ -353,9 +353,9 @@ const CheckoutPage = () =>
                 <div className="mt-4">
                     { cart?.items?.map( ( item: any, index: any ) => (
                         <div key={ index } className="flex items-center p-2">
-                            <img className="w-[64px] h-[64px] border rounded-md border-gray-300" src={ item.product.images[ 0 ].url } alt="" />
+                            <img className="w-[64px] h-[64px] border rounded-md border-gray-300" src={ item.productInfo.images[ 0 ].url } alt="" />
                             <div className="ml-4 mr-4 w-[50%]">
-                                <p>{ item.product.name }</p>
+                                <p>{ item.productInfo.name }</p>
                                 <p>{ item.productVariant.size }</p>
                                 <p>{ item.productVariant.color }</p>
                             </div>

@@ -28,7 +28,7 @@ const cartSchema = new mongoose.Schema( {
                 type: Number
             },
             productInfo: {
-                images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
+                images: [],
                 name: String,
                 brand: {
                     type: mongoose.Schema.Types.ObjectId,

@@ -27,7 +27,7 @@ const orderSchema = new mongoose.Schema( {
                 required: true,
             },
             productInfo: {
-                images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
+                images: [], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
                 name: String,
                 brand: {
                     type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +47,7 @@ const orderSchema = new mongoose.Schema( {
     total: {
         type: Number,
     },
-    shipping: {
+    shippingType: {
         type: String
     },
     paymentStatus: {

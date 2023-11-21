@@ -56,10 +56,10 @@ const CartPage = () =>
 
                         <div className="flex py-4 sm:py-8 items-center" key={ index }>
                             <div className="flex w-full items-center">
-                                { item?.product?.images && item?.product?.images[ 0 ] && (
+                                { item?.product?.images && item?.productInfo?.images[ 0 ] && (
                                     <img
                                         className="w-[96px] h-[125px] sm:w-[80px] sm:h-[100px] mr-4"
-                                        src={ item?.product?.images[ 0 ]?.url }
+                                        src={ item?.productInfo?.images[ 0 ]?.url }
                                         alt=""
                                     />
                                 ) }
