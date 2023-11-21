@@ -22,7 +22,7 @@ const ChartPage3 = () => {
 
 
     const { data: productChart } = useGetProductsQuery(null)
-    console.log(productChart);
+    // console.log(productChart);
 
     // const { data: OrderData } = useGetAllOrderQuery(null)
     // console.log(OrderData);
@@ -38,10 +38,10 @@ const ChartPage3 = () => {
             <div>
                 <Doughnut className=" "
                     data={{
-                        labels: sourceData.map((data) => data.month),
+                        labels: productChart?.products?.map((data:any) => data?.createdAt),
                         datasets: [
                             {
-                                label: "Tổng số tiền bán được/tháng",
+                                label: "Tổng số tiền bán được/năm",
                                 data: productChart?.products?.map((data:any) => data.price),
                                 backgroundColor: [
                                     "rgba(178, 90, 15, 0.8)",

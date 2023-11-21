@@ -671,74 +671,78 @@ export const applyCoupon = async ( req, res ) =>
 {
   const { _id } = req.user;
   const { voucher } = req.body;
+
   const validcoupon = await Voucher.findOne( { code: voucher } )
   if ( validcoupon === null ) throw new Error( "mã voucher không đúng " );
-  const user = await Auth.findOne( { _id } );
-  let totals = await order.findOne( { userId: user._id } ).populate( "products.product" )
-  console.log( totals );
-  if ( totals.paymentIntent.amount )
+  if ( validcoupon.limit <= 0 )
   {
-    console.log( totals.paymentIntent.amount );
-    let totalAfterDiscount = ( totals.paymentIntent.amount - ( totals.paymentIntent.amount * validcoupon.discount ) / 100 ).toFixed( 2 );
-    await order.findOneAndUpdate( { userId: user._id }, { totalAfterDiscount }, { new: true } );
-    res.json( totalAfterDiscount )
-
-  } else
-  {
-    throw new Error( "lỗi khi giảm giá hoặc mã giảm giá đã hết hạn" )
+    throw new Error( "Số lượng voucher đã hết" );
   }
+  const currentDate = new Date();
+  if ( currentDate > new Date( validcoupon.endDate ) )
+  {
+    console.log( "Voucher đã hết hạn" );
+    return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
+  }
+  const user = await Auth.findOne( { _id } );
+  let { products, total } = await Cart.findOne( { userId: user._id } ).populate( "items.product" )
+  console.log( total );
+  let totalAfterDiscount = ( total - ( total * validcoupon.discount ) / 100 ).toFixed( 2 );
+  await Cart.findOneAndUpdate( { userId: user._id }, { totalAfterDiscount }, { new: true } );
+  await Voucher.findOneAndUpdate( { code: voucher }, { $inc: { limit: -1 } } );
+  res.json( totalAfterDiscount )
+
+
 
 }
+
 export const createOrder = async ( req, res ) =>
 {
-  const { COD, discountCode, Address } = req.body;
+  const { COD, Address, couponApplied, TTONL, shippingType } = req.body;
   const { _id } = req.user;
 
   try
   {
-    if ( !COD )
+    let method = "COD";
+    let paymentStatus = "thanh toán khi nhận hàng";
+
+    if ( TTONL )
     {
-      throw new Error( "Create cash order failed" );
+      method = "TTONL";
+      paymentStatus = "Paypal";
+    } else if ( !COD )
+    {
+      throw new Error( "Create order failed" );
+    }
+    let shippingFee = 0;
+    if ( shippingType === 'standard' )
+    { // Xác định loại vận chuyển
+      shippingFee = 30; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
+    } else if ( shippingType === 'express' )
+    {
+      shippingFee = 50; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
     }
 
     const user = await Auth.findById( _id );
     let userCart = await Cart.findOne( { userId: user._id } );
-
-    let finalAmount = 0;
-    if ( userCart.total )
-    {
-      finalAmount = userCart.total;
-    } else
-    {
-      finalAmount = userCart.total;
-    }
-    if ( discountCode )
-    {
-      // Apply the discount code and update the final amount
-      const discountResult = await applyDiscountCode( user._id, finalAmount, discountCode );
-      console.log( discountResult );
-      if ( discountResult.error )
-      {
-        // Handle the case where the discount code is not valid
-        return res.status( 400 ).json( { error: discountResult.error } );
-      }
-
-      finalAmount -= discountResult;
-    }
+    console.log( userCart );
+    let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
 
     let newOrder = await new order( {
       products: userCart.items,
       paymentIntent: {
         id: uniqid(),
-        method: "COD",
+        method: method,
         amount: finalAmount,
-        status: "Đang xử lý",
+        status: "thanh toán thành công",
         created: Date.now(),
         currency: "VND",
       },
       userId: user._id,
-      paymentStatus: "thanh toán khi nhận hàng",
-      Address
+
+      paymentStatus: paymentStatus,
+      Address,
+      shippingType
     } ).save();
 
     // Clear the user's cart after creating the order
@@ -761,46 +765,77 @@ export const createOrder = async ( req, res ) =>
     return res.status( 500 ).json( { error: "Internal server error" } );
   }
 };
-const applyDiscountCode = async ( userId, amount, discountCode ) =>
-{
-  try
-  {
-    const validCoupon = await Voucher.findOne( { code: discountCode } );
 
-    if ( !validCoupon )
-    {
-      throw new Error( "Mã voucher không đúng" );
-    }
 
-    // Check if the voucher limit has been reached
-    if ( validCoupon.limit <= 0 )
-    {
-      throw new Error( "Số lượng voucher đã hết" );
-    }
 
-    // Check if the voucher is expired
-    const currentDate = new Date();
-    if ( currentDate > new Date( validCoupon.endDate ) )
-    {
-      console.log( "Voucher đã hết hạn" );
-      return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
-    }
+// const applyDiscountCode = async ( userId, amount, discountCode ) =>
+// {
+//   try
+//   {
+//     const validCoupon = await Voucher.findOne( { code: discountCode } );
 
-    // Calculate the discount amount
-    const discount = ( amount * validCoupon.discount ) / 100;
+//     if ( !validCoupon )
+//     {
+//       throw new Error( "Mã voucher không đúng" );
+//     }
 
-    // Update the order total with the discount
-    await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
+//     // Check if the voucher limit has been reached
+//     if ( validCoupon.limit <= 0 )
+//     {
+//       throw new Error( "Số lượng voucher đã hết" );
+//     }
 
-    // Decrease the voucher limit
-    await Voucher.findOneAndUpdate( { code: discountCode }, { $inc: { limit: -1 } } );
+//     // Check if the voucher is expired
+//     const currentDate = new Date();
+//     if ( currentDate > new Date( validCoupon.endDate ) )
+//     {
+//       console.log( "Voucher đã hết hạn" );
+//       return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
+//     }
 
-    return discount;
-  } catch ( error )
-  {
-    throw new Error( error );
-  }
-};
+//     // Calculate the discount amount
+//     const discount = ( amount * validCoupon.discount ) / 100;
+
+// const applyDiscountCode = async ( userId, amount, discountCode ) =>
+// {
+//   try
+//   {
+//     const validCoupon = await Voucher.findOne( { code: discountCode } );
+
+//     if ( !validCoupon )
+//     {
+//       throw new Error( "Mã voucher không đúng" );
+//     }
+
+//     // Check if the voucher limit has been reached
+//     if ( validCoupon.limit <= 0 )
+//     {
+//       throw new Error( "Số lượng voucher đã hết" );
+//     }
+
+//     // Check if the voucher is expired
+//     const currentDate = new Date();
+//     if ( currentDate > new Date( validCoupon.endDate ) )
+//     {
+//       console.log( "Voucher đã hết hạn" );
+//       return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
+//     }
+
+//     // Calculate the discount amount
+//     const discount = ( amount * validCoupon.discount ) / 100;
+
+//     // Update the order total with the discount
+//     await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
+
+//     // Decrease the voucher limit
+//     await Voucher.findOneAndUpdate( { code: discountCode }, { $inc: { limit: -1 } } );
+
+//     return discount;
+//   } catch ( error )
+//   {
+//     throw new Error( error );
+//   }
+// };
 
 
 export const getOrders = async ( req, res ) =>
@@ -808,7 +843,7 @@ export const getOrders = async ( req, res ) =>
   const { _id } = req.user
   try
   {
-    const Order = await order.findOne( { userId: _id } ).populate( "products.product" ).exec();
+    const Order = await order.find( { userId: _id } ).populate( "products.product" ).exec();
     res.json( {
       Order
     } )

@@ -36,13 +36,13 @@ const ChartPage = () => {
     return (
         <div>
             <div className="flex">
-                <div className="h-[400px] w-[600px]">
+                <div className="h-[500px] w-[600px]">
                     <Bar 
                         data={{
-                            labels: sourceData.map((data) => data.month),
+                            labels: productChart?.products?.map((data:any) => data?.createdAt),
                             datasets: [
                                 {
-                                    label: "Số sản phẩm bán được/tháng",
+                                    label: "Số sản phẩm bán được/năm",
                                     data: productChart?.products?.map((data: any) => data?.sold),
                                     backgroundColor: [
                                         "rgba(255, 0, 90, 1)",
@@ -50,8 +50,10 @@ const ChartPage = () => {
                                     ],
                                     borderRadius: 5,
                                 },
+                                
 
                             ],
+                            
                         }}
                         options={{
                             plugins: {
