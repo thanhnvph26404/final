@@ -1,6 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 import { IOrder, IUser, Login, Signup } from "./Auth.interface"
 import { ICartData } from "../Cart/cartInterface";
+import { Order, OrderItem } from "../Order/order";
+
+import { IVoucher } from "../voucher/voucher.interface";
 const authApi = createApi( {
     reducerPath: "auth",
     tagTypes: [ "Auth" ],
@@ -213,6 +216,20 @@ const authApi = createApi( {
             },
             providesTags: [ "Auth" ],
         } ),
+        getCart: builder.query( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/getCart`,
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                }
+            },
+            providesTags: [ "Auth" ],
+        } ),
         getAllOrder: builder.query( {
             query: () =>
             {
@@ -241,13 +258,68 @@ const authApi = createApi( {
                     }
                 }
             },
+
             invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
         } ),
+        createOrder: builder.mutation<Order, { COD: boolean, couponApplied: boolean, Address: string, TTONL: boolean, shippingType: string }>( {
+            query: ( { COD, couponApplied, Address, TTONL, shippingType } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+
+                    url: 'auth/creatOrder',
+                    method: 'POST',
+                    body: { COD, couponApplied, Address, TTONL, shippingType },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+
+            },
+            invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+
+        } ),
+        deleteoneProduct: builder.mutation<ICartData[], string>( {
+            query: ( id ) =>  
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+                    url: `auth/removeOneCart/${ id }`,
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+
+            invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+        } ),
+        applycoupon: builder.mutation<IVoucher, { voucher: string }>( {
+            query: ( voucher ) =>
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+
+                    url: 'auth/applycoupon',
+                    method: 'POST',
+                    body: voucher,
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+            invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+
+        } ),
+
 
     } )
 } )
 export const {
-    useLoginMutation, useAddToCartMutation, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useAddToCartMutation, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

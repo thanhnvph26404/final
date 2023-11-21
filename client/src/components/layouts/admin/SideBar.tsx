@@ -162,6 +162,7 @@ const SubSideBar = () =>
           <BiSolidUserPin className='text-xl text-gray-85 group-hover:text-[#1D1F2C] group-hover:font-bold' />
           <h3 className='ml-3 text-sm font-semibold text-black-400 group-hover:text-[#1D1F2C] group-hover:font-bold'>Liên hệ</h3>
         </Link>
+        
       </div>
 
     </div>

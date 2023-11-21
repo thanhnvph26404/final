@@ -22,14 +22,19 @@ import AuthSlice from './Auth/Auth.Slice'
 import { colorApi } from './valueAttribute/colorsevice'
 import { sizeApi } from './valueAttribute/Sizesevice'
 import { brandApi } from './Brand/brand.services'
+
 import { commentApi } from './Comment/comment.services'
+
+import { orderReducer } from './Order/Order.slice'
+
 
 // import { PersistGate } from 'redux-persist/integration/react'
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: [""]
+
+    whitelist: [ "cart" ]
 }
 
 const rootReducer = combineReducers({
@@ -39,6 +44,7 @@ const rootReducer = combineReducers({
     [authApi.reducerPath]: authReducer,
     users: AuthSlice,
     vouchers: voucherSlice,
+
     [voucherApi.reducerPath]: voucherApi.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [productVariantApi.reducerPath]: productVariantApi.reducer,
@@ -47,6 +53,7 @@ const rootReducer = combineReducers({
     [brandApi.reducerPath]: brandApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer
 })
+
 
 const middleware = [
     uploadImagesApi.middleware,

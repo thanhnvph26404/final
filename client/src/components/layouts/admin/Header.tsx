@@ -23,7 +23,7 @@ const Header = () => {
           <FaBell className='text-gray-85 text-lg mx-2 hover:text-[#1D1F2C] ' />
           <div className='flex items-center ml-6'>
             <div className='rounded-full w-8 h-8 overflow-hidden  bg-black-400 mr-3'>
-              <img src="https://www.roberthalf.com.au/sites/roberthalf.com.au/files/2019-05/admin_staff.jpg"  alt="" className='block h-full  object-cover' />
+              {/* <img src="https://www.roberthalf.com.au/sites/roberthalf.com.au/files/2019-05/admin_staff.jpg"  alt="" className='block h-full  object-cover' /> */}
             </div>
             <div className='mr-3'>
               <h3 className='text-sm font-medium text-[#07080B]'>Thanh Nguyen</h3>

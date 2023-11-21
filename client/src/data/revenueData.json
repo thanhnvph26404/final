@@ -1,0 +1,62 @@
+[
+    {
+      "month": "Tháng 1",
+      "revenue": 64854,
+      "sold": 100
+    },
+    {
+      "month": "Tháng 2",
+      "revenue": 54628,
+      "sold": 90
+    },
+    {
+      "month": "Tháng 3",
+      "revenue": 117238,
+      "sold": 80
+    },
+    {
+      "month": "Tháng 4",
+      "revenue": 82830,
+      "sold": 75
+    },
+    {
+      "month": "Tháng 5",
+      "revenue": 91208,
+      "sold": 65
+    },
+    {
+      "month": "Tháng 6",
+      "revenue": 103609,
+      "sold": 52
+    },
+    {
+      "month": "Tháng 7",
+      "revenue": 90974,
+      "sold": 47
+    },
+    {
+      "month": "Tháng 8",
+      "revenue": 82919,
+      "sold": 37
+    },
+    {
+      "month": "Tháng 9",
+      "revenue": 62407,
+      "sold": 20
+    },
+    {
+      "month": "Tháng 10",
+      "revenue": 82528,
+      "sold": 18
+    },
+    {
+      "month": "Tháng 11",
+      "revenue": 56979,
+      "sold": 8
+    },
+    {
+      "month": "Tháng 12",
+      "revenue": 87436,
+      "sold": 99
+    }
+  ]

@@ -4,6 +4,10 @@ import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router-dom";
 import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
+import { EyeFilled } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import { useGetProductQuery } from "../../../store/products/product.services";
+
 
 
 const ListProduct = () => {
@@ -11,6 +15,7 @@ const ListProduct = () => {
     const { data } = useGetProductsQuery([])
     const [remove] = useDeleteProductMutation()
     console.log(data);
+    
 
 
     const removeProduct = (id: string) => {
@@ -77,6 +82,9 @@ const ListProduct = () => {
             key: "action",
             render: (record) => (
                 <Space size="middle" className="w-12">
+                    <Link to={`productDetailAdmin/${record._id}`}>
+                        <EyeFilled className="text-[20px]" />
+                    </Link>
                     <Button
                         type="primary"
                         style={{ backgroundColor: "red" }}
