@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BsFilter } from "react-icons/bs";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowLeft, MdOutlineKeyboardArrowRight } from "react-icons/md";
 import Slider from "react-slider";
@@ -11,23 +11,40 @@ import { useAppDispatch } from "../store/hook";
 type Props = {};
 
 const ListProduct = (props: Props) => {
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
     const [arrange, setArrange] = useState(false);
     const [filter, setFilter] = useState(false);
     const [avaiable, setAvaiable] = useState(false);
-    const {data: productList } = useGetProductsQuery(null);
-    // console.log(productList);
+    const { data: productList } = useGetProductsQuery(null);
+    console.log(productList);
 
-    const {data: sortBy} = useSortByProductQuery(null)
-    console.log(sortBy);
-    
     const [value, setValue] = useState([0, 500000]);
-   
-    
-    
+    const [sortedProducts, setSortedProducts] = useState<Iproductdata[]>([]);
+    const [sortOption, setSortOption] = useState("lowest");
 
+    useEffect(() => {
+        if (productList?.products) {
+            const sorted = [...productList.products];
     
-   
+            // Sắp xếp dựa trên giá và lựa chọn của người dùng
+            if (sortOption === "lowest") {
+                sorted.sort((a, b) => a.price - b.price);
+            } else if (sortOption === "highest") {
+                sorted.sort((a, b) => b.price - a.price);
+            }
+    
+            setSortedProducts(sorted);
+        }
+    }, [productList, sortOption]);
+    const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOption(event.target.value);
+    };
+
+
+
+
+
+
 
     const handleToggle = () => {
         setAvaiable(!avaiable);
@@ -70,14 +87,20 @@ const ListProduct = (props: Props) => {
                                 }`} />
                             {
                                 filter && (<div className="absolute w-[302px] z-20 border rounded-lg right-0 top-[170%] py-4  bg-white">
-                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
-                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ thấp đến cao)</p>
-                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Giá (từ cao đến thấp)</p>
-                                    <p className="text-[#23314bb3] text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
+                                    <p className=" text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
+                                    <p className=" text-left pl-6 font-thin text-base py-1.5">Giá (từ thấp đến cao)</p>
+                                    <p className=" text-left pl-6 font-thin text-base py-1.5">Giá (từ cao đến thấp)</p>
+                                    <p className=" text-left pl-6 font-thin text-base py-1.5">Bán chạy nhất</p>
 
                                 </div>)
                             }
                         </span>
+                    </div>
+                    <div>
+                        <select name="" id="" onChange={handleSortChange}>
+                            <option value="lowest">Giá từ thấp đến cao</option>
+                            <option value="highest">Giá từ cao đến thấp</option>
+                        </select>
                     </div>
                 </div>
                 <div className="flex gap-12 ">
@@ -178,8 +201,8 @@ const ListProduct = (props: Props) => {
                     </div>
                     {/* list product */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 z-10">
-                    {(productList?.products as Iproductdata[] || []).map((product) => {
-                        return  <div className=" flex-1" key={product._id}>
+                        {sortedProducts.map((product:any) => {
+                            return <div className=" flex-1" key={product._id}>
                                 <div className="gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
                                     <Link className="" to={``}>
                                         <div className="relative ">
@@ -193,19 +216,19 @@ const ListProduct = (props: Props) => {
                                             <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
                                         </p>
                                     </Link>
-                                    
 
-                                
+
+
+                                </div>
                             </div>
-                        </div>
-                    })}
+                        })}
                     </div>
                 </div>
-                                <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">
-                                    <span className="px-5"><MdOutlineKeyboardArrowLeft /></span>
-                                    <span className="px-2">1 / 2</span>
-                                    <span className="px-5"><MdOutlineKeyboardArrowRight /></span>
-                                </div>
+                <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">
+                    <span className="px-5"><MdOutlineKeyboardArrowLeft /></span>
+                    <span className="px-2">1 / 2</span>
+                    <span className="px-5"><MdOutlineKeyboardArrowRight /></span>
+                </div>
             </div>
 
         </section>
