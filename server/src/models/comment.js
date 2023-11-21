@@ -1,11 +1,16 @@
+import { number } from "joi";
 import mongoose from "mongoose";
 
 const commentSchema = new mongoose.Schema(
     {
-        // user: {
-        //     type: mongoose.Types.ObjectId,
-        //     ref: "User",
-        // },
+        product: {
+            type: mongoose.Types.ObjectId,
+            ref: "Product",
+        },
+        user: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+        },
         comment: {
             type: String,
             required: true,
@@ -18,12 +23,10 @@ const commentSchema = new mongoose.Schema(
             type: String,
             default: 0,
         },
-        feed_back: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Feedback",
-            },
-        ],
+        feedback: {
+            type: Number,
+            required: true,
+        }
     },
     { timestamps: true, versionKey: false }
 );
