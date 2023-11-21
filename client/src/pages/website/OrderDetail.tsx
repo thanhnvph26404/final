@@ -2,10 +2,10 @@ import { Table } from "antd";
 import { useParams } from "react-router-dom";
 
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { useGetOneOrderQuery } from "../../../store/Auth/Auth.services";
 import { useEffect, useState } from "react";
+import { useGetOneOrderQuery } from "../../store/Auth/Auth.services";
 
-const OrderList = () =>
+const OrderDetail = () =>
 {
     const { id } = useParams<{ id: any }>()
     const { data: orderData } = useGetOneOrderQuery( id )
@@ -219,4 +219,4 @@ const OrderList = () =>
 
 }
 
-export default OrderList
+export default OrderDetail

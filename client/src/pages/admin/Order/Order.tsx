@@ -6,6 +6,8 @@ import { useGetAllOrderQuery, useUpdateOrderStatusMutation } from "../../../stor
 import { IOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
+import { TiEye } from "react-icons/ti";
+
 
 const ListOrder = () =>
 {
@@ -144,7 +146,8 @@ const ListOrder = () =>
                         className="bg-blue-500"
                     >
 
-                        <Link to={ `/admin/orders/${ record._id }` }>Update</Link>
+                        <Link to={ `/admin/orderss/${ record._id }` }><TiEye />
+                        </Link>
                     </Button>
                 </Space>
             ),

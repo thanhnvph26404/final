@@ -11,9 +11,10 @@ export interface ProductInfo
 
 export interface OrderItem
 {
+    _id?: string
     product: string; // Replace with the actual Product type
-    hasReviewed: boolean;
-    productVariant: {
+    hasReviewed?: boolean;
+    productVariant?: {
         size: string;
         color: string;
     };
@@ -34,7 +35,7 @@ export interface PaymentIntent
 export interface Order
 {
     _id: string;
-    userId: string;
+    userId?: string;
     vouchers?: string; // Replace with the actual Voucher type
     products: OrderItem[];
     total?: number;
@@ -43,6 +44,7 @@ export interface Order
     totalAfterDiscount?: number;
     paymentIntent?: PaymentIntent;
     phone?: string;
+    shippingType?: string
     address?: string;
 
 }

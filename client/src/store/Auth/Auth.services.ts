@@ -202,7 +202,7 @@ const authApi = createApi( {
 
             invalidatesTags: [ "Auth" ],
         } ),
-        getOrder: builder.query<IOrder[], void>( {
+        getOrder: builder.query( {
             query: () =>
             {
                 const token = localStorage.getItem( "token" );
@@ -314,12 +314,27 @@ const authApi = createApi( {
             invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
 
         } ),
+        getOneOrder: builder.query<Order, string>( {
+            query: ( id ) =>  
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+                    url: `auth/getoneOrder/${ id }`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+            providesTags: [ 'Auth' ]
+        } ),
 
 
     } )
 } )
 export const {
-    useLoginMutation, useAddToCartMutation, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useAddToCartMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

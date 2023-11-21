@@ -14,7 +14,6 @@ export const authMiddlware = async ( req, res, next ) =>
         const token = req.headers.authorization.split( " " )[ 1 ];
         const decoded = jwt.verify( token, process.env.SECRET_KEY );
         const user = await User.findById( decoded.id );
-        console.log( user );
 
         if ( !user )
         {

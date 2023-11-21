@@ -423,10 +423,10 @@ export const addToCart = async ( req, res ) =>
   {
     const userId = req.user._id;
     const { productId, size, color, quantity } = req.body;
-
+    const users = await Auth.findById( userId );
+    console.log( users );
     const productInfo = await Product.findById( productId );
     const existingCart = await Cart.findOne( { userId } );
-    console.log( productInfo );
 
     const cartItem = {
       product: productId,
@@ -441,6 +441,7 @@ export const addToCart = async ( req, res ) =>
         brand: productInfo.brand,
         category: productInfo.category,
         price: productInfo.price,
+        address: users.address
       },
     };
 
@@ -715,10 +716,10 @@ export const createOrder = async ( req, res ) =>
       throw new Error( "Create order failed" );
     }
     let shippingFee = 0;
-    if ( shippingType === 'standard' )
+    if ( shippingType === 'nhanh' )
     { // Xác định loại vận chuyển
       shippingFee = 30; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
-    } else if ( shippingType === 'express' )
+    } else if ( shippingType === 'hỏa tốc' )
     {
       shippingFee = 50; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
     }
@@ -739,7 +740,6 @@ export const createOrder = async ( req, res ) =>
         currency: "VND",
       },
       userId: user._id,
-
       paymentStatus: paymentStatus,
       Address,
       shippingType
@@ -862,4 +862,25 @@ export const getAllOrders = async ( req, res ) =>
   {
     throw new Error( error )
   }
-} 
+}
+
+export const getoneOrders = async ( req, res ) =>
+{
+  const id = req.params.id
+  try
+  {
+    const Order = await order.findById( id )
+      .populate( {
+        path: 'products.productInfo.category', // Đường dẫn đến category trong productInfo
+        model: 'Category' // Tên của model Category
+      } )
+      .populate( 'products.product' ).populate( "userId" ) // Populate product (nếu có)
+      .exec();
+    res.json(
+      Order
+    )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+}
