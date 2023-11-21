@@ -6,6 +6,9 @@ const cartSchema = new mongoose.Schema( {
         ref: "User", // Tham chiếu đến model User hoặc bạn có thể đổi thành tên model người dùng tương ứng
         required: true,
     },
+    totalAfterDiscount: {
+        type: Number
+    },
     items: [
         {
             product: {
@@ -20,6 +23,9 @@ const cartSchema = new mongoose.Schema( {
             quantity: {
                 type: Number,
                 required: true,
+            },
+            totalProduct: {
+                type: Number
             },
             productInfo: {
                 images: [ String ], // Dựa vào mô hình sản phẩm, bạn có thể lưu các thông tin tương tự
@@ -36,6 +42,7 @@ const cartSchema = new mongoose.Schema( {
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "Category", // Tham chiếu đến model Category hoặc bạn có thể đổi thành tên model danh mục tương ứng
                 },
+
             },
         },
     ],
