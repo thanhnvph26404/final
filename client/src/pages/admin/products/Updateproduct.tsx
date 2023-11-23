@@ -1,5 +1,5 @@
 import TextArea from "antd/es/input/TextArea";
-import { Form, Input, Button, Upload, Select, Space, UploadProps } from "antd";
+import { Form, Row, Col, Input, Button, Upload, Select, Space, UploadProps } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
@@ -31,19 +31,21 @@ const UpdateProduct = () => {
     const [form] = Form.useForm();
 
     const setFields = () => {
+        if (product) {
+            setFileList(product.data.images)
+            form.setFieldsValue({
+                _id: product?.data?._id,
+                name: product?.data?.name,
+                price: product?.data?.price,
+                original_price: product?.data?.original_price,
+                description: product?.data?.description,
+                brand: product?.data?.brand?._id,
+                imgUrl: product?.data?.images,
+                category: product?.data?.category?._id,
+                ProductVariants: product?.data?.ProductVariants
+            });
+        }
 
-        setFileList(product.data.images)
-        form.setFieldsValue({
-            _id: product?.data?._id,
-            name: product?.data?.name,
-            price: product?.data?.price,
-            original_price: product?.data?.original_price,
-            description: product?.data?.description,
-            brand: product?.data?.brand?._id,
-            imgUrl: product?.data?.images,
-            category: product?.data?.category?._id,
-            ProductVariants: product?.data?.ProductVariants
-        });
 
 
     };
@@ -75,7 +77,7 @@ const UpdateProduct = () => {
 
 
     const onSubmit = async (data: any) => {
-        // setLoadings(true);
+        setLoadings(true);
         let newurls = [];
 
         // Check if data.images exists and has a fileList property
@@ -98,7 +100,11 @@ const UpdateProduct = () => {
                 }
             }))
 
+        } else {
+            newurls = data.imgUrl
         }
+
+
         const newProduct = {
             _id: data._id,
             name: data.name,
@@ -134,14 +140,14 @@ const UpdateProduct = () => {
             <Form
                 name="Form"
                 form={form}
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                style={{ maxWidth: 800 }}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
+                // style={{ maxWidth: 800 }}
                 initialValues={{ remember: true }}
                 onFinish={onSubmit}
                 onFinishFailed={onFinishFailed}
                 validateMessages={validateMessages}
-                autoComplete="off"
+
             >
                 <Form.Item
                     label="Tên sản Phẩm"
@@ -156,106 +162,127 @@ const UpdateProduct = () => {
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item
-                    label="Tên sản Phẩm"
-                    name="name"
-                    rules={[
-                        { required: true },
-                        { whitespace: true },
-                        { min: 6, max: 255 },
-                    ]}
-                    hasFeedback
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Danh mục"
-                    name="category"
-                    rules={[
-                        { required: true },
-                    ]}
-                    hasFeedback
-                >
-                    <Select id="">
-                        {categories?.data?.map((Category: any) => (
-                            <Select.Option key={Category?._id} value={Category?._id}>
-                                {Category?.title}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    label="Thương hiệu"
-                    name="brand"
-                    rules={[
-                        { required: true },
-                    ]}
-                    hasFeedback
-                >
-                    <Select id="">
-                        {brands?.brand?.map((brand: any) => (
-                            <Select.Option key={brand._id} value={brand._id}>
-                                {brand.title}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    label="giá gốc"
-                    name="price"
-                    rules={[
-                        { required: true, min: 1, max: 100000000, pattern: new RegExp(/^[0-9]+$/), message: "Price is not a valid number" },
-                    ]}
-                    hasFeedback
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="giá giảm"
-                    name="original_price"
-                    rules={[
-                        { required: true, min: 1, max: 100000000, pattern: new RegExp(/^[0-9]+$/), message: "originPrice is not a valid number" },
-                    ]}
-                    hasFeedback
-                >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    label="Chi tiết"
-                    name="description"
-                    rules={[
-                        { required: true },
-                    ]}
-                    hasFeedback
-                >
-                    <TextArea />
-                </Form.Item>
-                <Form.Item
-                    label="Ảnh sản phẩm"
-                    name="imgUrl"
+                <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+                    <Col className="gutter-row" span={14}>
+                        <Form.Item
+                            label="Tên sản Phẩm"
+                            name="name"
+                            rules={[
+                                { required: true },
+                                { whitespace: true },
+                                { min: 6, max: 255 },
+                            ]}
+                            hasFeedback
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="giá gốc"
+                            name="price"
+                            rules={[
+                                { required: true, min: 1, max: 100000000, pattern: new RegExp(/^[0-9]+$/), message: "Price is not a valid number" },
+                            ]}
+                            hasFeedback
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="giá giảm"
+                            name="original_price"
+                            rules={[
+                                { min: 1, max: 100000000, pattern: new RegExp(/^[0-9]+$/), message: "originPrice is not a valid number" },
+                            ]}
+                            hasFeedback
+                        >
+                            <Input />
+                        </Form.Item>
+                    </Col>
+                    <Col className="gutter-row" span={8}>
+                        <Form.Item
+                            label="Danh mục"
+                            name="category"
+                            labelCol={{ span: 8 }}
+                            rules={[
+                                { required: true },
+                            ]}
+                            hasFeedback
+                        >
+                            <Select id="" className="mx-2">
+                                {categories?.data?.map((Category: any) => (
+                                    <Select.Option key={Category?._id} value={Category?._id}>
+                                        {Category?.title}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            label="Thương hiệu"
+                            name="brand"
+                            labelCol={{ span: 8 }}
+                            rules={[
+                                { required: true },
+                            ]}
+                            hasFeedback
+                        >
+                            <Select id="" className="mx-2 ">
+                                {brands?.brand?.map((brand: any) => (
+                                    <Select.Option key={brand._id} value={brand._id}>
+                                        {brand.title}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={24}>
 
-                    wrapperCol={{ offset: 3, span: 16 }}
-                    rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
-                >
-                    <Upload fileList={fileList} accept="image/*" listType="picture-card" multiple beforeUpload={beforeUpload}
-                        onChange={handleChange} >
-                        <Button icon={<UploadOutlined />} block>
-                            Chọn ảnh
-                        </Button>
-                    </Upload>
-                </Form.Item>
+                        <Form.Item
+                            labelCol={{ span: 3 }}
+                            label="Chi tiết"
+                            name="description"
+                            rules={[
+                                { required: true },
+                            ]}
+                            hasFeedback
+                        >
+                            <TextArea cols={40} rows={6} />
+                        </Form.Item>
+                        <Form.Item
+                            labelCol={{ span: 3 }}
+                            label="Ảnh sản phẩm"
+                            name="imgUrl"
+                            rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
+                        >
+                            <Upload fileList={fileList} accept="image/*" listType="picture-card" multiple beforeUpload={beforeUpload}
+                                onChange={handleChange} >
+                                <Button icon={<UploadOutlined />} block>
+                                    Chọn ảnh
+                                </Button>
+                            </Upload>
+                        </Form.Item>
+
+                    </Col>
+                </Row>
+
+
+                <h1 className="m-2" >Biến thể sản phẩm</h1>
+                <hr className="py-3  " />
                 <Form.List name="ProductVariants">
                     {(fields, { add, remove }) => (
-                        <div>
+                        <div className="flex flex-col gap-3 gap-x-10    ">
                             {fields?.map(({ key, name, fieldKey, ...restField }) => (
-                                <Space key={key} style={{ display: 'flex', marginBottom: 8 }}>
+                                <Space key={key} className="flex justify-start items-center"
+                                >
                                     <Form.Item
                                         {...restField}
+                                        labelCol={{ span: 8 }}
+                                        wrapperCol={{ span: 18 }}
+                                        className="my-auto "
+
                                         name={[name, 'color']}  // Đặt tên cho trường "size"
                                         label="Color"
                                         rules={[{ required: true, message: 'Color is required' }]}
                                     >
-                                        <Select id="">
+                                        <Select id="" className="w-8 mx-3" >
                                             {color?.data?.map((color: any, index) => (
                                                 <Select.Option key={index} value={color.color}>
                                                     {color.color}
@@ -264,12 +291,16 @@ const UpdateProduct = () => {
                                         </Select>
                                     </Form.Item>
                                     <Form.Item
+                                        className="my-auto ml-3"
+
+                                        labelCol={{ span: 8 }}
+                                        wrapperCol={{ span: 18 }}
                                         {...restField}
                                         name={[name, 'size']}  // Đặt tên cho trường "color"
                                         label="Size"
                                         rules={[{ required: true, message: 'Size is required' }]}
                                     >
-                                        <Select id="">
+                                        <Select id="" className=" mx-3">
                                             {size?.data?.map((size: any) => (
                                                 <Select.Option value={size.size}>
                                                     {size.size}
@@ -278,6 +309,9 @@ const UpdateProduct = () => {
                                         </Select>
                                     </Form.Item>
                                     <Form.Item
+                                        className="my-auto"
+                                        labelCol={{ span: 8 }}
+                                        wrapperCol={{ span: 18 }}
                                         {...restField}
                                         name={[name, 'quantity']}  // Đặt tên cho trường "quantity"
                                         label="Số lượng"
@@ -286,6 +320,7 @@ const UpdateProduct = () => {
                                         <Input />
                                     </Form.Item>
                                     <MinusCircleOutlined onClick={() => { remove(name); }} />
+
                                 </Space>
                             ))}
                             <Form.Item>
