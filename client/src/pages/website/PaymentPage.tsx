@@ -57,9 +57,9 @@ const CheckoutPage = () =>
                 };
 
                 const calculatedTotalAmount = couponApplied ? cart?.totalAfterDiscount + shippingFee : cart?.total + shippingFee;
+                navigate( "/ordersuccess" )
 
                 const response = await createOrder( { ...paymentData, calculatedTotalAmount } );
-                navigate( "/ordersuccess" )
 
                 console.log( response );
             } catch ( error )

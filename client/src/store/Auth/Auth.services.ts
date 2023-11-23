@@ -329,12 +329,57 @@ const authApi = createApi( {
             },
             providesTags: [ 'Auth' ]
         } ),
+        updateOrdersStatus: builder.mutation<IOrder, { id: string; status: string }>( {
+            query: ( { id, status } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/update-order/${ id }`,
+                    method: "PUT",
+                    body: { status },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ "Auth" ],
+        } ),
 
+        confirmCancelOrder: builder.mutation<void, { id: string; isConfirmed: boolean }>( {
+            query: ( { id, isConfirmed } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/confirm-cancel-order/${ id }`,
+                    method: "PUT",
+                    body: { isConfirmed },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ "Auth" ],
+        } ),
+        cancelOrder: builder.mutation<void, { id: string; reason: string }>( {
+            query: ( { id, reason } ) =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/cancel-order/${ id }`,
+                    method: "POST",
+                    body: { reason },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ "Auth" ],
+        } ),
 
     } )
 } )
 export const {
-    useLoginMutation, useAddToCartMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useAddToCartMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

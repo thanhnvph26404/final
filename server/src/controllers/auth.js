@@ -12,7 +12,7 @@ import Cart from "../models/cart";
 import order from "../models/order";
 import Voucher from "../models/voucher";
 import uniqid from "uniqid"
-
+import nodemailer from "nodemailer"
 
 config();
 // đăng kí
@@ -768,74 +768,6 @@ export const createOrder = async ( req, res ) =>
 
 
 
-// const applyDiscountCode = async ( userId, amount, discountCode ) =>
-// {
-//   try
-//   {
-//     const validCoupon = await Voucher.findOne( { code: discountCode } );
-
-//     if ( !validCoupon )
-//     {
-//       throw new Error( "Mã voucher không đúng" );
-//     }
-
-//     // Check if the voucher limit has been reached
-//     if ( validCoupon.limit <= 0 )
-//     {
-//       throw new Error( "Số lượng voucher đã hết" );
-//     }
-
-//     // Check if the voucher is expired
-//     const currentDate = new Date();
-//     if ( currentDate > new Date( validCoupon.endDate ) )
-//     {
-//       console.log( "Voucher đã hết hạn" );
-//       return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
-//     }
-
-//     // Calculate the discount amount
-//     const discount = ( amount * validCoupon.discount ) / 100;
-
-// const applyDiscountCode = async ( userId, amount, discountCode ) =>
-// {
-//   try
-//   {
-//     const validCoupon = await Voucher.findOne( { code: discountCode } );
-
-//     if ( !validCoupon )
-//     {
-//       throw new Error( "Mã voucher không đúng" );
-//     }
-
-//     // Check if the voucher limit has been reached
-//     if ( validCoupon.limit <= 0 )
-//     {
-//       throw new Error( "Số lượng voucher đã hết" );
-//     }
-
-//     // Check if the voucher is expired
-//     const currentDate = new Date();
-//     if ( currentDate > new Date( validCoupon.endDate ) )
-//     {
-//       console.log( "Voucher đã hết hạn" );
-//       return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
-//     }
-
-//     // Calculate the discount amount
-//     const discount = ( amount * validCoupon.discount ) / 100;
-
-//     // Update the order total with the discount
-//     await order.findOneAndUpdate( { userId }, { totalAfterDiscount: amount - discount }, { new: true } );
-
-//     // Decrease the voucher limit
-//     await Voucher.findOneAndUpdate( { code: discountCode }, { $inc: { limit: -1 } } );
-
-//     return discount;
-//   } catch ( error )
-//   {
-//     throw new Error( error );
-//   }
-// };
 
 
 export const getOrders = async ( req, res ) =>
@@ -884,3 +816,182 @@ export const getoneOrders = async ( req, res ) =>
     throw new Error( error )
   }
 }
+// API endpoint cho người dùng yêu cầu hủy đơn hàng
+export const cancelOrderRequest = async ( req, res ) =>
+{
+  const { id } = req.params; // ID của đơn hàng
+  const { reason } = req.body; // Lý do hủy đơn hàng từ người dùng
+
+  try
+  {
+    const Order = await order.findById( id );
+
+    // Kiểm tra trạng thái của đơn hàng trước khi hủy
+    if ( Order.cancelReason )
+    {
+      return res.status( 400 ).json( { error: 'Đơn hàng đã được gửi yêu cầu trước đó' } );
+    }
+
+    // Tìm đơn hàng dựa trên ID và cập nhật thông tin hủy đơn hàng
+    const updatedOrder = await order.findByIdAndUpdate(
+      id,
+      { status: 'đang chờ được xử lý', cancelReason: reason, cancelRequest: true }, // Cập nhật cancelReason
+      { new: true }
+    );
+
+    // Gửi email thông báo khi có yêu cầu hủy đơn hàng
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
+
+    const mailOptions = {
+      from: 'yourEmail@gmail.com',
+      to: 'honggiang22112003@gmail.com', // Địa chỉ email muốn gửi thông báo đến
+      subject: 'Yêu cầu hủy đơn hàng',
+      text: `Đơn hàng ${ id } yêu cầu hủy với lý do: ${ reason } bạn hãy check tài khoản của mình`,
+    };
+
+    transporter.sendMail( mailOptions, ( error, info ) =>
+    {
+      if ( error )
+      {
+        console.log( 'Error occurred while sending email:', error );
+      } else
+      {
+        console.log( 'Email sent:', info.response );
+      }
+    } );
+
+    res.json( updatedOrder );
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: 'Lỗi server: ' + error.message } );
+  }
+};
+
+// API endpoint cho quản trị viên xác nhận yêu cầu hủy đơn hàng
+export const confirmCancelOrder = async ( req, res ) =>
+{
+  const { id } = req.params; // ID của đơn hàng
+  const { isConfirmed } = req.body; // Xác nhận hoặc từ chối yêu cầu hủy đơn hàng từ quản trị viên
+  const { email } = req.user
+  console.log( email );
+  try
+  {
+    // Tìm đơn hàng dựa trên ID
+    const orderToCancel = await order.findById( id );
+
+    if ( !orderToCancel )
+    {
+      return res.status( 404 ).json( { error: 'Đơn hàng không tồn tại.' } );
+    }
+
+    if ( isConfirmed )
+    {
+      // Nếu quản trị viên chấp nhận hủy đơn hàng
+      await order.findByIdAndUpdate(
+        id,
+        { status: 'Đã hủy', cancelReason: orderToCancel.cancelReason },
+        { new: true }
+      );
+
+      // Gửi email thông báo cho người dùng đăng nhập
+      const transporter = nodemailer.createTransport( {
+        service: 'gmail',
+        auth: {
+          user: 'thanhnvph26404@gmail.com', // Email của bạn
+          pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+        },
+      } );
+
+      const mailOptions = {
+        from: 'yourEmail@gmail.com',
+        to: 'giangnhph23819@fpt.edu.vn', // Email người dùng đăng nhập
+        subject: 'Xác nhận hủy đơn hàng',
+        text: `Đơn hàng ${ id } đã được hủy.`,
+      };
+
+      transporter.sendMail( mailOptions, ( error, info ) =>
+      {
+        if ( error )
+        {
+          console.log( 'Error occurred while sending email:', error );
+        } else
+        {
+          console.log( 'Email sent:', info.response );
+        }
+      } );
+
+      res.json( { message: 'Đơn hàng đã được hủy.' } );
+    } else
+    {
+      // Nếu quản trị viên từ chối yêu cầu hủy đơn hàng
+      // Thay đổi trạng thái về "Đang giao hàng"
+      await order.findByIdAndUpdate(
+        id,
+        { status: 'Đang giao hàng', cancelReason: orderToCancel.cancelReason, cancelRequest: false },
+        { new: true }
+      );
+
+      // Gửi email thông báo cho người dùng đăng nhập
+      const transporter = nodemailer.createTransport( {
+        service: 'gmail',
+        auth: {
+          user: 'thanhnvph26404@gmail.com', // Email của bạn
+          pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+        },
+      } );
+
+      const mailOptions = {
+        from: 'yourEmail@gmail.com',
+        to: 'giangnhph23819@fpt.edu.vn', // Email người dùng đăng nhập
+        subject: 'Từ chối hủy đơn hàng',
+        text: `Yêu cầu hủy đơn hàng ${ id } không được chấp nhận.`,
+      };
+
+      transporter.sendMail( mailOptions, ( error, info ) =>
+      {
+        if ( error )
+        {
+          console.log( 'Error occurred while sending email:', error );
+        } else
+        {
+          console.log( 'Email sent:', info.response );
+        }
+      } );
+
+      res.json( { message: 'Đơn hàng không thể hủy.' } );
+    }
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: 'Lỗi server: ' + error.message } );
+  }
+};
+export const getCancelledOrders = async ( req, res ) =>
+{
+  try
+  {
+    const cancelledOrders = await order.find( { cancelRequest: true } );
+    res.json( cancelledOrders );
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
+  }
+};
+export const getCancelledtrueOrders = async ( req, res ) =>
+{
+  try
+  {
+    const cancelledOrders = await order.find( { cancelRequest: false } );
+    res.json( cancelledOrders );
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
+  }
+};
+
+
