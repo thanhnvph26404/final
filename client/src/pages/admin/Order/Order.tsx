@@ -97,7 +97,7 @@ const ListOrder = () =>
             key: "status",
             render: ( status, record ) => (
                 <>
-                    <span style={ { color: status === "Đã hủy" || status === "Đã hoàn tiền" ? "red" : "black" } }>
+                    <span style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>
                     </span>
 
                     { editingRowId === record._id ? (
@@ -172,7 +172,7 @@ const ListOrder = () =>
                 dataSource={ ListProduct }
                 pagination={ { pageSize: 6 } }
                 rowClassName={ ( record ) =>
-                    record.status === "Đã hủy" || record.status === "Đã hoàn tiền" ? "cancelled-row" : ""
+                    record.status === "Đã hủy" || record.status === "đang chờ được xử lý" ? "cancelled-row" : ""
                 }
             />
         </div>
