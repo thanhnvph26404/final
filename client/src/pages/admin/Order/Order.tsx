@@ -7,6 +7,7 @@ import { IOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
 import { TiEye } from "react-icons/ti";
+import { toastError } from "../../../hook/toastify";
 
 
 const ListOrder = () =>
@@ -38,10 +39,10 @@ const ListOrder = () =>
     {
         try
         {
-            await updateOrderStatus( { id, status: editedStatus } );
-        } catch ( error )
+            await updateOrderStatus( { id, status: editedStatus } ).unwrap().then();
+        } catch ( error: any )
         {
-
+            toastError( error.data.error )
         }
     };
     const { data } = useGetAllOrderQuery( [] )
@@ -124,18 +125,7 @@ const ListOrder = () =>
                 </>
             ),
         },
-        {
-            title: "tên sản phẩm",
-            dataIndex: "products",
-            key: "products",
-            render: ( products ) => (
-                <ul>
-                    { products.map( ( product: any ) => (
-                        <li key={ product._id }>{ product.product?.name }</li>
-                    ) ) }
-                </ul>
-            ),
-        },
+
         {
             title: "hành động",
             key: "action",

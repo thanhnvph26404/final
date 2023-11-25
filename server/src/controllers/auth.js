@@ -642,10 +642,45 @@ export const updateOrderStatus = async ( req, res, next ) =>
 {
   const { status } = req.body;
   const { id } = req.params;
+  const { _id } = req.user
 
   try
   {
-    const updatedOrder = await order.findByIdAndUpdate( id, { status }, { new: true } );
+    const existingOrder = await order.findById( id );
+
+    // Kiểm tra nếu đơn hàng đã chuyển trạng thái nhất định
+    if (
+      existingOrder.status === "Đã hoàn thành" ||
+      existingOrder.status === "Đã hủy" || existingOrder.status === "đang chờ được xử lý" || existingOrder.status === "Đã hoàn tiền"
+    )
+    {
+      return res.status( 400 ).json( {
+        error: "Không thể thay đổi trạng thái của đơn hàng này",
+      } );
+    }
+    const isAllowedToChange = canChangeToNewStatus(
+      existingOrder,
+      status
+    );
+
+    if ( !isAllowedToChange )
+    {
+      return res.status( 400 ).json( {
+        error: "Không thể quay lại trạng thái này",
+      } );
+    }
+
+    // Thêm trạng thái mới vào lịch sử trạng thái
+    existingOrder.statusHistory.push( {
+      status: status,
+      updatedBy: _id, // ID của người thực hiện hành động
+
+      updatedAt: new Date(),
+    } );
+
+    // Cập nhật trạng thái mới cho đơn hàng
+    existingOrder.status = status;
+    const updatedOrder = await existingOrder.save();
 
     // Check if the order status is "Đã hủy" or "Đã hoàn tiền"
     if ( status === "Đã hủy" || status === "Đã hoàn tiền" )
@@ -666,6 +701,25 @@ export const updateOrderStatus = async ( req, res, next ) =>
   {
     return next( error );
   }
+};
+const canChangeToNewStatus = ( existingOrder, newStatus ) =>
+{
+  // Lấy lịch sử trạng thái của đơn hàng
+  const statusHistory = existingOrder.statusHistory.map( ( item ) => item.status );
+
+  // Kiểm tra trạng thái ban đầu của đơn hàng (lấy trạng thái đầu tiên trong lịch sử)
+  const initialStatus = statusHistory[ 0 ];
+
+  // Kiểm tra nếu trạng thái muốn chuyển đến không phải là trạng thái ban đầu
+  if ( newStatus === initialStatus )
+  {
+    return false; // Trạng thái mới muốn chuyển đến là trạng thái ban đầu, không hợp lệ
+  }
+
+  // Kiểm tra nếu trạng thái muốn chuyển đến đã từng được chuyển qua từ trạng thái ban đầu
+  const hasChangedToNewStatus = statusHistory.includes( newStatus );
+
+  return !hasChangedToNewStatus;
 };
 
 export const applyCoupon = async ( req, res ) =>
@@ -775,7 +829,7 @@ export const getOrders = async ( req, res ) =>
   const { _id } = req.user
   try
   {
-    const Order = await order.find( { userId: _id } ).populate( "products.product" ).exec();
+    const Order = await order.find( { userId: _id } ).populate( "products.product" ).sort( { createdAt: -1 } ).exec();
     res.json( {
       Order
     } )
@@ -788,7 +842,7 @@ export const getAllOrders = async ( req, res ) =>
 {
   try
   {
-    const Order = await order.find().populate( "products.product" ).populate( "userId" ).exec();
+    const Order = await order.find().populate( "products.product" ).populate( "userId" ).sort( { createdAt: -1 } ).exec();
     res.json( { Order } )
   } catch ( error )
   {

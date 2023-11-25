@@ -44,6 +44,25 @@ const orderSchema = new mongoose.Schema( {
             },
         }
     ],
+    statusHistory: [
+        {
+            status: {
+                type: String,
+                required: true,
+            },
+            updatedAt: {
+                type: Date,
+                default: Date.now,
+            },
+            updatedBy: {
+                type: mongoose.Schema.Types.ObjectId, // Lưu ID của người dùng hoặc quản trị viên
+                ref: 'User', // Tham chiếu tới model người dùng (hoặc quản trị viên)
+                required: true,
+            },
+
+        },
+    ],
+
     total: {
         type: Number,
     },

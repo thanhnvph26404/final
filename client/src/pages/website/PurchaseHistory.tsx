@@ -23,7 +23,7 @@ const PurchaseHistory = () =>
     {
         try
         {
-            await updatestatus( { id: orderId, status: 'Đã nhận hàng' } )
+            await updatestatus( { id: orderId, status: 'Đã hoàn thành' } )
                 .unwrap()
                 .then( ( response ) =>
                 {
@@ -120,7 +120,7 @@ const PurchaseHistory = () =>
                                             type="primary"
                                             className="bg-red-400"
                                             onClick={ () => handleOpenModal( order._id ) }
-                                            disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã nhận hàng" }
+                                            disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "Đã hoàn tiền" }
                                         >
                                             Hủy đơn hàng
                                         </Button>
@@ -214,8 +214,9 @@ const PurchaseHistory = () =>
                                     render={ ( text, record: any ) => (
                                         <Button
                                             type="primary"
+                                            className="bg-black-400"
                                             onClick={ () => handleReceivedOrder( order._id ) }
-                                            disabled={ record.status === 'Đã nhận hàng' || isReceived || order.status === 'Đã hủy' || order.status === "Đã nhận hàng" }
+                                            disabled={ record.status === 'Đã hoàn thành' || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "đang chờ được xử lý" || order.status === "Đã hoàn tiền" }
                                         >
                                             Đã nhận được hàng
                                         </Button>
