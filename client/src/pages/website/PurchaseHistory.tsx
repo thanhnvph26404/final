@@ -24,6 +24,7 @@ const PurchaseHistory = () =>
         try
         {
             await updatestatus( { id: orderId, status: 'Đã hoàn thành' } )
+
                 .unwrap()
                 .then( ( response ) =>
                 {
@@ -121,6 +122,7 @@ const PurchaseHistory = () =>
                                             className="bg-red-400"
                                             onClick={ () => handleOpenModal( order._id ) }
                                             disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "Đã hoàn tiền" }
+
                                         >
                                             Hủy đơn hàng
                                         </Button>
@@ -217,6 +219,7 @@ const PurchaseHistory = () =>
                                             className="bg-black-400"
                                             onClick={ () => handleReceivedOrder( order._id ) }
                                             disabled={ record.status === 'Đã hoàn thành' || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "đang chờ được xử lý" || order.status === "Đã hoàn tiền" }
+
                                         >
                                             Đã nhận được hàng
                                         </Button>

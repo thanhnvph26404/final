@@ -17,6 +17,7 @@ const UpdateProduct = () =>
     const navigate = useNavigate();
     const { id } = useParams();
     const { data: product, isLoading } = useGetProductQuery( id! );
+
     const { data: categories } = useGetCategoryListQuery( [] );
     const { data: brands } = useGetBrandListQuery( [] );
     const { data: size } = useGetsizeListQuery( [] )
@@ -34,6 +35,7 @@ const UpdateProduct = () =>
 
     const setFields = () =>
     {
+
 
         setFileList( product.data.images )
         form.setFieldsValue( {
