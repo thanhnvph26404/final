@@ -1,27 +1,88 @@
-import React from 'react';
-import { Button, Space, Table } from 'antd';
-import { DownloadOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, Select, Space, Table } from 'antd';
 import Container from '../../components/layouts/website/Container';
-import { useGetAllOrderQuery, useGetOrderQuery } from '../../store/Auth/Auth.services';
+import { useCancelOrderMutation, useGetOrderQuery, useUpdateOrderStatusMutation } from '../../store/Auth/Auth.services';
 import { Link } from 'react-router-dom';
+import { toastError, toastSuccess } from '../../hook/toastify';
 
 const { Column } = Table;
+const { Option } = Select;
 
 const PurchaseHistory = () =>
 {
-    const { data: order } = useGetOrderQuery( [] );
+    const { data: order, refetch } = useGetOrderQuery( [] );
+    const [ selectedOrderId, setSelectedOrderId ] = useState( null );
+    const [ cancelReason, setCancelReason ] = useState( '' );
+    const [ updateStatus ] = useCancelOrderMutation();
+    const [ isOrderCancelled, setIsOrderCancelled ] = useState( false );
+    const [ updatestatus ] = useUpdateOrderStatusMutation()
+    const [ isReceived, setIsReceived ] = useState( false );
+    const [ showThankYouModal, setShowThankYouModal ] = useState( false );
 
-    // React.useEffect(() => {
-    console.log( order );
-    // }, [orderData]);
+    const handleReceivedOrder = async ( orderId: string ) =>
+    {
+        try
+        {
+            await updatestatus( { id: orderId, status: 'Đã hoàn thành' } )
 
-    // if (isLoading) {
-    //     return <p>Đang tải...</p>;
-    // }
+                .unwrap()
+                .then( ( response ) =>
+                {
+                    toastSuccess( 'Đã cập nhật trạng thái đơn hàng' );
+                    refetch();
+                    setIsReceived( true ); // Đã nhận hàng, disable các nút
+                    setShowThankYouModal( true );
 
-    // if (isError) {
-    //     return <p>Lỗi khi truy xuất dữ liệu</p>;
-    // }
+                } )
+                .catch( ( error ) =>
+                {
+                    console.log( error );
+                    toastError( error.data.error );
+                } );
+        } catch ( error )
+        {
+            console.error( 'Error:', error );
+        }
+    };
+    const handleCancelOrder = async () =>   
+    {
+        if ( selectedOrderId && cancelReason )
+        {
+            const cancel = {
+                id: selectedOrderId,
+                reason: cancelReason,
+            };
+
+            await updateStatus( cancel )
+                .unwrap()
+                .then( ( response ) =>
+                {
+                    toastSuccess( 'Gửi yêu cầu thành công' );
+                    refetch();
+                    setSelectedOrderId( null );
+                    setCancelReason( '' );
+                    setIsOrderCancelled( true ); // Set state khi hủy thành công
+
+                } ).catch( ( error ) =>
+                {
+                    console.log( error );
+                    toastError( error.data.error );
+                } );
+        }
+    };
+
+    const [ showModal, setShowModal ] = useState( false );
+
+    const handleOpenModal = ( orderId: any ) =>
+    {
+        setSelectedOrderId( orderId );
+        setShowModal( true );
+    };
+
+    const handleCancel = () =>
+    {
+        setShowModal( false );
+    };
 
     return (
         <Container>
@@ -48,14 +109,66 @@ const PurchaseHistory = () =>
                                     <p>{ order.totalAfterDiscount } VNĐ</p>
                                 </div>
                             </div>
-                            <div className='px-5'>
-                                <Link to={ `/profile/orderDetail/${ order._id }` }>
-                                    <Button type="primary" className='bg-black-400'>Xem hóa đơn</Button>
-                                </Link>
+                            <div className='flex justify-between items-center'>
+                                <div className='px-5'>
+                                    <Link to={ `/profile/orderDetail/${ order._id }` }>
+                                        <Button type='primary' className='bg-black-400'>
+                                            Xem hóa đơn
+                                        </Button>
+                                    </Link>
+                                    <div className='py-2'>
+                                        <Button
+                                            type="primary"
+                                            className="bg-red-400"
+                                            onClick={ () => handleOpenModal( order._id ) }
+                                            disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "Đã hoàn tiền" }
+
+                                        >
+                                            Hủy đơn hàng
+                                        </Button>
+                                        <Modal
+                                            title='Chọn lý do hủy đơn hàng'
+                                            visible={ showModal && selectedOrderId === order._id }
+                                            onCancel={ handleCancel }
+                                            footer={ [
+                                                <Button key='cancel' onClick={ handleCancel }>
+                                                    Hủy
+                                                </Button>,
+                                                <Button key='confirm' type='primary' onClick={ handleCancelOrder }>
+                                                    Xác nhận
+                                                </Button>,
+                                            ] }
+                                        >
+                                            <Select
+                                                defaultValue=''
+                                                onChange={ ( value ) => setCancelReason( value ) }
+                                                style={ { width: '100%' } }
+                                                placeholder='Chọn lý do hủy đơn hàng'
+                                            >
+                                                <Option value='đổi địa chỉ'>Đổi địa chỉ</Option>
+                                                <Option value='Change of mind'>Thay đổi ý kiến</Option>
+                                                {/* Thêm các lý do khác vào đây */ }
+                                            </Select>
+                                        </Modal>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <hr className='bg-gray-200' />
-
+                        <div className='p-2'>
+                            { order.status === 'Đã hủy' && order.cancelReason && (
+                                <div>
+                                    <p>Người dùng đã đồng ý hủy đơn hàng.</p>
+                                    {/* Hiển thị thông báo hoặc thông tin khác cho người dùng */ }
+                                </div>
+                            ) }
+                            { order.status === 'Đang giao hàng' && order.cancelReason && (
+                                <div>
+                                    <p>Người dùng không đồng ý hủy đơn hàng.</p>
+                                    {/* Hiển thị thông báo hoặc thông tin khác cho người dùng */ }
+                                </div>
+                            ) }
+                        </div>
                         <Table dataSource={ order.products || [] }>
                             <body className="" key={ order.products._id }>
                                 <Column
@@ -97,29 +210,42 @@ const PurchaseHistory = () =>
                                     ) }
 
                                 />
+                                <Column
+                                    title="Hành động"
+                                    key="action"
+                                    render={ ( text, record: any ) => (
+                                        <Button
+                                            type="primary"
+                                            className="bg-black-400"
+                                            onClick={ () => handleReceivedOrder( order._id ) }
+                                            disabled={ record.status === 'Đã hoàn thành' || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "đang chờ được xử lý" || order.status === "Đã hoàn tiền" }
 
-                                {/* <Column
-                                title="Chi tiết"
-                                key="action"
-                                render={() => (
-                                    <Space size="middle">
-                                        <Button
-                                            type="primary"
-                                            className="bg-blue-600 hidden md:block"
-                                            icon={<DownloadOutlined />}
                                         >
-                                            Tải xuống
+                                            Đã nhận được hàng
                                         </Button>
-                                        <Button
-                                            type="primary"
-                                            className="bg-blue-600 md:hidden block"
-                                            icon={<DownloadOutlined />}
-                                        />
-                                    </Space>
-                                )}
-                            /> */}
+                                    ) }
+                                />
+
+
+
                             </body>
                         </Table>
+                        <Modal
+                            title="Cảm ơn bạn đã mua hàng"
+                            visible={ showThankYouModal }
+                            onCancel={ () => setShowThankYouModal( false ) }
+                            footer={ [
+                                <Button key="cancel" onClick={ () => setShowThankYouModal( false ) }>
+                                    Đóng
+                                </Button>,
+                                <Button key="feedback" type="primary">
+                                    <Link to="/feedback">Đến trang feedback</Link>
+                                </Button>,
+                            ] }
+                        >
+                            <p>Xin cảm ơn bạn đã mua hàng!</p>
+                            <p>Bạn có thể chia sẻ đánh giá của mình tại trang feedback.</p>
+                        </Modal>a
 
                     </div>
                 ) ) }

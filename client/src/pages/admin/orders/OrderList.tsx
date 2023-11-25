@@ -1,14 +1,60 @@
-import { Table } from "antd";
+import { Button, Modal, Table } from "antd";
 import { useParams } from "react-router-dom";
 
 import { InfoCircleTwoTone } from "@ant-design/icons";
-import { useGetOneOrderQuery } from "../../../store/Auth/Auth.services";
+import { useConfirmCancelOrderMutation, useGetOneOrderQuery } from "../../../store/Auth/Auth.services";
 import { useEffect, useState } from "react";
 
 const OrderList = () =>
 {
     const { id } = useParams<{ id: any }>()
     const { data: orderData } = useGetOneOrderQuery( id )
+    const [ cancelReasonModalVisible, setCancelReasonModalVisible ] = useState( false );
+    const [ cancelReasonFromOrder, setCancelReasonFromOrder ] = useState( '' );
+    const [ confirmCancelOrder ] = useConfirmCancelOrderMutation();
+    const handleConfirmCancelOrder = async ( isConfirmed: boolean ) =>
+    {
+        localStorage.setItem( 'isConfirmed', JSON.stringify( isConfirmed ) );
+        localStorage.setItem( 'cancelReasonFromOrder', JSON.stringify( cancelReasonFromOrder ) );
+
+
+        try
+        {
+            const neworder: any = {
+                id: orderData?._id, // Sử dụng ID của order
+                isConfirmed: isConfirmed,
+            }
+            const response = await confirmCancelOrder( neworder )
+
+            // Xử lý dữ liệu trả về từ API nếu cần
+
+            // Sau khi xác nhận hủy đơn hàng thành công, ẩn Modal và làm những thứ cần thiết
+            setCancelReasonModalVisible( false );
+            setCancelReasonFromOrder( '' );
+
+            // Thực hiện các bước cập nhật UI hoặc refetch dữ liệu nếu cần
+            // Ví dụ: refetch dữ liệu order
+            // refetchOrderData();
+        } catch ( error )
+        {
+            console.error( 'Error confirming cancel order:', error );
+
+        }
+    };
+    const handleShowCancelReasonModal = () =>
+    {
+        if ( orderData?.status === 'đang chờ được xử lý' )
+        {
+            setCancelReasonModalVisible( true );
+            setCancelReasonFromOrder( orderData?.cancelReason || '' );
+        }
+    };
+
+    const handleCancelReasonModalCancel = () =>
+    {
+        setCancelReasonModalVisible( false );
+        setCancelReasonFromOrder( '' );
+    };
     const [ productDataForTable, setProductDataForTable ] = useState<any[]>( [] );
     console.log( orderData );
 
@@ -34,6 +80,8 @@ const OrderList = () =>
             } ) );
             console.log( productsInfo ); // Check productsInfo before setting state
             setProductDataForTable( productsInfo );
+            handleShowCancelReasonModal();
+
         }
     }, [ orderData ] );
 
@@ -138,6 +186,23 @@ const OrderList = () =>
                         <p className="text-[15px] text-gray-500" >{ orderData?.status }</p>
 
                     </div>
+                    { orderData?.status === 'đang chờ được xử lý' && (
+                        <Modal
+                            title="Lý do hủy hàng"
+                            visible={ cancelReasonModalVisible }
+                            onCancel={ handleCancelReasonModalCancel }
+                            footer={ [
+                                <Button key='confirm' type='primary' onClick={ () => handleConfirmCancelOrder( true ) }>
+                                    Xác nhận
+                                </Button>,
+                                <Button key='cancel' onClick={ () => handleConfirmCancelOrder( false ) }>
+                                    Hủy
+                                </Button>,
+                            ] }
+                        >
+                            <p>Lý do hủy hàng: { cancelReasonFromOrder }</p>
+                        </Modal>
+                    ) }
                     <div>
                         <div className="flex space-x-4 mt-4 ml-[20px]">
                             <i className="fa-solid fa-user text-[#ababab] pt-[3px] "></i>

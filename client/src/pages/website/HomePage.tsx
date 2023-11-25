@@ -162,7 +162,7 @@ const HomePage = () =>
                       <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{ product.original_price }₫</span>
                     </p>
                   </div>
-                  <button onClick={ () => handleGetProductDetail( product._id ) } className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+                  <button onClick={ () => handleGetProductDetail( product?._id ) } className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
                     + Thêm nhanh
                   </button>
                 </div>

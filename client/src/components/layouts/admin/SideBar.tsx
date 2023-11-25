@@ -28,9 +28,11 @@ const SideBar = () =>
     <>
       <div className='max-w-[264px] border border-[#F0F1F3] font-semibold min-h-[900px] bg-white  flex-col justify-between flex-1 hidden lg:max-2xl:flex ' >
         <div>
-          <div className="text-2xl ml-5 py-6 ">
-            Astro
-          </div>
+          <Link to={ "/" }>
+            <div className="text-2xl ml-5 py-6 ">
+              Bee Fashion
+            </div>
+          </Link>
           <Link to='' className='group relative flex px-6 py-3 items-center h-12 mt-2.5 hover:bg-[#F0F1F3]  before:content-[""] before:w-1 before:absolute before:left-0 before:bg-gradient-to-b from-[#3250FF] to-[#2BB2FE] before:h-full before:opacity-0 hover:before:opacity-100' >
             <RiLayoutGridFill className='text-xl text-gray-85 group-hover:text-[#1D1F2C] group-hover:font-bold' />
             <h3 className='ml-3 text-sm font-semibold text-black-400 group-hover:text-[#1D1F2C] group-hover:font-bold'>Dashboard</h3>
@@ -162,7 +164,7 @@ const SubSideBar = () =>
           <BiSolidUserPin className='text-xl text-gray-85 group-hover:text-[#1D1F2C] group-hover:font-bold' />
           <h3 className='ml-3 text-sm font-semibold text-black-400 group-hover:text-[#1D1F2C] group-hover:font-bold'>Liên hệ</h3>
         </Link>
-        
+
       </div>
 
     </div>
