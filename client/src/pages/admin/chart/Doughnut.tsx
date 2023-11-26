@@ -44,7 +44,8 @@ const ChartPage3 = () => {
                                 label: "Tổng số tiền bán được/năm",
                                 data: productChart?.products?.map((data:any) => data.price),
                                 backgroundColor: [
-                                    "rgba(178, 90, 15, 0.8)",
+                                    "rgba(108, 90, 15, 0.8)",
+                                    "rgba(900, 11, 20, 1)",
 
                                 ],
                                 borderRadius: 5,

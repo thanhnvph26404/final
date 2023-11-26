@@ -134,13 +134,13 @@ const OrderList = () =>
         <div>
             <h1 className="text-[27px] font-bold">Order</h1>
             {/* <div></div> */ }
-            <div className="flex auto-cols-auto mt-[20px] space-x-4">
+            <div className="flex auto-cols-auto mt-[20px] space-x-[40px]">
                 <div className="">
                     <h2 className="font-semibold text-[20px]">Product</h2>
                     <Table columns={ columns } dataSource={ productDataForTable } />
                     <div className="flex">
                         {/* dưới */ }
-                        <div className="mt-[50px] bg-white w-[350px] h-[380px]">
+                        <div className="mt-[50px] bg-white w-[450px] h-[380px]">
                             <div className="ml-[20px] mt-[10px]">
                                 <h2 className="font-bold text-[20px]  "><i className="fa-solid fa-location-dot text-[#286FFD]"></i> Địa chỉ giao hàng</h2>
                                 <hr className="border-1 border-black w-[320px] mt-2" />
@@ -156,7 +156,7 @@ const OrderList = () =>
 
                         </div>
                         {/* dưới */ }
-                        <div className="mt-[50px] bg-white w-[350px] h-[380px]">
+                        <div className="mt-[50px] bg-white w-[465px] h-[380px]">
                             <div className="ml-[20px] mt-[10px]">
                                 <h2 className="font-bold text-[20px]  "><i className="fa-solid fa-location-dot text-[#286FFD]"></i> Địa chỉ thanh toán</h2>
                                 <hr className="border-1 border-black w-[320px] mt-2" />
@@ -173,7 +173,7 @@ const OrderList = () =>
                         </div>
                     </div>
                 </div>
-                <div className="mt-[10px] bg-white w-[350px] h-[380px]">
+                <div className="mt-[10px] bg-white w-[450px] h-[380px]">
                     <div className="ml-[20px] mt-[10px]">
                         <h2 className="font-bold text-[20px] "><InfoCircleTwoTone /> Người đặt hàng</h2>
                         <hr className="border-1 border-black w-[320px] mt-2" />
@@ -235,7 +235,7 @@ const OrderList = () =>
                         </div>
                     </div>
                     {/* dưới */ }
-                    <div className="mt-[50px] bg-white w-[350px] h-[200px]">
+                    <div className="mt-[50px] bg-white w-[450px] h-[200px]">
                         <div className="ml-[20px] mt-[10px]">
                             <h2 className="font-bold text-[20px] "><i className="fa-solid fa-money-bill text-[#286FFD]"></i> Payment</h2>
                             <hr className="border-1 border-black w-[320px] mt-2" />
@@ -259,7 +259,7 @@ const OrderList = () =>
                     </div>
 
                     {/* dưới */ }
-                    <div className="mt-[50px] bg-white w-[350px] h-[380px]">
+                    <div className="mt-[50px] bg-white w-[450px] h-[380px]">
                         <div className="ml-[20px] mt-[10px]">
                             <h2 className="font-bold text-[20px] "><i className="fa-solid fa-truck text-[#286FFD]"></i> Đang chuyển hàng</h2>
                             <hr className="border-1 border-black w-[320px] mt-2" />
