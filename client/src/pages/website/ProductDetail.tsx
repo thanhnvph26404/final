@@ -10,6 +10,7 @@ import { useAddToCartMutation, useGetUserByTokenMutation } from "../../store/Aut
 import { useAddCommentMutation, useGetCommentbyidprouctQuery } from "../../store/Comment/comment.services";
 import { toastSuccess, toastError } from "../../hook/toastify";
 import { message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 
 const ProductDetail = () =>

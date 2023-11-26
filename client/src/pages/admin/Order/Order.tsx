@@ -96,8 +96,9 @@ const ListOrder = () =>
             dataIndex: "status",
             key: "status",
             render: ( status, record ) => (
-                <>
-                    <span style={ { color: status === "Đã hủy" || status === "Đã hoàn tiền" ? "red" : "black" } }>
+                <div className="grid grid-cols-2">
+                  <div>
+                  <span className="" style={ { color: status === "Đã hủy" || status === "Đã hoàn tiền" ? "red" : "black" } }>
                     </span>
 
                     { editingRowId === record._id ? (
@@ -114,6 +115,8 @@ const ListOrder = () =>
                     ) : (
                         <span>{ status }</span>
                     ) }
+                  </div>
+                    <div>
                     <Button
                         type="primary"
                         className="bg-blue-500"
@@ -121,7 +124,8 @@ const ListOrder = () =>
                     >
                         { editingRowId === record._id ? "Update" : <AiFillEdit /> }
                     </Button>
-                </>
+                    </div>
+                </div>
             ),
         },
         {

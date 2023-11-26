@@ -7,60 +7,57 @@ import { useAppDispatch } from "../../store/hook";
 import { Iproductdata } from "../../store/products/product.interface";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const HomePage = () =>
-{
+const HomePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const handleGetProductDetail = ( idProduct: string ) =>
-  {
-    navigate( `/home/product-detail/${ idProduct }` )
+  const handleGetProductDetail = (idProduct: string) => {
+    navigate(`/home/product-detail/${idProduct}`)
   }
-  const { isError, isLoading, data: productList } = useGetProductsQuery( null );
-  console.log( productList );
-  if ( isLoading )
-  {
-    return <>Loading...</>
-  }
+  const { data: productList } = useGetProductsQuery(null);
+  console.log(productList);
+  // if (isLoading) {
+  //   return <>Loading...</>
+  // }
 
-  if ( isError )
-  {
-    return <p>Error...</p>
-  }
+  // if (isError) {
+  //   return <p>Error...</p>
+  // }
 
 
 
-  const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1
-    }
-  };
+  // const responsive = {
+  //   superLargeDesktop: {
+  //     // the naming can be any, depends on you.
+  //     breakpoint: { max: 4000, min: 3000 },
+  //     items: 5
+  //   },
+  //   desktop: {
+  //     breakpoint: { max: 3000, min: 1024 },
+  //     items: 3
+  //   },
+  //   tablet: {
+  //     breakpoint: { max: 1024, min: 464 },
+  //     items: 2
+  //   },
+  //   mobile: {
+  //     breakpoint: { max: 464, min: 0 },
+  //     items: 1
+  //   }
+  // };
 
   return (
     <div className="mx-auto items-center">
-      {/* banner */ }
+      {/* banner */}
       <div className="flex items-center justify-center sm:justify-start">
         <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />
       </div>
-      {/* Danh mục sản phẩm */ }
+      {/* Danh mục sản phẩm */}
       <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
-      {/* Card */ }
+      {/* Card */}
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-[80px] mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
-        {/* Card 1 */ }
+        {/* Card 1 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 ">
           <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
             <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
@@ -75,7 +72,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 2 */ }
+        {/* Card 2 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 ">
           <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
             <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
@@ -90,7 +87,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 3 */ }
+        {/* Card 3 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 ">
           <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
             <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
@@ -106,7 +103,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 4 */ }
+        {/* Card 4 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-clip-border text-gray-700 ">
           <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
             <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
@@ -132,7 +129,9 @@ const HomePage = () =>
         </div>
         <div className="space-x-2 flex">
           <div>
-            <h2 className="mt-[50px] font-thin text-[20px] py-1.5 text-[#23314bb3]  ml-[150px] inline-block relative after:absolute after:bottom-2 after:left-0 after:bg-gray-700 after:h-0.5 hover:after:w-full after:w-0 after:transition-all after:ease-in-out after:duration-300">Xem toàn bộ sản phẩm  </h2>
+            <Link to="/products">
+              <h2 className="mt-[50px] font-thin text-[20px] py-1.5 text-[#23314bb3]  ml-[150px] inline-block relative after:absolute after:bottom-2 after:left-0 after:bg-gray-700 after:h-0.5 hover:after:w-full after:w-0 after:transition-all after:ease-in-out after:duration-300">Xem toàn bộ sản phẩm  </h2>
+            </Link>
           </div>
           <div className="mt-[55px]">
             <span className="inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] transform transition-transform duration-300 ">
@@ -142,37 +141,36 @@ const HomePage = () =>
         </div>
       </div>
 
-      {/* sản phẩm mới */ }
+      {/* sản phẩm mới */}
 
-      <Carousel responsive={ responsive }>
-        <div className="flex">
-          { ( productList.products as Iproductdata[] || [] ).map( product =>
-          {
-            return <div className="" key={ product._id } >
-              <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
-                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
 
-                  <img className="object-cover w-full" src={ product?.images[ 0 ]?.url } alt="profile-picture" />
+      <div className="flex space-x-6">
+        {(productList?.products as Iproductdata[] || []).map(product => {
+          return <div className="" key={product._id} >
+            <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
+              <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
 
-                  <p className="text-center text-[20px] font-semibold" >{ product.name }</p>
-                  <div className="flex space-x-4 pl-[80px] mb-4">
-                    <p className="flex justify-center gap-2">
-                      <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{ product.price }₫</span>
-                      <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{ product.original_price }₫</span>
-                    </p>
-                  </div>
-                  <button onClick={ () => handleGetProductDetail( product._id ) } className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
-                    + Thêm nhanh
-                  </button>
+                <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
+
+                <p className="text-center text-[20px] font-semibold mt-2">{product.name}</p>
+                <div className="flex space-x-4 ml-[120px]  mb-4 text-center">
+                  <p className="flex space-x-4 mt-2">
+                    <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.price}₫</span>
+                    <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
+                  </p>
                 </div>
+                <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+                  + Thêm nhanh
+                </button>
               </div>
             </div>
-          } ) }
-        </div>
-      </Carousel>
+          </div>
+        })}
+      </div>
 
-      {/*sản phẩm bán chạy*/ }
+
+      {/*sản phẩm bán chạy*/}
 
       <div className="grid grid-cols-3 ">
         <div>
@@ -194,10 +192,10 @@ const HomePage = () =>
       </div>
 
 
-      {/* sản phẩm */ }
+      {/* sản phẩm */}
 
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
-        {/* Card 1 */ }
+        {/* Card 1 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -216,7 +214,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 2 */ }
+        {/* Card 2 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -235,7 +233,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 3 */ }
+        {/* Card 3 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -253,7 +251,7 @@ const HomePage = () =>
             </button>
           </div>
         </div>
-        {/* card 4 */ }
+        {/* card 4 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -273,10 +271,10 @@ const HomePage = () =>
         </div>
       </div>
 
-      {/* sản phẩm */ }
+      {/* sản phẩm */}
 
       <div className="flex flex-col sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
-        {/* Card 1 */ }
+        {/* Card 1 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -295,7 +293,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 2 */ }
+        {/* Card 2 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -314,7 +312,7 @@ const HomePage = () =>
           </div>
         </div>
 
-        {/* Card 3 */ }
+        {/* Card 3 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -332,7 +330,7 @@ const HomePage = () =>
             </button>
           </div>
         </div>
-        {/* card 4 */ }
+        {/* card 4 */}
         <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700  group">
           <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -352,7 +350,7 @@ const HomePage = () =>
         </div>
       </div>
 
-      {/* banner dưới */ }
+      {/* banner dưới */}
       <div className="w-full relative text-center mb-[90px] ">
         <img src="/bannerdown.jpg" alt="" className="w-full  sm:w-[1700px] h-[450px] mt-[100px]" />
         <div className="absolute top-[120px] left-[50%] text-white transform -translate-x-1/2">
@@ -367,7 +365,7 @@ const HomePage = () =>
 
       </div>
 
-      {/* một số hình ảnh */ }
+      {/* một số hình ảnh */}
       <div className="flex ml-[70px]  space-x-10  mt-8 sm:mt-12">
         <div className="relative ">
           <img className="w-full transition-transform transform-gpu hover:scale-105 rounded-xl " src="/imgleft.png" alt="Image" />

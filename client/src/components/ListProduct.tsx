@@ -76,10 +76,10 @@ const ListProduct = (props: Props) => {
                         <span className="mr-1 text-[#23314b] text-base font-medium">
                             Sắp xếp theo:
                         </span>
-                        <span className="text-[#23314b] text-base font-thin mr-3">
+                        {/* <span className="text-[#23314b] text-base font-thin mr-3" onChange={handleSortChange}>
                             Thứ tự bảng chữ cái
-                        </span>
-                        <span
+                        </span> */}
+                        {/* <span
                             className={`inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] relative `}
                             onClick={handleTongleFilter}
                         >
@@ -94,7 +94,7 @@ const ListProduct = (props: Props) => {
 
                                 </div>)
                             }
-                        </span>
+                        </span> */}
                     </div>
                     <div>
                         <select name="" id="" onChange={handleSortChange}>
@@ -206,7 +206,7 @@ const ListProduct = (props: Props) => {
                                 <div className="gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
                                     <Link className="" to={``}>
                                         <div className="relative ">
-                                            <img src="https://polomanor.vn/cdn/shop/files/Polomanor_ao-thun_be_300823_2.jpg?v=1695786838&width=600" alt="" />
+                                            <img className="object-cover w-full" src={product?.images[0]?.url} alt="" />
                                             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
                                             <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
                                         </div>
