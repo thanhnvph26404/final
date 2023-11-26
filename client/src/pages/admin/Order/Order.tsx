@@ -7,6 +7,7 @@ import { IOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
 import { TiEye } from "react-icons/ti";
+import { toastError } from "../../../hook/toastify";
 
 
 const ListOrder = () =>
@@ -38,10 +39,10 @@ const ListOrder = () =>
     {
         try
         {
-            await updateOrderStatus( { id, status: editedStatus } );
-        } catch ( error )
+            await updateOrderStatus( { id, status: editedStatus } ).unwrap().then();
+        } catch ( error: any )
         {
-
+            toastError( error.data.error )
         }
     };
     const { data } = useGetAllOrderQuery( [] )
@@ -98,9 +99,8 @@ const ListOrder = () =>
             render: ( status, record ) => (
                 <div className="grid grid-cols-2">
                   <div>
-                  <span className="" style={ { color: status === "Đã hủy" || status === "Đã hoàn tiền" ? "red" : "black" } }>
+                  <span className="" style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>           
                     </span>
-
                     { editingRowId === record._id ? (
                         <select
                             value={ editedStatus }
@@ -128,18 +128,7 @@ const ListOrder = () =>
                 </div>
             ),
         },
-        {
-            title: "tên sản phẩm",
-            dataIndex: "products",
-            key: "products",
-            render: ( products ) => (
-                <ul>
-                    { products.map( ( product: any ) => (
-                        <li key={ product._id }>{ product.product?.name }</li>
-                    ) ) }
-                </ul>
-            ),
-        },
+
         {
             title: "hành động",
             key: "action",
@@ -176,7 +165,7 @@ const ListOrder = () =>
                 dataSource={ ListProduct }
                 pagination={ { pageSize: 6 } }
                 rowClassName={ ( record ) =>
-                    record.status === "Đã hủy" || record.status === "Đã hoàn tiền" ? "cancelled-row" : ""
+                    record.status === "Đã hủy" || record.status === "đang chờ được xử lý" ? "cancelled-row" : ""
                 }
             />
         </div>

@@ -44,6 +44,25 @@ const orderSchema = new mongoose.Schema( {
             },
         }
     ],
+    statusHistory: [
+        {
+            status: {
+                type: String,
+                required: true,
+            },
+            updatedAt: {
+                type: Date,
+                default: Date.now,
+            },
+            updatedBy: {
+                type: mongoose.Schema.Types.ObjectId, // Lưu ID của người dùng hoặc quản trị viên
+                ref: 'User', // Tham chiếu tới model người dùng (hoặc quản trị viên)
+                required: true,
+            },
+
+        },
+    ],
+
     total: {
         type: Number,
     },
@@ -61,6 +80,9 @@ const orderSchema = new mongoose.Schema( {
         type: String,
         default: "Đang xử lý",
         enum: [
+            "đang chờ được xử lý",
+            "hủy đơn hàng",
+            "không thể hủy đơn hàng",
             "thanh toán thành công",
             "Chờ thanh toán",
             "Đang xử lý",
@@ -70,6 +92,20 @@ const orderSchema = new mongoose.Schema( {
             "Đã hoàn tiền",
             "Đã hoàn thành",
         ],
+    },
+    cancelReason: {
+        type: String,
+        enum: [
+            "chọn sản phẩm khác",
+            "đổi địa chỉ",
+            "muốn chọn màu,size khác",
+            "lý do khác"
+        ]
+        // Trường lý do hủy đơn hàng
+    },
+    cancelRequest: {
+        type: Boolean,
+        default: false // Mặc định là false, khi không có yêu cầu hủy
     },
     paymentIntent: {},
     Phone: {

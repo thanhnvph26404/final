@@ -44,7 +44,8 @@ export interface Order
     totalAfterDiscount?: number;
     paymentIntent?: PaymentIntent;
     phone?: string;
-    shippingType?: string
+    shippingType?: string,
+    cancelReason?: string,
     address?: string;
 
 }

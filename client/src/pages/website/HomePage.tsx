@@ -141,6 +141,7 @@ const HomePage = () => {
         </div>
       </div>
 
+
       {/* sản phẩm mới */}
 
 
@@ -150,9 +151,7 @@ const HomePage = () => {
             <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
               <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
                 <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
-
                 <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
-
                 <p className="text-center text-[20px] font-semibold mt-2">{product.name}</p>
                 <div className="flex space-x-4 ml-[120px]  mb-4 text-center">
                   <p className="flex space-x-4 mt-2">
@@ -160,7 +159,7 @@ const HomePage = () => {
                     <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
                   </p>
                 </div>
-                <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+                <button onClick={() => handleGetProductDetail(product?._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
                   + Thêm nhanh
                 </button>
               </div>
