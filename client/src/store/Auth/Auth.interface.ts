@@ -109,6 +109,11 @@ export const enumStatus = [
     "Đã hủy",
     "Đã hoàn tiền",
     "Đã hoàn thành",
+    "shipper đã lấy hàng",
+    "đơn hàng đang chuẩn bị được giao đến bạn",
+    "người bán đang chuẩn bị hàng",
+
+
 ];
 
 

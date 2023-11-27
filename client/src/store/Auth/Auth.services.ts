@@ -261,8 +261,8 @@ const authApi = createApi( {
 
             invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
         } ),
-        createOrder: builder.mutation<Order, { COD: boolean, couponApplied: boolean, Address: string, TTONL: boolean, shippingType: string }>( {
-            query: ( { COD, couponApplied, Address, TTONL, shippingType } ) =>
+        createOrder: builder.mutation<Order, { COD: boolean, couponApplied: boolean, Address: string, address: string, phone: string, TTONL: boolean, shippingType: string }>( {
+            query: ( { COD, couponApplied, Address, TTONL, shippingType, address, phone } ) =>
             {
                 const token = localStorage.getItem( "token" );
 
@@ -270,7 +270,7 @@ const authApi = createApi( {
 
                     url: 'auth/creatOrder',
                     method: 'POST',
-                    body: { COD, couponApplied, Address, TTONL, shippingType },
+                    body: { COD, couponApplied, Address, TTONL, shippingType, phone, address },
                     headers: {
                         Authorization: "Bearer " + token,
                     }

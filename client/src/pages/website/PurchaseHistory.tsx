@@ -106,7 +106,7 @@ const PurchaseHistory = () =>
                                 </div>
                                 <div className='ml-14 hidden md:block'>
                                     <p className='text-gray-500'>Tổng</p>
-                                    <p>{ order.totalAfterDiscount } VNĐ</p>
+                                    <p>{ order.totalAfterDiscount ? order.totalAfterDiscount : order.paymentIntent.amount } VNĐ</p>
                                 </div>
                             </div>
                             <div className='flex justify-between items-center'>
@@ -245,7 +245,7 @@ const PurchaseHistory = () =>
                         >
                             <p>Xin cảm ơn bạn đã mua hàng!</p>
                             <p>Bạn có thể chia sẻ đánh giá của mình tại trang feedback.</p>
-                        </Modal>a
+                        </Modal>
 
                     </div>
                 ) ) }

@@ -753,7 +753,7 @@ export const applyCoupon = async ( req, res ) =>
 
 export const createOrder = async ( req, res ) =>
 {
-  const { COD, Address, couponApplied, TTONL, shippingType } = req.body;
+  const { COD, address, couponApplied, TTONL, Address, shippingType, phone } = req.body;
   const { _id } = req.user;
 
   try
@@ -777,9 +777,17 @@ export const createOrder = async ( req, res ) =>
     {
       shippingFee = 50; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
     }
-
+    const updatedUser = await Auth.findByIdAndUpdate(
+      _id,
+      { $set: { address, phone } },
+      { new: true }
+    );
+    if ( !updatedUser )
+    {
+      throw new Error( "User not found" );
+    }
     const user = await Auth.findById( _id );
-    let userCart = await Cart.findOne( { userId: user._id } );
+    let userCart = await Cart.findOne( { userId: updatedUser._id } );
     console.log( userCart );
     let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
 
@@ -793,12 +801,27 @@ export const createOrder = async ( req, res ) =>
         created: Date.now(),
         currency: "VND",
       },
-      userId: user._id,
+      userId: updatedUser._id,
       paymentStatus: paymentStatus,
+      address,
       Address,
+      phone,
       shippingType
     } ).save();
+    const newStatus = {
+      status: "Đang xử lý",
+      updatedBy: _id,
+      updatedAt: Date.now(), // Ngày giờ cập nhật
+    };
 
+    // Thêm status mới vào statusHistory của đơn hàng
+    await order.findByIdAndUpdate(
+      newOrder._id,
+      {
+        $push: { statusHistory: newStatus },
+      },
+      { new: true }
+    );
     // Clear the user's cart after creating the order
     await Cart.findOneAndDelete( { userId: user._id } );
 
@@ -829,7 +852,7 @@ export const getOrders = async ( req, res ) =>
   const { _id } = req.user
   try
   {
-    const Order = await order.find( { userId: _id } ).populate( "products.product" ).sort( { createdAt: -1 } ).exec();
+    const Order = await order.find( { userId: _id } ).populate( "products" ).populate( "statusHistory.updatedBy" ).sort( { createdAt: -1 } ).exec();
     res.json( {
       Order
     } )
@@ -842,7 +865,7 @@ export const getAllOrders = async ( req, res ) =>
 {
   try
   {
-    const Order = await order.find().populate( "products.product" ).populate( "userId" ).sort( { createdAt: -1 } ).exec();
+    const Order = await order.find().populate( "products.product" ).populate( "statusHistory.updatedBy" ).populate( "userId" ).sort( { createdAt: -1 } ).exec();
     res.json( { Order } )
   } catch ( error )
   {
@@ -860,7 +883,7 @@ export const getoneOrders = async ( req, res ) =>
         path: 'products.productInfo.category', // Đường dẫn đến category trong productInfo
         model: 'Category' // Tên của model Category
       } )
-      .populate( 'products.product' ).populate( "userId" ) // Populate product (nếu có)
+      .populate( 'products.product' ).populate( "statusHistory.updatedBy" ).populate( "userId" ) // Populate product (nếu có)
       .exec();
     res.json(
       Order
@@ -875,9 +898,10 @@ export const cancelOrderRequest = async ( req, res ) =>
 {
   const { id } = req.params; // ID của đơn hàng
   const { reason } = req.body; // Lý do hủy đơn hàng từ người dùng
-
+  const { _id } = req.user
   try
   {
+    const user = await Auth.findById( _id )
     const Order = await order.findById( id );
 
     // Kiểm tra trạng thái của đơn hàng trước khi hủy
@@ -885,11 +909,17 @@ export const cancelOrderRequest = async ( req, res ) =>
     {
       return res.status( 400 ).json( { error: 'Đơn hàng đã được gửi yêu cầu trước đó' } );
     }
+    const updatedStatusHistory = Order.statusHistory || [];
+    updatedStatusHistory.push( {
+      status: 'đang chờ được xử lý', // hoặc trạng thái mới mà bạn muốn thêm vào
+      updatedAt: new Date(),
+      updatedBy: user._id, // hoặc thông tin người cập nhật
+    } );
 
     // Tìm đơn hàng dựa trên ID và cập nhật thông tin hủy đơn hàng
     const updatedOrder = await order.findByIdAndUpdate(
       id,
-      { status: 'đang chờ được xử lý', cancelReason: reason, cancelRequest: true }, // Cập nhật cancelReason
+      { status: 'đang chờ được xử lý', cancelReason: reason, cancelRequest: true, statusHistory: updatedStatusHistory }, // Cập nhật cancelReason
       { new: true }
     );
 
@@ -933,10 +963,13 @@ export const confirmCancelOrder = async ( req, res ) =>
   const { id } = req.params; // ID của đơn hàng
   const { isConfirmed } = req.body; // Xác nhận hoặc từ chối yêu cầu hủy đơn hàng từ quản trị viên
   const { email } = req.user
-  console.log( email );
+  const { _id } = req.user
+
   try
   {
     // Tìm đơn hàng dựa trên ID
+    const user = await Auth.findById( _id )
+
     const orderToCancel = await order.findById( id );
 
     if ( !orderToCancel )
@@ -946,12 +979,19 @@ export const confirmCancelOrder = async ( req, res ) =>
 
     if ( isConfirmed )
     {
+      const updatedStatusHistory = orderToCancel.statusHistory || [];
+      updatedStatusHistory.push( {
+        status: 'Đã hủy', // hoặc trạng thái mới mà bạn muốn thêm vào
+        updatedAt: new Date(),
+        updatedBy: user._id, // hoặc thông tin người cập nhật
+      } );
       // Nếu quản trị viên chấp nhận hủy đơn hàng
       await order.findByIdAndUpdate(
         id,
-        { status: 'Đã hủy', cancelReason: orderToCancel.cancelReason },
+        { status: 'Đã hủy', cancelReason: orderToCancel.cancelReason, statusHistory: updatedStatusHistory },
         { new: true }
       );
+
 
       // Gửi email thông báo cho người dùng đăng nhập
       const transporter = nodemailer.createTransport( {
@@ -985,9 +1025,15 @@ export const confirmCancelOrder = async ( req, res ) =>
     {
       // Nếu quản trị viên từ chối yêu cầu hủy đơn hàng
       // Thay đổi trạng thái về "Đang giao hàng"
+      const updatedStatusHistory = orderToCancel.statusHistory || [];
+      updatedStatusHistory.push( {
+        status: 'Đang giao hàng', // hoặc trạng thái mới mà bạn muốn thêm vào
+        updatedAt: new Date(),
+        updatedBy: user._id, // hoặc thông tin người cập nhật
+      } );
       await order.findByIdAndUpdate(
         id,
-        { status: 'Đang giao hàng', cancelReason: orderToCancel.cancelReason, cancelRequest: false },
+        { status: 'Đang giao hàng', cancelReason: orderToCancel.cancelReason, cancelRequest: false, statusHistory: updatedStatusHistory },
         { new: true }
       );
 
