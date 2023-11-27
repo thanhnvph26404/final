@@ -1,5 +1,7 @@
 // Create a new file, e.g., order.interface.ts
 
+import { IUser } from "../Auth/Auth.interface";
+
 export interface ProductInfo
 {
     images: string[];
@@ -31,11 +33,19 @@ export interface PaymentIntent
     created: number;
     currency: string;
 }
+export interface StatusHistory
+{
+    _id?: string,
+    status?: string,
+    updatedAt?: Date,
+    updatedBy?: IUser
+
+}
 
 export interface Order
 {
     _id: string;
-    userId?: string;
+    userId?: IUser;
     vouchers?: string; // Replace with the actual Voucher type
     products: OrderItem[];
     total?: number;
@@ -47,6 +57,8 @@ export interface Order
     shippingType?: string,
     cancelReason?: string,
     address?: string;
+    Address?: string,
+    statusHistory: StatusHistory[]
 
 }
 

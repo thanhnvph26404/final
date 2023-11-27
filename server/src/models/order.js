@@ -55,9 +55,8 @@ const orderSchema = new mongoose.Schema( {
                 default: Date.now,
             },
             updatedBy: {
-                type: mongoose.Schema.Types.ObjectId, // Lưu ID của người dùng hoặc quản trị viên
-                ref: 'User', // Tham chiếu tới model người dùng (hoặc quản trị viên)
-                required: true,
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
             },
 
         },
@@ -84,10 +83,13 @@ const orderSchema = new mongoose.Schema( {
             "hủy đơn hàng",
             "không thể hủy đơn hàng",
             "thanh toán thành công",
+            "người bán đang chuẩn bị hàng",
             "Chờ thanh toán",
             "Đang xử lý",
             "Đang giao hàng",
             "Đã giao hàng",
+            "shipper đã lấy hàng",
+            "đơn hàng đang chuẩn bị được giao đến bạn",
             "Đã hủy",
             "Đã hoàn tiền",
             "Đã hoàn thành",

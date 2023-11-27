@@ -5,6 +5,8 @@ import { useAppDispatch } from '../../store/hook';
 import { addOrder } from '../../store/Order/Order.slice';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { toastError } from '../../hook/toastify';
+import { RiUserLine } from 'react-icons/ri';
 
 
 
@@ -17,6 +19,7 @@ const CartPage = () =>
 
     const { data: cart, refetch } = useGetCartQuery( [] );
     console.log( cart );
+    const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
 
     const [ removeOnecart ] = useDeleteoneProductMutation()
     const remove = ( id: any ) =>
@@ -32,9 +35,9 @@ const CartPage = () =>
                 // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
                 await refetch();
                 // Dữ liệu giỏ hàng đã được cập nhật
-            } catch ( error )
+            } catch ( error: any )
             {
-                // Xử lý lỗi nếu có
+                toastError( error.data.error )   // Xử lý lỗi nếu có
             }
         };
 
@@ -52,39 +55,51 @@ const CartPage = () =>
                         <p className="hidden sm:block w-[267px] sm:w-1/4 text-center font-mono text-xl">Tổng</p>
                     </div>
                     <hr className='my-4' />
-                    { cart && cart?.items?.map( ( item: any, index: any ) => (
+                    { check ? (
+                        <div>
+                            { cart && cart?.items?.map( ( item: any, index: any ) => (
 
-                        <div className="flex py-4 sm:py-8 items-center" key={ index }>
-                            <div className="flex w-full items-center">
-                                { item?.product?.images && item?.productInfo?.images[ 0 ] && (
-                                    <img
-                                        className="w-[96px] h-[125px] sm:w-[80px] sm:h-[100px] mr-4"
-                                        src={ item?.productInfo?.images[ 0 ]?.url }
-                                        alt=""
-                                    />
-                                ) }
-                                <div>
-                                    <a href="#">{ item.productInfo.name } </a>
-                                    <p className="text-gray-400">{ item.productInfo.price }đ</p>
-                                    <p className="text-gray-600 font-semibold">{ item.productVariant.size }</p>
-                                    <p className="text-gray-600 font-semibold">{ item.productVariant.color }</p>
+                                <div className="flex py-4 sm:py-8 items-center" key={ index }>
+                                    <div className="flex w-full items-center">
+                                        { item?.product?.images && item?.productInfo?.images[ 0 ] && (
+                                            <img
+                                                className="w-[96px] h-[125px] sm:w-[80px] sm:h-[100px] mr-4"
+                                                src={ item?.productInfo?.images[ 0 ]?.url }
+                                                alt=""
+                                            />
+                                        ) }
+                                        <div>
+                                            <a href="#">{ item.productInfo.name } </a>
+                                            <p className="text-gray-400">{ item.productInfo.price }đ</p>
+                                            <p className="text-gray-600 font-semibold">{ item.productVariant.size }</p>
+                                            <p className="text-gray-600 font-semibold">{ item.productVariant.color }</p>
+
+                                        </div>
+                                    </div>
+                                    <div className="w-1/4 sm:w-1/4 text-center mr-[55px]">
+                                        <div className="flex flex-col items-center">
+                                            <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
+                                            <button className="underline hover:text-red-500" onClick={ () => remove( item.product._id ) }>Xóa</button>
+                                        </div>
+                                    </div>
+                                    <div className="w-[267px] text-center mr-[15px] hidden sm:block">
+                                        <p className="text-400">{ item.totalProduct }</p>
+                                    </div>
 
                                 </div>
-                            </div>
-                            <div className="w-1/4 sm:w-1/4 text-center mr-[55px]">
-                                <div className="flex flex-col items-center">
-                                    <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
-                                    <button className="underline hover:text-red-500" onClick={ () => remove( item.product._id ) }>Xóa</button>
-                                </div>
-                            </div>
-                            <div className="w-[267px] text-center mr-[15px] hidden sm:block">
-                                <p className="text-400">{ item.totalProduct }</p>
-                            </div>
 
+                            ) ) }
                         </div>
-
-                    ) ) }
-
+                    ) : (
+                        <div className="flex items-center justify-center h-48">
+                            <div className="text-center">
+                                <p className="text-xl font-semibold mb-2">Bạn cần đăng nhập để xem giỏ hàng</p>
+                                <Link to="/login">
+                                    <button className="border rounded-full text-white px-4 py-2 bg-[#23314B]">Đăng nhập</button>
+                                </Link>
+                            </div>
+                        </div>
+                    ) }
                     <hr className='my-4' />
 
 

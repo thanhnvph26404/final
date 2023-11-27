@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useApplycouponMutation, useCreateOrderMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
-import { toastSuccess } from '../../hook/toastify';
+import { toastError, toastSuccess } from '../../hook/toastify';
 
 import
 {
@@ -8,7 +8,7 @@ import
     PayPalButtons,
     usePayPalScriptReducer
 } from "@paypal/react-paypal-js";
-import { Select } from 'antd';
+import { Input, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -16,7 +16,15 @@ const CheckoutPage = () =>
 {
     const navigate = useNavigate()
     const { data: cart } = useGetCartQuery( [] );
+    console.log( cart );
+    const addresss = cart.userId.address
+    const phonee = cart.userId.phone
+    const hasPreviousDetails = addresss && phonee;
 
+
+    const [ address, setAddress ] = useState( hasPreviousDetails ? addresss : '' ); // State to store address
+    const [ phone, setPhone ] = useState( hasPreviousDetails ? phonee : '' ); // State to store phone number
+    const [ Address, setAddressS ] = useState( "" )
     const [ couponApplied, setCouponApplied ] = useState( false );
     const [ createOrder ] = useCreateOrderMutation();
     const [ discountCode, setDiscountCode ] = useState( '' );
@@ -46,13 +54,25 @@ const CheckoutPage = () =>
         // Hàm xử lý khi nhấn thanh toán PayPal
         const handlePaypal = async () =>
         {
+            if ( !paymentMethod || !shippingType )
+            {
+                // Kiểm tra xem người dùng đã chọn phương thức thanh toán và vận chuyển chưa
+                // Hiển thị thông báo lỗi hoặc ngăn chặn chuyển trang
+                toastError( 'Vui lòng chọn phương thức thanh toán và vận chuyển.' );
+                // Hiển thị thông báo lỗi
+                return;
+            }
+
             try
             {
                 const paymentData: any = {
                     TTONL: paymentMethod === 'TTONL',
                     shippingType,
                     couponApplied,
-                    payload// Use the couponApplied state value
+                    payload,
+                    phone,
+                    address,
+                    Address// Use the couponApplied state value
                     // Other necessary information such as Address...
                 };
 
@@ -165,13 +185,33 @@ const CheckoutPage = () =>
 
     const handleCheckout = async () =>
     {
-
+        if ( !paymentMethod && !shippingType )
+        {
+            toastError( 'Vui lòng chọn phương thức thanh toán và vận chuyển.' );
+            // Hiển thị thông báo lỗi cần chọn cả hai
+            return;
+        } else if ( !paymentMethod )
+        {
+            toastError( 'Vui lòng chọn phương thức thanh toán.' );
+            // Hiển thị thông báo lỗi cần chọn phương thức thanh toán
+            return;
+        } else if ( !shippingType )
+        {
+            toastError( 'Vui lòng chọn phương thức vận chuyển.' );
+            // Hiển thị thông báo lỗi cần chọn phương thức vận chuyển
+            return;
+        }
         try
         {
+
             const paymentData: any = {
                 COD: paymentMethod === 'COD',
                 shippingType,
-                couponApplied, // Use the couponApplied state value
+                couponApplied,
+                phone,
+                address,
+                Address
+                // Use the couponApplied state value
                 // Other necessary information such as Address...
             };
 
@@ -192,17 +232,24 @@ const CheckoutPage = () =>
     };
     const handleShippingChange = ( e: any ) =>
     {
-        const selectedShippingType = e.target.value;
-        setShippingType( selectedShippingType );
+        try
+        {
+            const selectedShippingType = e.target.value;
+            setShippingType( selectedShippingType );
 
-        // Áp dụng giá vận chuyển tương ứng
-        if ( selectedShippingType === 'nhanh' )
+            // Áp dụng giá vận chuyển tương ứng
+            if ( selectedShippingType === 'nhanh' )
+            {
+                setShippingFee( 30 ); // Giá vận chuyển cho giao hàng tiêu chuẩn
+            } else if ( selectedShippingType === 'hỏa tốc' )
+            {
+                setShippingFee( 50 ); // Giá vận chuyển cho giao hàng hỏa tốc
+            }
+        } catch ( error )
         {
-            setShippingFee( 30 ); // Giá vận chuyển cho giao hàng tiêu chuẩn
-        } else if ( selectedShippingType === 'hỏa tốc' )
-        {
-            setShippingFee( 50 ); // Giá vận chuyển cho giao hàng hỏa tốc
+            toastError( "bn ch chon phuong thuc van chuyen" )
         }
+
     };
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
@@ -224,16 +271,33 @@ const CheckoutPage = () =>
                             type="text" placeholder="  Tên" />
                     </div>
                     <div className='mt-5'>
-                        <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 " value={ cart?.userId?.address } // Hiển thị email
-                            type="text" placeholder="  Địa chỉ" />
+                        <Input
+
+                            className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5"
+                            value={ address }
+                            placeholder="Địa chỉ"
+                            onChange={ ( e ) => setAddress( e.target.value ) }
+                        />
                     </div>
 
                     <div className="mt-5">
-                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="text" name="Address" value={ cart?.Address } placeholder="  Thành phố" />
+                        <Input
+
+                            className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400"
+                            type="text"
+                            value={ Address }
+                            placeholder="Địa chỉ"
+                            onChange={ ( e ) => setAddressS( e.target.value ) } // Capture address input
+                        />
                         <input className="w-[274px] h-[48px] max-sm:mt-3 max-sm:w-[360px] rounded-md border border-gray-400 sm:ml-4" type="text" placeholder="  Nhập 000, áp dụng cho mọi tỉnh thành" />
                     </div>
-                    <input className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5" type="text" value={ cart?.userId?.phone } // Hiển thị email
-                        placeholder="  Điện thoại" />
+                    <Input
+                        className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5"
+                        type="text"
+                        value={ phone }
+                        placeholder="Điện thoại"
+                        onChange={ ( e ) => setPhone( e.target.value ) } // Capture phone input
+                    />
                     <h2 className="mt-5 text-xl font-semibold">Phương thức vận chuyển</h2>
                     <label htmlFor='standardShipping' className={ `radio-button flex py-3 ` } >
 

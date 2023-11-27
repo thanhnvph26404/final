@@ -84,7 +84,15 @@ const OrderList = () =>
 
         }
     }, [ orderData ] );
-
+    const statusHistoryData = orderData?.statusHistory.map( ( historyItem: any, index ) => ( {
+        key: index,
+        status: historyItem.status,
+        updatedBy: {
+            name: historyItem.updatedBy?.name || 'Unknown',
+            role: historyItem.updatedBy?.role || 'User', // Ví dụ: lấy thông tin vai trò từ dữ liệu người dùng
+        },
+        updatedAt: new Date( historyItem?.updatedAt ).toLocaleString(), // Đổi định dạng ngày giờ
+    } ) );
 
 
     const columns = [
@@ -152,11 +160,20 @@ const OrderList = () =>
                             <div className=" mt-4 ml-[50px]">
                                 <p className="text-[15px] text-black-500 font-bold" >{ orderData?.userId?.address }</p>
                             </div>
+                            <div className="flex space-x-4 mt-4 ml-[20px]  ">
+                                <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
+                                <p className="text-gray-500 font-semibold">Địa chỉ thêm</p>
+                            </div>
+                            <div className=" mt-4 ml-[50px]">
+                                <p className="text-[15px] text-black-500 font-bold" >{ orderData?.Address }</p>
+                            </div>
 
 
                         </div>
+
                         {/* dưới */ }
                         <div className="mt-[50px] bg-white w-[465px] h-[380px]">
+
                             <div className="ml-[20px] mt-[10px]">
                                 <h2 className="font-bold text-[20px]  "><i className="fa-solid fa-location-dot text-[#286FFD]"></i> Địa chỉ thanh toán</h2>
                                 <hr className="border-1 border-black w-[320px] mt-2" />
@@ -170,6 +187,27 @@ const OrderList = () =>
                             </div>
 
 
+                        </div>
+                        <div className="mt-[50px] bg-white p-4 rounded shadow-md">
+                            <h2 className="font-bold text-[20px] mb-4">
+                                <i className="fa-solid fa-truck text-[#286FFD]"></i> Lịch sử trạng thái đơn hàng
+                                <hr className="border-1 border-black w-[320px] mt-2" />
+
+                            </h2>
+                            { statusHistoryData?.map( ( historyItem ) => (
+                                <div key={ historyItem.key } className="mb-4 border-b border-gray-300 pb-2">
+                                    <p className="text-gray-500 mb-1">{ historyItem.status }</p>
+                                    <p className="text-sm text-gray-700">
+                                        <span className="font-semibold">Được cập nhật bởi:</span> { historyItem.updatedBy.name }
+                                    </p>
+                                    <p className="text-sm text-gray-700">
+                                        <span className="font-semibold">Vai trò:</span> { historyItem.updatedBy.role }
+                                    </p>
+                                    <p className="text-sm text-gray-700">
+                                        <span className="font-semibold">Ngày giờ cập nhật:</span> { historyItem.updatedAt }
+                                    </p>
+                                </div>
+                            ) ) }
                         </div>
                     </div>
                 </div>
@@ -261,7 +299,7 @@ const OrderList = () =>
                     {/* dưới */ }
                     <div className="mt-[50px] bg-white w-[450px] h-[380px]">
                         <div className="ml-[20px] mt-[10px]">
-                            <h2 className="font-bold text-[20px] "><i className="fa-solid fa-truck text-[#286FFD]"></i> Đang chuyển hàng</h2>
+                            <h2 className="font-bold text-[20px] "><i className="fa-solid fa-truck text-[#286FFD]"></i> { orderData?.status }</h2>
                             <hr className="border-1 border-black w-[320px] mt-2" />
                         </div>
 

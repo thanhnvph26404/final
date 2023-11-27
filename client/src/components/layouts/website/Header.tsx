@@ -23,10 +23,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
   // Default to 0 if cart or items array is null or undefined
 
   const { data: cart, refetch } = useGetCartQuery( [] );
-  const cartItemCount = cart?.items?.length || 0;
-  console.log( cartItemCount );
 
-  console.log( cart );
   const navigate = useNavigate();
   const [ isOpen, setIsOpen ] = useState( false );
   const togglesDropdown = () =>
@@ -91,7 +88,16 @@ const Header = ( { currentUser }: UserMenuProps ) =>
   };
 
   const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
-
+  const cartItemCount = cart?.items?.length || 0;
+  useEffect( () =>
+  {
+    if ( !check )
+    {
+      // Nếu không có token (đã đăng xuất), cập nhật lại giá trị cartItemCount
+      const cartItemCount = 0;
+      console.log( cartItemCount );
+    }
+  }, [ check ] );
 
 
 
@@ -293,7 +299,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                     <LiaShoppingBasketSolid className="w-6 h-6" />
                   </span>
                   {/* Display the cart item count */ }
-                  { cartItemCount > 0 && (
+                  { check && cartItemCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-2">
                       { cartItemCount }
                     </span>
