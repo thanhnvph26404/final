@@ -37,7 +37,7 @@ const UpdateProduct = () =>
     {
 
 
-        setFileList( product.data.images )
+        setFileList( product?.data?.images )
         form.setFieldsValue( {
             _id: product?.data?._id,
             name: product?.data?.name,
