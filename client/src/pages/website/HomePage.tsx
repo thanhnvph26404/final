@@ -365,7 +365,7 @@ const HomePage = () => {
       </div>
 
       {/* một số hình ảnh */}
-      <div className="flex ml-[70px]  space-x-10  mt-8 sm:mt-12">
+      <div className="flex ml-[200px]  space-x-10  mt-8 sm:mt-12">
         <div className="relative ">
           <img className="w-full transition-transform transform-gpu hover:scale-105 rounded-xl " src="/imgleft.png" alt="Image" />
           <p className="absolute top-[50%] text-center text-white text-[27px] font-medium ">Mỗi sản phẩm đến tay bạn là những chất xám và công sức của cả một tập thể phía sau</p>
