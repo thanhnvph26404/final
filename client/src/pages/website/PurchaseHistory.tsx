@@ -178,7 +178,7 @@ const PurchaseHistory = () =>
                                     render={ ( text, record: any ) => (
                                         <div>
 
-                                            <img src={ record.productInfo.images[ 0 ]?.url } alt="" className='w-50 h-50' />
+                                            <img src={ record.productInfo.images[ 0 ]?.url } alt="" className='w-[150px] h-[200px]' />
                                         </div>
                                     ) }
                                 />
