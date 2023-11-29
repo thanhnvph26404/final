@@ -1,5 +1,5 @@
 import { LockOutlined } from '@ant-design/icons'
-import { useDeleteoneProductMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
+import { useDecreaseQuantityMutation, useDeleteoneProductMutation, useGetCartQuery, useIncreaseQuantityMutation } from '../../store/Auth/Auth.services';
 
 import { useAppDispatch } from '../../store/hook';
 import { addOrder } from '../../store/Order/Order.slice';
@@ -17,6 +17,8 @@ const CartPage = () =>
     const { data: cart, refetch } = useGetCartQuery( [] );
     console.log( cart );
     const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
+    const [ increaseQuantity ] = useIncreaseQuantityMutation(); // Sử dụng mutation increaseQuantity
+    const [ decreaseQuantity ] = useDecreaseQuantityMutation(); // Sử dụng mutation decreaseQuantity
 
     const [ removeOnecart ] = useDeleteoneProductMutation()
     const remove = ( id: any ) =>
@@ -41,6 +43,40 @@ const CartPage = () =>
         fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
     }, [ location.pathname, refetch ] );
 
+    const handleIncreaseQuantity = async ( itemId: any, increaseBy: any ) =>
+    {
+        try
+        {
+            await increaseQuantity( { itemId, increaseBy } );
+            await refetch(); // Gọi lại hàm refetch để cập nhật dữ liệu giỏ hàng
+        } catch ( error )
+        {
+            // Xử lý lỗi nếu có
+            console.error( error );
+        }
+    };
+
+    const handleDecreaseQuantity = async ( itemId: any, decreaseBy: any ) =>
+    {
+        try
+        {
+            // Nếu số lượng hiện tại đã là 0, không cho giảm xuống âm
+            if ( cart && cart.items )
+            {
+                const currentItem = cart.items.find( ( item: any ) => item._id === itemId );
+                if ( currentItem && currentItem.quantity <= 1 )
+                {
+                    return;
+                }
+            }
+
+            await decreaseQuantity( { itemId, decreaseBy } );
+            await refetch();
+        } catch ( error: any )
+        {
+            toastError( error.data.error );
+        }
+    };
     return (
         <div className="p-4">
             <h1 className="text-center text-4xl sm:text-5xl py-4 font-semibold text-[#23314B]">Giỏ hàng</h1>
@@ -75,7 +111,11 @@ const CartPage = () =>
                                     </div>
                                     <div className="w-1/4 sm:w-1/4 text-center mr-[55px]">
                                         <div className="flex flex-col items-center">
-                                            <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
+                                            <div className="border border-gray-300 rounded-md p-2 flex items-center">
+                                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={ () => handleDecreaseQuantity( item._id, 1 ) }>-</button>
+                                                <p className="mb-2 mx-4 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
+                                                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={ () => handleIncreaseQuantity( item._id, 1 ) }>+</button>
+                                            </div>
                                             <button className="underline hover:text-red-500" onClick={ () => remove( item.product._id ) }>Xóa</button>
                                         </div>
                                     </div>
