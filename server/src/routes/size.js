@@ -1,8 +1,9 @@
 import express from "express"
-import { getAll, create, update, remove } from "../controllers/size"
+import { getAll, create, update, remove, getOne } from "../controllers/size"
 const router = express.Router()
-router.get( "/", getAll )
+router.get("/", getAll)
+router.get("/:id", getOne)
 router.post( "/", create )
-router.patch( "/:id", update )
+router.put( "/:id", update )
 router.delete( "/:id", remove )
 export default router

@@ -119,6 +119,7 @@ const HomePage = () => {
 
 
       {/* sản phẩm mới */}
+
       <div className="flex flex-wrap">
         {productList?.products?.map((product: any) => {
           return (
@@ -126,6 +127,7 @@ const HomePage = () => {
               {/* Card 1 */}
               <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
                 <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+
 
                   <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
                     Tiết kiệm {product.discountProduct}đ
@@ -140,17 +142,48 @@ const HomePage = () => {
                       <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
                     </>
 
+
                   </div>
                   <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
+
+      
+        
+         
+            
+
+                  
+                
+               
+                    
+                      
+                    
+                        
+                        
+                       
+                            
+                            
+                            
+                            
+                   
+                      
+    
+       
+            
+
                     + Thêm nhanh
                   </button>
                 </div>
               </div>
 
+
               {/* Card 2 */}
             </div>
           );
         })}
+
+         
+
+
       </div>
 
       
@@ -179,6 +212,7 @@ const HomePage = () => {
 
 
       {/* sản phẩm */}
+
       <div className="flex flex-wrap">
         {productsold?.productsSoldOverTwenty?.map((product: any) => {
           return (
@@ -208,13 +242,18 @@ const HomePage = () => {
                     + Thêm nhanh
                   </button>
                 </div>
+
+      
+
               </div>
+
 
               
             </div>
           );
         })}
       </div>
+
 
       <div className="grid grid-cols-3 ">
         <div>
@@ -236,6 +275,7 @@ const HomePage = () => {
       </div>
 
       {/* sản phẩm */}
+
       <div className="flex flex-wrap">
         {productDiscont?.productsWithDiscount?.map((product: any) => {
           return (
@@ -257,11 +297,13 @@ const HomePage = () => {
                       <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
                     </>
 
+
                   </div>
                   <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
                     + Thêm nhanh
                   </button>
                 </div>
+
               </div>
 
               {/* Card 2 */}
@@ -269,6 +311,7 @@ const HomePage = () => {
           );
         })}
       </div>
+
 
 
 
@@ -288,7 +331,9 @@ const HomePage = () => {
       </div>
 
       {/* một số hình ảnh */}
+
       <div className="flex ml-[120px]  space-x-10  mt-8 sm:mt-12">
+
 
         <div className="relative ">
           <img className="w-full transition-transform transform-gpu hover:scale-105 rounded-xl " src="/imgleft.png" alt="Image" />
