@@ -212,8 +212,8 @@ const ListProduct = (props: Props) => {
                                         </div>
                                         <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">{product.name}</p>
                                         <p className="flex justify-center gap-2">
-                                            <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price}₫</span>
-                                            <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
+                                            <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price.toLocaleString()}₫</span>
+                                            <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price.toLocaleString()}₫</span>
                                         </p>
                                     </Link>
 

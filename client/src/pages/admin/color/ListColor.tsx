@@ -54,11 +54,11 @@ const ListColor = () =>
                             }
                         } }
                     >
-                        Remove
+                        Xoá
                     </Button>
 
                     <Button type="primary" className="bg-blue-500">
-                        <Link to={ `/admin/color/update/${ record._id }` }>Update</Link>
+                        <Link to={ `/admin/color/update/${ record._id }` }>Cập Nhật</Link>
                     </Button>
                 </Space>
             ),
