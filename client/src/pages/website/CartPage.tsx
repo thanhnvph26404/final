@@ -13,10 +13,7 @@ import { RiUserLine } from 'react-icons/ri';
 const CartPage = () =>
 {
     const dispatch = useAppDispatch();
-
     const location = useLocation();
-
-
     const { data: cart, refetch } = useGetCartQuery( [] );
     console.log( cart );
     const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
@@ -115,7 +112,13 @@ const CartPage = () =>
                         <p>Phí vận chuyển (nếu có) sẽ được tính toán trong trang thanh toán.</p>
                         <textarea placeholder="Ghi chú đơn hàng" className="w-[282px] sm:w-[220px] h-[115px] sm:h-[60px] border my-4 border-gray-300 rounded-md" name="" id="" />
                         <Link to="/payment">
-                            <button className="border rounded-full text-white w-[282px] sm:w-[220px] h-[62px] sm:h-[60px] bg-[#23314B]" onClick={ () => dispatch( addOrder( { ...cart, total: 0 } ) ) }><LockOutlined /> Thanh toán</button>
+                            <button
+                                className="border rounded-full text-white w-[282px] sm:w-[220px] h-[62px] sm:h-[60px] bg-[#23314B]"
+                                disabled={ !cart || !cart.items || cart.items.length === 0 }
+                                onClick={ () => dispatch( addOrder( { ...cart, total: 0 } ) ) }
+                            >
+                                <LockOutlined /> Thanh toán
+                            </button>
                         </Link>
                     </div>
                 </div>

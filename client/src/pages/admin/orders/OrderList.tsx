@@ -172,7 +172,7 @@ const OrderList = () =>
                         </div>
 
                         {/* dưới */ }
-                        <div className="mt-[50px] bg-white w-[465px] h-[380px]">
+                        {/* <div className="mt-[50px] bg-white w-[465px] h-[380px]">
 
                             <div className="ml-[20px] mt-[10px]">
                                 <h2 className="font-bold text-[20px]  "><i className="fa-solid fa-location-dot text-[#286FFD]"></i> Địa chỉ thanh toán</h2>
@@ -187,7 +187,7 @@ const OrderList = () =>
                             </div>
 
 
-                        </div>
+                        </div> */}
                         <div className="mt-[50px] bg-white p-4 rounded shadow-md">
                             <h2 className="font-bold text-[20px] mb-4">
                                 <i className="fa-solid fa-truck text-[#286FFD]"></i> Lịch sử trạng thái đơn hàng

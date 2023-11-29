@@ -18,6 +18,7 @@ import orderRouter from "./routes/order";
 import size from "./routes/size";
 import color from "./routes/color";
 import comment from "./routes/comment";
+import productDiscount from "./routes/productDistcount"
 // import Payment from "./routes/payment";
 
 
@@ -33,27 +34,29 @@ const app = express();
 dotenv.config();
 
 // connect db
-connectDB(process.env.MONGO_URI)
+connectDB( process.env.MONGO_URI )
 
-app.use(express.json());
-app.use(morgan("tiny"));
-app.use(cors())
+app.use( express.json() );
+app.use( morgan( "tiny" ) );
+app.use( cors() )
 // app.use( "/api/cart", cartRouter );
-app.use('/auth', authRouter)
-app.use('/password', passwordRouter)
-app.use('/category', categoryRouter)
-app.use('/images', uploadRouter)
-app.use("/voucher", voucherRouter);
-app.use("/products", ProductRouter);
-app.use("/contact", contactRouter);
-app.use("/brand", brandRouter);
-app.use("/attribute", attributeRouter);
-app.use("/valueattribute", valueattributeRouter);
-app.use("/productvariant", productvariantRouter);
-app.use("/order", orderRouter);
-app.use("/color", color);
-app.use("/size", size);
-app.use("/comment", comment);
+app.use( '/auth', authRouter )
+app.use( '/password', passwordRouter )
+app.use( '/category', categoryRouter )
+app.use( '/images', uploadRouter )
+app.use( "/voucher", voucherRouter );
+app.use( "/products", ProductRouter );
+app.use( "/contact", contactRouter );
+app.use( "/brand", brandRouter );
+app.use( "/attribute", attributeRouter );
+app.use( "/valueattribute", valueattributeRouter );
+app.use( "/productvariant", productvariantRouter );
+app.use( "/order", orderRouter );
+app.use( "/color", color );
+app.use( "/size", size );
+app.use( "/comment", comment );
+app.use( "/productDiscount", productDiscount );
+
 // app.use( "/payment", Payment );
 
 

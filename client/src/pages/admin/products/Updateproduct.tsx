@@ -1,5 +1,6 @@
-import TextArea from "antd/es/input/TextArea";
-import { Form, Row, Col, Input, Button, Upload, Select, Space, UploadProps } from "antd";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { Form, Row, Col, Input, Button, Upload, Select, Space, UploadProps, InputNumber } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
@@ -37,7 +38,7 @@ const UpdateProduct = () =>
     {
 
 
-        setFileList( product.data.images )
+        setFileList( product?.data?.images )
         form.setFieldsValue( {
             _id: product?.data?._id,
             name: product?.data?.name,
@@ -70,6 +71,16 @@ const UpdateProduct = () =>
             range: '${label} must be between ${min} and ${max}',
         }
     }
+    const validateDiscount = ( rule: any, value: any ) =>
+    {
+        const price = parseFloat( value );
+        const originalPrice = form.getFieldValue( 'price' );
+        if ( price > originalPrice )
+        {
+            return Promise.reject( 'Giá giảm không thể lớn hơn giá gốc' );
+        }
+        return Promise.resolve();
+    };
 
     const onFinishFailed = ( errorInfo: any ) =>
     {
@@ -227,34 +238,34 @@ const UpdateProduct = () =>
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    label="giá gốc"
+                    label="Giá gốc"
                     name="price"
                     rules={ [
-                        { required: true, min: 1, max: 100000000, pattern: new RegExp( /^[0-9]+$/ ), message: "Price is not a valid number" },
+                        { required: true, message: 'Vui lòng nhập giá gốc' },
+                        { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                     ] }
-                    hasFeedback
                 >
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
                 <Form.Item
-                    label="giá giảm"
+                    label="Giá giảm"
                     name="original_price"
                     rules={ [
-                        { required: true, min: 1, max: 100000000, pattern: new RegExp( /^[0-9]+$/ ), message: "originPrice is not a valid number" },
+
+                        { type: 'number', min: 1, max: 100000000, message: 'Giá giảm không hợp lệ' },
+                        { validator: validateDiscount },
                     ] }
-                    hasFeedback
                 >
-                    <Input />
+                    <InputNumber />
                 </Form.Item>
                 <Form.Item
+                    labelCol={ { span: 3 } }
                     label="Chi tiết"
                     name="description"
-                    rules={ [
-                        { required: true },
-                    ] }
+                    rules={ [ { required: true } ] }
                     hasFeedback
                 >
-                    <TextArea />
+                    <ReactQuill />
                 </Form.Item>
                 <Form.Item
                     label="Ảnh sản phẩm"
