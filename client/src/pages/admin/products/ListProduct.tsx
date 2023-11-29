@@ -1,25 +1,28 @@
-import { Space, Table, Button } from "antd";
+import { Space, Table, Button, Popconfirm } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { MdDelete } from "react-icons/md";
+import { MdEdit } from "react-icons/md";
 
 import { Link } from "react-router-dom";
 import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
-import { useGetProductQuery } from "../../../store/products/product.services";
 
 
 
-const ListProduct = () => {
 
-    const { data } = useGetProductsQuery([])
-    const [remove] = useDeleteProductMutation()
-    console.log(data);
+const ListProduct = () =>
+{
+
+    const { data } = useGetProductsQuery( [] )
+    const [ remove ] = useDeleteProductMutation()
+    console.log( data );
 
 
 
-    const removeProduct = (id: string) => {
-        remove(id)
+    const removeProduct = ( id: string ) =>
+    {
+        remove( id )
 
     };
 
@@ -28,11 +31,11 @@ const ListProduct = () => {
             title: "Ảnh sản phẩm",
             dataIndex: "images",
             key: "images",
-            render: (images) => (
+            render: ( images ) => (
                 <div className="">
-                    {/* {images.map((image: any, index: any) => ( */}
-                    <img src={images[0]?.url} alt={`Product Image`} style={{ width: 100 }} />
-                    {/* // ))} */}
+                    {/* {images.map((image: any, index: any) => ( */ }
+                    <img src={ images[ 0 ]?.url } alt={ `Product Image` } style={ { width: 100 } } />
+                    {/* // ))} */ }
                 </div>
             ),
         },
@@ -40,27 +43,27 @@ const ListProduct = () => {
             title: "Tên sản phẩm",
             dataIndex: "name",
             key: "name",
-            render: (text) => <p>{text}</p>,
+            render: ( text ) => <p>{ text }</p>,
         },
         {
             title: "Giá  gốc",
             dataIndex: "price",
             key: "price",
-            render: (number) => <p>{number.toLocaleString()}đ</p>,
+            render: ( number ) => <p>{ number.toLocaleString() }đ</p>,
 
         },
         {
             title: "Giá  giảm",
             dataIndex: "original_price",
             key: "original_price",
-            render: (number) => <p>{number.toLocaleString()}đ</p>,
+            render: ( number ) => <p>{ number.toLocaleString() }đ</p>,
         }
         ,
         {
             title: "Danh mục",
             dataIndex: "category",
             key: "category",
-            render: (category) => <p>{category.title}</p>,
+            render: ( category ) => <p>{ category.title }</p>,
 
 
         },
@@ -68,7 +71,7 @@ const ListProduct = () => {
             title: "Brand",
             dataIndex: "brand",
             key: "brand",
-            render: (brand) => <p>{brand?.title}</p>,
+            render: ( brand ) => <p>{ brand?.title }</p>,
 
 
         },
@@ -77,57 +80,59 @@ const ListProduct = () => {
             dataIndex: "description",
             key: "description",
             ellipsis: true,
-            render: (text) => <div >{text}</div>,
+            render: ( text ) => <div >{ text }</div>,
         },
         {
             title: "Hành động",
             key: "action",
-            render: (record) => (
+            render: ( record ) => (
                 <Space size="small" className="w-10">
-                    <Link to={`productDetailAdmin/${record._id}`}>
+                    <Link to={ `productDetailAdmin/${ record._id }` }>
                         <EyeFilled className="text-[20px]" />
                     </Link>
-                    <Button
-                        type="primary"
-                        style={{ backgroundColor: "red" }}
-                        onClick={() => {
-                            const delProduct = confirm("Bạn có muốn xoá không?");
-                            if (delProduct) {
-                                removeProduct(record._id);
-                            }
-                        }}
+
+                    <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        onConfirm={ () => removeProduct( record._id ) }
+                        okText="Yes"
+                        cancelText="No"
                     >
-                        Xoá
-                    </Button>
+                        <Button danger><MdDelete />
+                        </Button>
+                    </Popconfirm>
                     <Button type="primary"
                         className="bg-blue-500"
                     >
 
-                        <Link to={`/admin/product/${record._id}`}>Cập Nhật</Link>
+
+                        <Link to={ `/admin/product/${ record._id }` }><MdEdit />
+                        </Link>
                     </Button>
                 </Space>
             ),
         },
     ];
 
-    const ListProduct = data?.products?.map((item: any) => {
+    const ListProduct = data?.products?.map( ( item: any ) =>
+    {
         return {
             key: item._id,
             ...item,
 
         };
-    });
+    } );
 
     return (
-        <div style={{ marginTop: 100, paddingRight: 50 }}>
-            <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
-                <Link to={"/admin/products/add"}>Thêm Sản Phẩm</Link>
+        <div style={ { marginTop: 100, paddingRight: 50 } }>
+            <Button type="primary" className="bg-blue-500" style={ { marginBottom: 30 } }>
+                <Link to={ "/admin/products/add" }>Thêm Sản Phẩm</Link>
             </Button>
             <Table
-                style={{ backgroundColor: "white", marginTop: 100, }}
-                columns={columns}
-                dataSource={ListProduct}
-                pagination={{ pageSize: 6 }}
+                style={ { backgroundColor: "white", marginTop: 100, } }
+                columns={ columns }
+                dataSource={ ListProduct }
+                pagination={ { pageSize: 6 } }
             />
         </div>
     );

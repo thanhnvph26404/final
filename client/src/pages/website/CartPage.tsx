@@ -47,12 +47,29 @@ const CartPage = () =>
     {
         try
         {
-            await increaseQuantity( { itemId, increaseBy } );
+            if ( cart && cart.items )
+            {
+                const currentItem = cart.items.find( ( item: any ) => item._id === itemId );
+                if ( currentItem && currentItem.quantity >= 10 )
+                {
+                    toastError( "giới hạn mua sản phẩm " )
+                    return;
+                }
+            }
+            await increaseQuantity( { itemId, increaseBy } ).
+                unwrap().then( ( response ) =>
+                {
+                } )
+                .catch( ( error ) =>
+                {
+                    toastError( error.data.message );
+                } );
+
             await refetch(); // Gọi lại hàm refetch để cập nhật dữ liệu giỏ hàng
         } catch ( error )
         {
             // Xử lý lỗi nếu có
-            console.error( error );
+            toastError( "loi" );
         }
     };
 

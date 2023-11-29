@@ -4,125 +4,169 @@ import Product from "../models/products";
 import { updateImage, deleteImage } from "./upload";
 import { categorySchema } from "../schemas/category";
 
-export const getAll = async (req, res) => {
-    try {
+export const getAll = async ( req, res ) =>
+{
+    try
+    {
         const data = await Category.find();
 
-        if (!data || data.length === 0) {
-            return res.status(404).json({
+        if ( !data || data.length === 0 )
+        {
+            return res.status( 404 ).json( {
                 message: "Không có danh sách",
-            });
+            } );
         }
-        console.log(data);
-        return res.status(200).json({
+        console.log( data );
+        return res.status( 200 ).json( {
             data,
-        });
-    } catch (error) {
-        return res.status(500).json({
+        } );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
             message: "Lỗi server: " + error.message,
-        });
+        } );
     }
 };
 
-export const getOne = async (req, res) => {
-    try {
-        const result = await Category.findById(req.params.id);
+export const getOne = async ( req, res ) =>
+{
+    try
+    {
+        const result = await Category.findById( req.params.id );
 
-        if (!result || result.length === 0) {
-            return res.status(404).json({
+        if ( !result || result.length === 0 )
+        {
+            return res.status( 404 ).json( {
                 message: "Không có thông tin",
-            });
+            } );
         }
 
-        return res.status(200).json(result);
-    } catch (error) {
-        return res.status(500).json({
+        return res.status( 200 ).json( result );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
             message: "Lỗi server: " + error.message,
-        });
+        } );
     }
 };
 
-export const create = async (req, res) => {
-    try {
-        const { error } = categorySchema.validate(req.body, {
+export const create = async ( req, res ) =>
+{
+    try
+    {
+        const { error } = categorySchema.validate( req.body, {
             abortEarly: false,
-        });
-        if (error) {
-            const errors = error.details.map((err) => err.message);
-            return res.status(400).json({
+        } );
+        if ( error )
+        {
+            const errors = error.details.map( ( err ) => err.message );
+            return res.status( 400 ).json( {
                 message: errors,
-            });
+            } );
         }
 
-        const data = await Category.create(req.body);
+        const data = await Category.create( req.body );
 
-        if (!data || data.length === 0) {
-            return res.status(404).json({
+        if ( !data || data.length === 0 )
+        {
+            return res.status( 404 ).json( {
                 message: "Không thêm được danh mục",
-            });
+            } );
         }
 
-        return res.status(200).json({
+        return res.status( 200 ).json( {
             message: "Thêm danh mục thành công ",
             data: data,
-        });
-    } catch (error) {
-        return res.status(500).json({
+        } );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
             message: "Lỗi server: " + error.message,
-        });
+        } );
     }
 };
 
-export const remove = async (req, res) => {
-    try {
-        const data = await Category.findByIdAndDelete(req.params.id);
+export const remove = async ( req, res ) =>
+{
+    try
+    {
+        const data = await Category.findByIdAndDelete( req.params.id );
 
-        if (!data || data.length === 0) {
-            return res.status(404).json({
+        if ( !data || data.length === 0 )
+        {
+            return res.status( 404 ).json( {
                 message: "Xóa danh mục thất bại",
-            });
+            } );
         }
 
-        return res.status(200).json({
+        return res.status( 200 ).json( {
             message: "Xóa danh mục thành công ",
-        });
-    } catch (error) {
-        return res.status(500).json({
+        } );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
             message: "Lỗi server: " + error.message,
-        });
+        } );
     }
 };
 
-export const update = async (req, res) => {
-    try {
-        const { error } = categorySchema.validate(req.body, {
+export const update = async ( req, res ) =>
+{
+    try
+    {
+        const { error } = categorySchema.validate( req.body, {
             abortEarly: false,
-        });
-        if (error) {
-            const errors = error.details.map((err) => err.message);
-            return res.status(400).json({
+        } );
+        if ( error )
+        {
+            const errors = error.details.map( ( err ) => err.message );
+            return res.status( 400 ).json( {
                 message: errors,
-            });
+            } );
         }
 
-        const data = await Category.findByIdAndUpdate(req.params.id, req.body, {
+        const data = await Category.findByIdAndUpdate( req.params.id, req.body, {
             new: true,
-        });
+        } );
 
-        if (!data) {
-            return res.status(404).json({
+        if ( !data )
+        {
+            return res.status( 404 ).json( {
                 message: "Cập nhật danh mục thất bại",
-            });
+            } );
         }
 
-        return res.status(200).json({
+        return res.status( 200 ).json( {
             message: "Cập nhật danh mục thành công ",
             data: data,
-        });
-    } catch (error) {
-        return res.status(500).json({
+        } );
+    } catch ( error )
+    {
+        return res.status( 500 ).json( {
             message: "Lỗi server: " + error.message,
-        });
+        } );
     }
 };
+export const getCategoryProduct = async ( req, res ) =>
+{
+    try
+    {
+        const id = req.params.id;
 
+        // Truy vấn cơ sở dữ liệu để lấy tất cả sản phẩm thuộc danh mục categoryId
+        const products = await Product.find( { category: id } );
+
+        // Nếu không có sản phẩm thuộc danh mục categoryId, trả về thông báo không tìm thấy sản phẩm
+        if ( !products || products.length === 0 )
+        {
+            return res.status( 404 ).json( { message: 'Không tìm thấy sản phẩm trong danh mục này.' } );
+        }
+
+        // Trả về danh sách sản phẩm dưới dạng JSON
+        res.status( 200 ).json( { products } );
+    } catch ( error )
+    {
+        // Xử lý các lỗi nếu có
+        res.status( 500 ).json( { message: 'Đã có lỗi xảy ra khi lấy sản phẩm từ danh mục.' } );
+    }
+}
