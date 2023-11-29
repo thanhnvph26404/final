@@ -133,7 +133,7 @@ const OrderList = () => {
         <div>
             <h1 className="text-[27px] font-bold">Order</h1>
             {/* <div></div> */}
-            <div className="flex auto-cols-auto mt-[20px] space-x-[40px]">
+            <div className="flex auto-cols-auto mt-[20px] space-x-[20px]">
                 <div className="">
                     <h2 className="font-semibold text-[20px]">Product</h2>
                     <Table columns={columns} dataSource={productDataForTable} />
@@ -183,7 +183,7 @@ const OrderList = () => {
                             </div>
                         </div>
                                                       
-                        </div> */}
+                        </div> 
                         <div className="mt-[50px] bg-white p-4 rounded shadow-md">
                             <h2 className="font-bold text-[20px] mb-4">
                                 <i className="fa-solid fa-truck text-[#286FFD]"></i> Lịch sử trạng thái đơn hàng
@@ -206,10 +206,10 @@ const OrderList = () => {
                         ))}
                     </div>
                 </div>
-                <div className="mt-[10px] bg-white w-[450px] h-[380px]">
+                <div className="mt-[10px] bg-white w-[350px] h-[380px]">
                     <div className="ml-[20px] mt-[10px]">
                         <h2 className="font-bold text-[20px] "><InfoCircleTwoTone /> Người đặt hàng</h2>
-                        <hr className="border-1 border-black w-[320px] mt-2" />
+                        <hr className="border-1 border-black w-[280px] mt-2" />
                     </div>
                     <div className="flex space-x-4 mt-4 ml-[20px]">
                         <i className="fa-solid fa-cart-shopping text-[#ababab] pt-[3px] "></i>
@@ -249,7 +249,7 @@ const OrderList = () => {
                             <i className="fa-solid fa-envelope text-[#ababab] pt-[3px] "></i>
                             <p className="text-gray-500 font-semibold">Email</p>
 
-                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[209px] "></i>
+                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[200px] "></i>
 
                         </div>
                         <div className=" mt-4 ml-[50px]">
@@ -260,7 +260,7 @@ const OrderList = () => {
                             <i className="fa-solid fa-mobile text-[#ababab] pt-[3px] "></i>
                             <p className="text-gray-500 font-semibold">Số điện thoại</p>
 
-                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[165px] "></i>
+                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[155px] "></i>
 
                         </div>
                         <div className=" mt-4 ml-[50px]">
@@ -268,15 +268,15 @@ const OrderList = () => {
                         </div>
                     </div>
                     {/* dưới */}
-                    <div className="mt-[50px] bg-white w-[450px] h-[200px]">
+                    <div className="mt-[50px] bg-white w-[320px] h-[200px]">
                         <div className="ml-[20px] mt-[10px]">
                             <h2 className="font-bold text-[20px] "><i className="fa-solid fa-money-bill text-[#286FFD]"></i> Payment</h2>
-                            <hr className="border-1 border-black w-[320px] mt-2" />
+                            <hr className="border-1 border-black w-[280px] mt-2" />
                         </div>
                         <div className="flex space-x-4 mt-4 ml-[20px]  ">
                             <i className="fa-solid fa-file-lines text-[#ababab] pt-[3px] "></i>
                             <p className="text-gray-500 font-semibold">ID</p>
-                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[235px] "></i>
+                            <i className="fa-solid fa-copy text-[#ababab] pt-[3px] pl-[220px] "></i>
                         </div>
                         <div className=" mt-4 ml-[50px]">
                             <p className="text-[15px] text-black-500 font-bold" >{orderData?.paymentIntent?.id}</p>
@@ -292,10 +292,10 @@ const OrderList = () => {
                     </div>
 
                     {/* dưới */}
-                    <div className="mt-[50px] bg-white w-[450px] h-[380px]">
+                    <div className="mt-[50px] bg-white w-[330px] h-[380px]">
                         <div className="ml-[20px] mt-[10px]">
                             <h2 className="font-bold text-[20px] "><i className="fa-solid fa-truck text-[#286FFD]"></i> {orderData?.status}</h2>
-                            <hr className="border-1 border-black w-[320px] mt-2" />
+                            <hr className="border-1 border-black w-[280px] mt-2" />
                         </div>
 
                         <div className="flex space-x-4 mt-4 ml-[20px]">

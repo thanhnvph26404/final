@@ -305,9 +305,10 @@ const AddProduct = () => {
                         </div>
                     )}
                 </Form.List>
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" loading={loadings} className="bg-blue-500" htmlType="submit">
-                        cập nhập sản phẩm
+                <Form.Item wrapperCol={ { offset: 8, span: 16 } }>
+                    <Button type="primary" loading={ loadings } className="bg-blue-500" htmlType="submit">
+                        Thêm sản phẩm mới
+        
                     </Button>
                 </Form.Item>
             </Form>

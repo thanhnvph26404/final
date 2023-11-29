@@ -183,10 +183,15 @@ const ProductDetail = () => {
                 quantity: count
             }
 
-            navigate('/cart')
-            AddToCartMutation(cart)
-        } else {
-            toastError("bạn chưa chọn số lượng sản phẩm ")
+
+            navigate( '/cart' )
+            AddToCartMutation( cart )
+        } else
+        {
+            toastError( "Bạn chưa chọn số lượng sản phẩm " )
+
+        
+
         }
 
 
@@ -223,10 +228,12 @@ const ProductDetail = () => {
                         {product?.data?.original_price ? (
                             <div className="flex gap-2 text-left mt-[40px]">
                                 <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
-                                    {product?.data?.original_price}₫
+
+                                    { product?.data?.original_price.toLocaleString() }₫
                                 </span>
                                 <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">
-                                    {product?.data?.price}₫
+                                    { product?.data?.price.toLocaleString() }₫
+
                                 </span>
                                 <p className="bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
                                     Tiết kiệm {product?.data?.price - product?.data?.original_price}₫
@@ -235,7 +242,9 @@ const ProductDetail = () => {
                         ) : (
                             <div className="flex gap-2 text-left mt-[40px]">
                                 <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
-                                    {product?.data?.price}₫
+
+                                    { product?.data?.price.toLocaleString() }₫
+
                                 </span>
                             </div>
                         )}

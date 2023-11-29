@@ -21,35 +21,7 @@ const HomePage = () => {
   const { data: productDiscont } = useGetproductDiscountApiQuery(null)
 
   console.log(productDiscont);
-  // if (isLoading) {
-  //   return <>Loading...</>
-  // }
 
-  // if (isError) {
-  //   return <p>Error...</p>
-  // }
-
-
-
-  // const responsive = {
-  //   superLargeDesktop: {
-  //     // the naming can be any, depends on you.
-  //     breakpoint: { max: 4000, min: 3000 },
-  //     items: 5
-  //   },
-  //   desktop: {
-  //     breakpoint: { max: 3000, min: 1024 },
-  //     items: 3
-  //   },
-  //   tablet: {
-  //     breakpoint: { max: 1024, min: 464 },
-  //     items: 2
-  //   },
-  //   mobile: {
-  //     breakpoint: { max: 464, min: 0 },
-  //     items: 1
-  //   }
-  // };
 
   return (
     <div className="mx-auto items-center">
@@ -148,39 +120,73 @@ const HomePage = () => {
 
       {/* sản phẩm mới */}
 
-
-      <div className="flex space-x-6">
-        {productList?.products.map((product: any) => {
+      <div className="flex flex-wrap">
+        {productList?.products?.map((product: any) => {
           return (
-            <Link to={`/home/product-detail/${product._id}`} className="" key={product._id}>
-              <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
-                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
+            <div key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+              {/* Card 1 */}
+              <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
+                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+
+
+                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
+                    Tiết kiệm {product.discountProduct}đ
+                  </p>
+
+
                   <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
-                  <p className="text-center text-[20px] font-semibold mt-2">{product.name}</p>
-                  <div className="flex space-x-4 ml-[120px]  mb-4 text-center">
-                    <p className="flex space-x-4 mt-2">
-                      {/* Conditional rendering based on the existence of original_price */}
-                      {product.original_price ? (
-                        <>
-                          <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price}₫</span>
-                          <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price}₫</span>
-                        </>
-                      ) : (
-                        <span className=" text-sm md:text-base font-extralight text-align-center text-[#23314bb3]">{product.price}₫</span>
-                      )}
-                    </p>
+                  <p className="text-center text-[20px] font-semibold">{product.name}</p>
+                  <div className="flex space-x-4 pl-[130px] mb-4">
+                    <>
+                      <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>
+                      <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
+                    </>
+
+
                   </div>
-                  <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px] ">
+                  <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
+
+      
+        
+         
+            
+
+                  
+                
+               
+                    
+                      
+                    
+                        
+                        
+                       
+                            
+                            
+                            
+                            
+                   
+                      
+    
+       
+            
+
                     + Thêm nhanh
                   </button>
                 </div>
               </div>
-            </Link>
+
+
+              {/* Card 2 */}
+            </div>
           );
         })}
 
+         
+
+
       </div>
+
+      
 
 
       {/*sản phẩm bán chạy*/}
@@ -206,40 +212,48 @@ const HomePage = () => {
 
 
       {/* sản phẩm */}
-      {productsold?.productsSoldOverTwenty?.map((product: any) => {
-        return (
-          <div key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
-            {/* Card 1 */}
-            <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
-              <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-                {product.original_price && (
-                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
-                    Tiết kiệm {product.price - product.original_price} đ
-                  </p>
-                )}
 
-                <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
-                <p className="text-center text-[20px] font-semibold">{product.name}</p>
-                <div className="flex space-x-4 pl-[80px] mb-4">
-                  {product.original_price ? (
-                    <>
-                      <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price}₫</span>
-                      <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price}₫</span>
-                    </>
-                  ) : (
-                    <span className="text-sm md:text-base font-extralight text-align-center text-[#23314bb3]">{product.price}₫</span>
+      <div className="flex flex-wrap">
+        {productsold?.productsSoldOverTwenty?.map((product: any) => {
+          return (
+            <div key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+              {/* Card 1 */}
+              <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
+                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+                  {product.original_price && (
+                    <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
+                      Tiết kiệm {product.price - product.original_price} đ
+                    </p>
                   )}
-                </div>
-                <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
-                  + Thêm nhanh
-                </button>
-              </div>
-            </div>
 
-            {/* Card 2 */}
-          </div>
-        );
-      })}
+                  <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+                  <p className="text-center text-[20px] font-semibold">{product.name}</p>
+                  <div className="flex space-x-4 pl-[130px] mb-4">
+                    {product.original_price ? (
+                      <>
+                        <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>
+                        <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
+                      </>
+                    ) : (
+                      <span className="text-sm md:text-base font-extralight text-align-center text-[#23314bb3]">{product.price}₫</span>
+                    )}
+                  </div>
+                  <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
+                    + Thêm nhanh
+                  </button>
+                </div>
+
+      
+
+              </div>
+
+
+              
+            </div>
+          );
+        })}
+      </div>
+
 
       <div className="grid grid-cols-3 ">
         <div>
@@ -262,38 +276,44 @@ const HomePage = () => {
 
       {/* sản phẩm */}
 
+      <div className="flex flex-wrap">
+        {productDiscont?.productsWithDiscount?.map((product: any) => {
+          return (
+            <div key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
+              {/* Card 1 */}
+              <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
+                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
 
-      {productDiscont?.productsWithDiscount?.map((product: any) => {
-        return (
-          <div key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
-            {/* Card 1 */}
-            <div className="relative w-full sm:w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 group">
-              <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-
-                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
-                  Tiết kiệm {product.discountProduct}đ
-                </p>
+                  <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
+                    Tiết kiệm {product.discountProduct}đ
+                  </p>
 
 
-                <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
-                <p className="text-center text-[20px] font-semibold">{product.name}</p>
-                <div className="flex space-x-4 pl-[80px] mb-4">
-                  <>
-                    <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price}₫</span>
-                    <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price}₫</span>
-                  </>
+                  <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+                  <p className="text-center text-[20px] font-semibold">{product.name}</p>
+                  <div className="flex space-x-4 pl-[130px] mb-4">
+                    <>
+                      <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>
+                      <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
+                    </>
 
+
+                  </div>
+                  <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
+                    + Thêm nhanh
+                  </button>
                 </div>
-                <button onClick={() => handleGetProductDetail(product._id)} className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
-                  + Thêm nhanh
-                </button>
-              </div>
-            </div>
 
-            {/* Card 2 */}
-          </div>
-        );
-      })}
+              </div>
+
+              {/* Card 2 */}
+            </div>
+          );
+        })}
+      </div>
+
+
+
 
       {/* banner dưới */}
       <div className="w-full relative text-center mb-[90px] ">
@@ -311,7 +331,9 @@ const HomePage = () => {
       </div>
 
       {/* một số hình ảnh */}
-      <div className="flex ml-[200px]  space-x-10  mt-8 sm:mt-12">
+
+      <div className="flex ml-[120px]  space-x-10  mt-8 sm:mt-12">
+
 
         <div className="relative ">
           <img className="w-full transition-transform transform-gpu hover:scale-105 rounded-xl " src="/imgleft.png" alt="Image" />

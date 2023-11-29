@@ -47,11 +47,11 @@ const ListSize = () =>
                         okText="Yes"
                         cancelText="No"
                     >
-                        <Button danger>Delete</Button>
+                        <Button danger>Xoá</Button>
                     </Popconfirm>
 
                     <Button type="primary" className="bg-blue-500">
-                        <Link to={ `/admin/size/update/${ record._id }` }>Update</Link>
+                        <Link to={ `/admin/size/update/${ record._id }` }>Cập Nhật</Link>
                     </Button>
                 </Space>
             ),
