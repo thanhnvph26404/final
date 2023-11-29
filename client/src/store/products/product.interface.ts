@@ -2,13 +2,13 @@ import { Image } from "../upload/upload.interface"
 
 export interface Iproductdata
 {
-    _id?: string;
+    _id?: string | undefined;
     name: string;
     price: number;
     original_price: number,
     description: string;
     brand: string | undefined
-    images: Image;
+    images: Image[];
     ProductVariants: string[]
     category: string | undefined,
     sold?: number

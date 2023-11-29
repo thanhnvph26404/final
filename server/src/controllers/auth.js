@@ -427,7 +427,9 @@ export const addToCart = async ( req, res ) =>
     console.log( users );
     const productInfo = await Product.findById( productId );
     const existingCart = await Cart.findOne( { userId } );
-
+    const priceToUse = productInfo.original_price !== undefined && productInfo.original_price !== null
+      ? productInfo.original_price
+      : productInfo.price;
     const cartItem = {
       product: productId,
       productVariant: {
@@ -440,7 +442,7 @@ export const addToCart = async ( req, res ) =>
         name: productInfo.name,
         brand: productInfo.brand,
         category: productInfo.category,
-        price: productInfo.price,
+        price: priceToUse,
         address: users.address
       },
     };
@@ -1093,5 +1095,97 @@ export const getCancelledtrueOrders = async ( req, res ) =>
     return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
   }
 };
+export const increaseQuantity = async ( req, res ) =>
+{
+  const { _id } = req.user;
+  const { id } = req.params; // Lấy itemId từ URL
+  const { increaseBy } = req.body;
+
+  try
+  {
+    const existingCart = await Cart.findOne( { userId: _id } );
+    if ( !existingCart )
+    {
+      return res.status( 404 ).json( { message: 'Giỏ hàng không tồn tại' } );
+    }
+
+    const itemToIncrease = existingCart.items.find( item => item._id.toString() === id );
+    if ( !itemToIncrease )
+    {
+      return res.status( 404 ).json( { message: 'Sản phẩm không tồn tại trong giỏ hàng' } );
+    }
+
+    // Lưu trữ số lượng trước khi thay đổi
+    const previousQuantity = itemToIncrease.quantity;
+
+    // Tăng số lượng sản phẩm
+    itemToIncrease.quantity += increaseBy;
+    await existingCart.save();
+
+    // Tính lại tổng tiền sau khi thay đổi
+    const total = existingCart.items.reduce( ( acc, item ) =>
+    {
+      return acc + ( item.productInfo.price * item.quantity );
+    }, 0 );
+
+    // Cập nhật tổng tiền trong giỏ hàng
+    existingCart.total = total;
+    await existingCart.save();
+
+    return res.status( 200 ).json( { message: 'Số lượng sản phẩm đã được tăng' } );
+  } catch ( error )
+  {
+    console.error( error );
+    return res.status( 500 ).json( { message: 'Lỗi máy chủ: ' + error.message } );
+  }
+};
+
+export const decreaseQuantity = async ( req, res ) =>
+{
+  const { _id } = req.user;
+  const { id } = req.params; // Lấy itemId từ URL
+  const { decreaseBy } = req.body;
+
+  try
+  {
+    const existingCart = await Cart.findOne( { userId: _id } );
+    if ( !existingCart )
+    {
+      return res.status( 404 ).json( { message: 'Giỏ hàng không tồn tại' } );
+    }
+
+    const itemToDecrease = existingCart.items.find( item => item._id.toString() === id );
+    if ( !itemToDecrease )
+    {
+      return res.status( 404 ).json( { message: 'Sản phẩm không tồn tại trong giỏ hàng' } );
+    }
+
+    // Lưu trữ số lượng trước khi thay đổi
+    const previousQuantity = itemToDecrease.quantity;
+
+    // Giảm số lượng sản phẩm
+    itemToDecrease.quantity -= decreaseBy;
+    // Kiểm tra nếu số lượng nhỏ hơn 0 thì có thể xử lý ở đây
+
+    await existingCart.save();
+
+    // Tính lại tổng tiền sau khi thay đổi
+    const total = existingCart.items.reduce( ( acc, item ) =>
+    {
+      return acc + ( item.productInfo.price * item.quantity );
+    }, 0 );
+
+    // Cập nhật tổng tiền trong giỏ hàng
+    existingCart.total = total;
+    await existingCart.save();
+
+    return res.status( 200 ).json( { message: 'Số lượng sản phẩm đã được giảm' } );
+  } catch ( error )
+  {
+    console.error( error );
+    return res.status( 500 ).json( { message: 'Lỗi máy chủ: ' + error.message } );
+  }
+};
+
 
 

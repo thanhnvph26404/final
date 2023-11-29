@@ -16,11 +16,6 @@ export const productSchema = joi
       .min( 0 )
       .required()
       .messages( errorMessages( "Giá" ) ),
-    original_price: joi
-      .number()
-      .min( 0 )
-      .required()
-      .messages( errorMessages( "Giá gốc" ) ),
     description: joi
       .string()
       .required()

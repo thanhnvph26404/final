@@ -55,6 +55,8 @@ import CheckoutPage from "./pages/website/PaymentPage";
 import ChartPage from "./pages/admin/chart/BarChart";
 import ProductDetailAdmin from "./pages/admin/products/ProductDetailAdmin";
 import OrderDetail from "./pages/website/OrderDetail";
+import ListSize from "./pages/admin/size/listSize";
+import AddSize from "./pages/admin/size/addSize";
 
 
 
@@ -225,14 +227,14 @@ export const router = createBrowserRouter( [
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
 
                     { path: 'orderss/:id', element: <OrderList /> },
+                    { path: 'size', element: <ListSize /> },
 
-                    // { path: 'size', element: <ListSize /> },
-                    // { path: 'size/add', element: <AddSize /> },
+                    { path: 'size/add', element: <AddSize /> },
                     // { path: 'size/update/:id', element: <UpdateSize /> },
 
                     { path: 'color', element: <ListColor /> },
                     { path: 'color/add', element: <AddColor /> },
-                    { path: 'color/update/:id', element: <Updatecolor /> },
+                    { path: 'color/update/:_id', element: <Updatecolor /> },
                     { path: 'products', element: <ListProduct /> },
                     { path: 'products/add', element: <AddProduct /> },
 

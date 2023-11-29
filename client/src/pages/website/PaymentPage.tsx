@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useApplycouponMutation, useCreateOrderMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
+import { useApplycouponMutation, useCreateOrderMutation, useDeleteoneProductMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
 import { toastError, toastSuccess } from '../../hook/toastify';
 
 import
@@ -17,11 +17,14 @@ const CheckoutPage = () =>
     const navigate = useNavigate()
     const { data: cart } = useGetCartQuery( [] );
     console.log( cart );
+    const [ removeOnecart ] = useDeleteoneProductMutation()
+    const remove = ( id: any ) =>
+    {
+        removeOnecart( id )
+    }
     const addresss = cart.userId.address
     const phonee = cart.userId.phone
     const hasPreviousDetails = addresss && phonee;
-
-
     const [ address, setAddress ] = useState( hasPreviousDetails ? addresss : '' ); // State to store address
     const [ phone, setPhone ] = useState( hasPreviousDetails ? phonee : '' ); // State to store phone number
     const [ Address, setAddressS ] = useState( "" )
@@ -33,6 +36,31 @@ const CheckoutPage = () =>
     const [ shippingFee, setShippingFee ] = useState( 0 ); // Giá vận chuyển
     const [ voucher ] = useApplycouponMutation();
     const [ showPaypalButton, setShowPaypalButton ] = useState( false );
+    const [ addressError, setAddressError ] = useState( '' );
+    const [ phoneError, setPhoneError ] = useState( '' );
+    const validateAddress = () =>
+    {
+        if ( !address.trim() )
+        {
+            setAddressError( 'Vui lòng nhập địa chỉ.' );
+            return false;
+        }
+        setAddressError( '' );
+        return true;
+    };
+
+    // Validation function for the phone number
+    const validatePhone = () =>
+    {
+        const phoneRegex = /^[0-9]{10}$/; // Adjust this regex based on your phone number format
+        if ( !phone.match( phoneRegex ) )
+        {
+            setPhoneError( 'Vui lòng nhập số điện thoại hợp lệ.' );
+            return false;
+        }
+        setPhoneError( '' );
+        return true;
+    };
     const style: {
         layout?: "vertical"
         // Các thuộc tính khác nếu có
@@ -185,6 +213,13 @@ const CheckoutPage = () =>
 
     const handleCheckout = async () =>
     {
+        const isAddressValid = validateAddress();
+        const isPhoneValid = validatePhone();
+        if ( !isAddressValid || !isPhoneValid )
+        {
+            // If any field is invalid, prevent further action
+            return;
+        }
         if ( !paymentMethod && !shippingType )
         {
             toastError( 'Vui lòng chọn phương thức thanh toán và vận chuyển.' );
@@ -277,7 +312,11 @@ const CheckoutPage = () =>
                             value={ address }
                             placeholder="Địa chỉ"
                             onChange={ ( e ) => setAddress( e.target.value ) }
+                            onBlur={ validateAddress } // Trigger validation onBlur
+
                         />
+                        { addressError && <span className=" px-2 text-red-500">{ addressError }</span> }
+
                     </div>
 
                     <div className="mt-5">
@@ -287,6 +326,7 @@ const CheckoutPage = () =>
                             type="text"
                             value={ Address }
                             placeholder="Địa chỉ"
+
                             onChange={ ( e ) => setAddressS( e.target.value ) } // Capture address input
                         />
                         <input className="w-[274px] h-[48px] max-sm:mt-3 max-sm:w-[360px] rounded-md border border-gray-400 sm:ml-4" type="text" placeholder="  Nhập 000, áp dụng cho mọi tỉnh thành" />
@@ -295,9 +335,13 @@ const CheckoutPage = () =>
                         className="w-[564px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400 mt-5"
                         type="text"
                         value={ phone }
+                        onBlur={ validatePhone } // Trigger validation onBlur
+
                         placeholder="Điện thoại"
                         onChange={ ( e ) => setPhone( e.target.value ) } // Capture phone input
                     />
+                    { phoneError && <span className=" px-2 text-red-500">{ phoneError }</span> }
+
                     <h2 className="mt-5 text-xl font-semibold">Phương thức vận chuyển</h2>
                     <label htmlFor='standardShipping' className={ `radio-button flex py-3 ` } >
 
@@ -426,6 +470,8 @@ const CheckoutPage = () =>
                             <div className="w-1/4 sm:w-1/4 text-center ">
                                 <div className="flex flex-col items-center">
                                     <p className="mb-2 border rounded-md border-gray-600 w-[48px] sm:w-[40px] h-[38px] sm:h-[32px] text-center pt-1">{ item.quantity }</p>
+                                    <button className="underline hover:text-red-500" onClick={ () => remove( item.product._id ) }>Xóa</button>
+
                                 </div>
                             </div>
                             <p className='max-sm:mr-2'>{ item.productInfo.price }₫</p>

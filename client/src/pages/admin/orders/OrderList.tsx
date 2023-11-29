@@ -162,8 +162,13 @@ const OrderList = () => {
 
                         </div>
 
+
                         {/* dưới */}
                         <div className="mt-[50px] bg-white w-[465px] h-[300px]">
+
+                        
+                        
+
 
                             <div className="ml-[20px] mt-[10px]">
                                 <h2 className="font-bold text-[20px]  "><i className="fa-solid fa-location-dot text-[#286FFD]"></i> Địa chỉ thanh toán</h2>
@@ -177,17 +182,12 @@ const OrderList = () => {
                                 <p className="text-[15px] text-black-500 font-bold" >{orderData?.userId?.address}</p>
                             </div>
                         </div>
-
-                        
-
-                    </div>
-                    {/* <div>
-                        <hr className="border-1 border-black w-[320px] mt-2" />
-                    </div> */}
-                    <div className="mt-[50px] bg-white p-4 rounded shadow-md">
-                        <h2 className="font-bold text-[20px] mb-4">
-                            <i className="fa-solid fa-truck text-[#286FFD]"></i> Lịch sử trạng thái đơn hàng
-                            <hr className="border-1 border-black w-[320px] mt-2" />
+                                                      
+                        </div> */}
+                        <div className="mt-[50px] bg-white p-4 rounded shadow-md">
+                            <h2 className="font-bold text-[20px] mb-4">
+                                <i className="fa-solid fa-truck text-[#286FFD]"></i> Lịch sử trạng thái đơn hàng
+                                <hr className="border-1 border-black w-[320px] mt-2" />
 
                         </h2>
                         {statusHistoryData?.map((historyItem) => (
