@@ -1,49 +1,60 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { ICategory } from './category.interface'
 
-export const categoryApi = createApi({
+export const categoryApi = createApi( {
     reducerPath: 'categoryApi',
-    baseQuery: fetchBaseQuery({
+    baseQuery: fetchBaseQuery( {
         baseUrl: 'http://localhost:8080/category'
-    }),
-    tagTypes: ['Category'],
-    endpoints: (builder) => ({
-        getCategoryList: builder.query({
+    } ),
+    tagTypes: [ 'Category' ],
+    endpoints: ( builder ) => ( {
+        getCategoryList: builder.query( {
             query: () => ``,
-            providesTags: ['Category']
-        }),
-        getCategory: builder.query({
-            query: (id: string) => ({
-                url: `/${id}`,
+            providesTags: [ 'Category' ]
+        } ),
+        getCategory: builder.query( {
+            query: ( id: string ) => ( {
+                url: `/${ id }`,
                 method: 'GET',
-            }),
-            providesTags: ['Category']
-        }),
-        addCategory: builder.mutation<ICategory[], ICategory>({
-            query: (category) => ({
+            } ),
+            providesTags: [ 'Category' ]
+        } ),
+        addCategory: builder.mutation<ICategory[], ICategory>( {
+            query: ( category ) => ( {
                 url: ``,
                 method: 'POST',
                 body: category
-            }),
-            invalidatesTags: ['Category']
-        }),
-        editCategory: builder.mutation<ICategory[], ICategory>({
-            query: (category) => ({
-                url: `/${category._id}`,
+            } ),
+            invalidatesTags: [ 'Category' ]
+        } ),
+        editCategory: builder.mutation<ICategory[], ICategory>( {
+            query: ( category ) => ( {
+                url: `/${ category._id }`,
                 method: 'PATCH',
                 body: category
-            }),
-            invalidatesTags: ['Category']
-        }),
-        deleteCategory: builder.mutation<ICategory[], string>({
-            query: (id) => ({
-                url: `/${id}`,
+            } ),
+            invalidatesTags: [ 'Category' ]
+        } ),
+        deleteCategory: builder.mutation<ICategory[], string>( {
+            query: ( id ) => ( {
+                url: `/${ id }`,
                 method: 'DELETE',
-            }),
-            invalidatesTags: ['Category'],
-        })
-    })
+            } ),
+            invalidatesTags: [ 'Category' ],
+        } ),
+        getCategoryProduct: builder.query( {
+            query: ( id: string ) =>
+            {
+                console.log( id );
+                return {
+                    url: `/getproduct/${ id }`,
+                    method: "GET"
+                }
+            },
+            providesTags: [ 'Category' ]
+        } )
+    } )
 
-})
+} )
 
-export const { useAddCategoryMutation, useGetCategoryListQuery, useDeleteCategoryMutation, useEditCategoryMutation, useGetCategoryQuery } = categoryApi
+export const { useAddCategoryMutation, useGetCategoryListQuery, useGetCategoryProductQuery, useDeleteCategoryMutation, useEditCategoryMutation, useGetCategoryQuery } = categoryApi

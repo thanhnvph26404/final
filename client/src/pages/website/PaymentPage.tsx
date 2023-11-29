@@ -82,6 +82,11 @@ const CheckoutPage = () =>
         // Hàm xử lý khi nhấn thanh toán PayPal
         const handlePaypal = async () =>
         {
+            if ( !cart?.items || cart.items.length === 0 )
+            {
+                toastError( "không có sản phẩm để checkout" )
+                return
+            }
             if ( !paymentMethod || !shippingType )
             {
                 // Kiểm tra xem người dùng đã chọn phương thức thanh toán và vận chuyển chưa
@@ -182,6 +187,11 @@ const CheckoutPage = () =>
     };
     const handleApplyCoupon = async () =>
     {
+        if ( !cart?.items || cart.items.length === 0 )
+        {
+            toastError( "không có sản phẩm để áp mã " )
+            return
+        }
         try
         {
             const response: any = await voucher( { voucher: discountCode } );
@@ -213,6 +223,11 @@ const CheckoutPage = () =>
 
     const handleCheckout = async () =>
     {
+        if ( !cart?.items || cart.items.length === 0 )
+        {
+            toastError( "không có sản phẩm để checkout" )
+            return
+        }
         const isAddressValid = validateAddress();
         const isPhoneValid = validatePhone();
         if ( !isAddressValid || !isPhoneValid )

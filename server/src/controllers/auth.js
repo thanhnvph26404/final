@@ -1115,6 +1115,32 @@ export const increaseQuantity = async ( req, res ) =>
       return res.status( 404 ).json( { message: 'Sản phẩm không tồn tại trong giỏ hàng' } );
     }
 
+    // Lấy thông tin sản phẩm từ ProductVariants
+    const { size, color } = itemToIncrease.productVariant; // Lấy thông tin size và color của sản phẩm trong giỏ hàng
+
+    // Tìm biến thể sản phẩm từ mô hình ProductVariants
+    const productVariant = await Product.findOne( { "ProductVariants.size": size, "ProductVariants.color": color } );
+    if ( !productVariant )
+    {
+      return res.status( 404 ).json( { message: 'Không tìm thấy thông tin biến thể sản phẩm' } );
+    }
+
+    // Tìm thông tin biến thể sản phẩm cụ thể dựa trên size và color
+    const specificVariant = productVariant.ProductVariants.find(
+      ( variant ) => variant.size === size && variant.color === color
+    );
+    console.log( specificVariant );
+    if ( !specificVariant )
+    {
+      return res.status( 404 ).json( { message: 'Không tìm thấy biến thể sản phẩm' } );
+    }
+
+    // Kiểm tra số lượng còn lại của biến thể sản phẩm
+    if ( specificVariant.quantity < itemToIncrease.quantity + increaseBy )
+    {
+      return res.status( 400 ).json( { message: 'Quá số lượng màu và size' } );
+    }
+
     // Lưu trữ số lượng trước khi thay đổi
     const previousQuantity = itemToIncrease.quantity;
 
@@ -1139,6 +1165,7 @@ export const increaseQuantity = async ( req, res ) =>
     return res.status( 500 ).json( { message: 'Lỗi máy chủ: ' + error.message } );
   }
 };
+
 
 export const decreaseQuantity = async ( req, res ) =>
 {
