@@ -11,27 +11,30 @@ type FieldType = {
 };
 const Updatecolor = () =>
 {
-    const { id } = useParams<{ id: any }>();
+    const { _id } = useParams<{ _id: any }>();
 
-    const navigate = useNavigate();
-    const { data: colordata } = useGetColorQuery( id )
+    const { data: colordata } = useGetColorQuery( _id )
     const [ editcolor ] = useEditColorMutation()
+
+    const [ form ] = Form.useForm();
+    form.setFieldsValue( colordata )
+
     const onFinish = async ( values: any ) =>
     {
-        const response = await editcolor( { ...values, _id: id } ).unwrap().then( () =>
-        {
-            console.log( response )
+        const newColor = {
+            _id: values._id,
+            color: values.color
+        }
+        console.log( values );
 
-            toastSuccess( "ok"
 
-            )
-        } )
+        await editcolor( values )
     };
-    const [ form ] = Form.useForm();
-
     useEffect( () =>
     {
-        form.setFieldsValue( colordata )
+        form.setFieldsValue(
+            colordata
+        )
     }, [ colordata ] )
 
     const onFinishFailed = ( values: any ) =>
@@ -63,7 +66,15 @@ const Updatecolor = () =>
                 onFinishFailed={ onFinishFailed }
                 validateMessages={ validateMessages }
             >
-
+                <Form.Item
+                    label=""
+                    name="_id"
+                    initialValue={ _id }
+                    style={ { display: "none" } }
+                    rules={ [ { required: true, message: "vui lòng nhập kích cỡ!" } ] }
+                >
+                    <Input />
+                </Form.Item>
 
                 <Form.Item<FieldType>
                     label="Tên màu"

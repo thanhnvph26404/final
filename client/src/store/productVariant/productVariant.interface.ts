@@ -1,8 +1,10 @@
-export type Size = {
+export interface Size
+{
     _id?: string
     size: string,
 }
-export type Color = {
-    _id?: string
+export interface Color
+{
+    _id: string
     color: string,
 }

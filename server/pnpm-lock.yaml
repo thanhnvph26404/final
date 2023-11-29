@@ -47,6 +47,9 @@ dependencies:
   mock-aws-s3:
     specifier: ^4.0.2
     version: 4.0.2
+  moment:
+    specifier: ^2.29.4
+    version: 2.29.4
   mongoose:
     specifier: ^7.4.5
     version: 7.4.5
@@ -1378,6 +1381,10 @@ packages:
       bluebird: 3.7.2
       fs-extra: 7.0.1
       underscore: 1.12.1
+    dev: false
+
+  /moment@2.29.4:
+    resolution: {integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==}
     dev: false
 
   /mongodb-connection-string-url@2.6.0:

@@ -1,11 +1,12 @@
-import TextArea from "antd/es/input/TextArea";
-import { Form, Row, Col, Input, Button, Upload, Select, Space } from "antd";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'; // CSS styles for ReactQuill
+
+import { Form, Row, Col, Input, Button, Upload, Select, Space, InputNumber } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { useGetCategoryListQuery } from "../../../store/categoies/category.services";
-import { Iproductdata } from "../../../store/products/product.interface";
 import { useGetBrandListQuery } from "../../../store/Brand/brand.services";
 import { useGetsizeListQuery } from "../../../store/valueAttribute/Sizesevice";
 import { useGetcolorListQuery } from "../../../store/valueAttribute/colorsevice";
@@ -103,6 +104,17 @@ const AddProduct = () =>
 
         }
     }
+    const [ form ] = Form.useForm()
+    const validateDiscount = ( rule: any, value: any ) =>
+    {
+        const price = parseFloat( value );
+        const originalPrice = form.getFieldValue( 'price' );
+        if ( price > originalPrice )
+        {
+            return Promise.reject( 'Giá giảm không thể lớn hơn giá gốc' );
+        }
+        return Promise.resolve();
+    };
 
 
     return (
@@ -112,7 +124,7 @@ const AddProduct = () =>
             </h3>
             <Form
                 name="Form"
-
+                form={ form }
                 labelCol={ { span: 6 } }
                 wrapperCol={ { span: 18 } }
                 // style={{ maxWidth: 800 }}
@@ -150,24 +162,25 @@ const AddProduct = () =>
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            label="giá gốc"
+                            label="Giá gốc"
                             name="price"
                             rules={ [
-                                { required: true, min: 1, max: 100000000, pattern: new RegExp( /^[0-9]+$/ ), message: "Price is not a valid number" },
+                                { required: true, message: 'Vui lòng nhập giá gốc' },
+                                { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                             ] }
-                            hasFeedback
                         >
-                            <Input />
+                            <InputNumber />
                         </Form.Item>
                         <Form.Item
-                            label="giá giảm"
+                            label="Giá giảm"
                             name="original_price"
                             rules={ [
-                                { min: 1, max: 100000000, pattern: new RegExp( /^[0-9]+$/ ), message: "originPrice is not a valid number" },
+
+                                { type: 'number', min: 1, max: 100000000, message: 'Giá giảm không hợp lệ' },
+                                { validator: validateDiscount },
                             ] }
-                            hasFeedback
                         >
-                            <Input />
+                            <InputNumber />
                         </Form.Item>
                     </Col>
                     <Col className="gutter-row" span={ 8 }>
@@ -212,12 +225,10 @@ const AddProduct = () =>
                             labelCol={ { span: 3 } }
                             label="Chi tiết"
                             name="description"
-                            rules={ [
-                                { required: true },
-                            ] }
+                            rules={ [ { required: true } ] }
                             hasFeedback
                         >
-                            <TextArea cols={ 40 } rows={ 6 } />
+                            <ReactQuill />
                         </Form.Item>
                         <Form.Item
                             label="Ảnh sản phẩm"

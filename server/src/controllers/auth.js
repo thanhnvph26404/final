@@ -427,7 +427,9 @@ export const addToCart = async ( req, res ) =>
     console.log( users );
     const productInfo = await Product.findById( productId );
     const existingCart = await Cart.findOne( { userId } );
-
+    const priceToUse = productInfo.original_price !== undefined && productInfo.original_price !== null
+      ? productInfo.original_price
+      : productInfo.price;
     const cartItem = {
       product: productId,
       productVariant: {
@@ -440,7 +442,7 @@ export const addToCart = async ( req, res ) =>
         name: productInfo.name,
         brand: productInfo.brand,
         category: productInfo.category,
-        price: productInfo.price,
+        price: priceToUse,
         address: users.address
       },
     };

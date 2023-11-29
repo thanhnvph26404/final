@@ -17,6 +17,7 @@ const productVariantSchema = new mongoose.Schema(
     },
   },
 
+
 );
 
 const productSchema = new mongoose.Schema(
@@ -38,7 +39,6 @@ const productSchema = new mongoose.Schema(
     original_price: {
       type: Number,
       min: 0,
-      required: true,
     },
     description: {
       type: String,
@@ -73,8 +73,13 @@ const productSchema = new mongoose.Schema(
         ref: "Comment",
       },
     ],
+    discountProduct: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true, versionKey: false }
-);
+)
+
 
 export default mongoose.model( "Product", productSchema );
