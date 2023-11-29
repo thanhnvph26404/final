@@ -50,7 +50,7 @@ const ListOrder = () =>
     const columns: ColumnsType<IOrder> = [
 
         {
-            title: "mã đơn hàng",
+            title: "Mã đơn hàng",
             dataIndex: "paymentIntent",
             key: "paymentIntent",
             render: ( paymentIntent ) => <p>{ paymentIntent?.id }</p>,
@@ -79,7 +79,7 @@ const ListOrder = () =>
         }
         ,
         {
-            title: "ngày mua hàng ",
+            title: "Ngày mua hàng ",
             dataIndex: "createdAt",
             key: "createdAt",
 
@@ -130,7 +130,7 @@ const ListOrder = () =>
         },
 
         {
-            title: "hành động",
+            title: "Hành động",
             key: "action",
             render: ( record ) => (
                 <Space size="middle" className="w-12">
