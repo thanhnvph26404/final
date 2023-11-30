@@ -25,14 +25,14 @@ const ListProduct = (props: Props) => {
     useEffect(() => {
         if (productList?.products) {
             const sorted = [...productList.products];
-    
+
             // Sắp xếp dựa trên giá và lựa chọn của người dùng
             if (sortOption === "lowest") {
                 sorted.sort((a, b) => a.price - b.price);
             } else if (sortOption === "highest") {
                 sorted.sort((a, b) => b.price - a.price);
             }
-    
+
             setSortedProducts(sorted);
         }
     }, [productList, sortOption]);
@@ -201,10 +201,10 @@ const ListProduct = (props: Props) => {
                     </div>
                     {/* list product */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 z-10">
-                        {sortedProducts.map((product:any) => {
-                            return <div className=" flex-1" key={product._id}>
+                        {sortedProducts.map((product: any) => {
+                            return <Link to={`/home/product-detail/${product._id}`} className=" flex-1" key={product._id}>
                                 <div className="gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
-                                    <Link className="" to={``}>
+                                    <div className="">
                                         <div className="relative ">
                                             <img className="object-cover w-full" src={product?.images[0]?.url} alt="" />
                                             <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
@@ -215,12 +215,12 @@ const ListProduct = (props: Props) => {
                                             <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price.toLocaleString()}₫</span>
                                             <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price.toLocaleString()}₫</span>
                                         </p>
-                                    </Link>
+                                    </div>
 
 
 
                                 </div>
-                            </div>
+                            </Link>
                         })}
                     </div>
                 </div>
