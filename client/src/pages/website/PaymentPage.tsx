@@ -290,10 +290,10 @@ const CheckoutPage = () =>
             // Áp dụng giá vận chuyển tương ứng
             if ( selectedShippingType === 'nhanh' )
             {
-                setShippingFee( 30 ); // Giá vận chuyển cho giao hàng tiêu chuẩn
+                setShippingFee( 30000 ); // Giá vận chuyển cho giao hàng tiêu chuẩn
             } else if ( selectedShippingType === 'hỏa tốc' )
             {
-                setShippingFee( 50 ); // Giá vận chuyển cho giao hàng hỏa tốc
+                setShippingFee( 50000 ); // Giá vận chuyển cho giao hàng hỏa tốc
             }
         } catch ( error )
         {
@@ -373,7 +373,7 @@ const CheckoutPage = () =>
                         <div className="border rounded-md border-black  flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
 
                             <p className="ml-4 max-sm:w-[360px]">Giao hàng tiết kiệm</p>
-                            <p className="mr-4 font-semibold">30đ</p>
+                            <p className="mr-4 font-semibold">30.000đ</p>
                         </div>
                     </label>
                     <label htmlFor='expressShipping' className={ `radio-button flex ` } >
@@ -389,7 +389,7 @@ const CheckoutPage = () =>
                         <div className="border rounded-md border-black  flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
 
                             <p className="ml-4 max-sm:w-[360px]">Giao hàng hỏa tốc</p>
-                            <p className="mr-4 font-semibold">50đ</p>
+                            <p className="mr-4 font-semibold">50.000đ</p>
                         </div>
                     </label>
                     <h2 className="mt-5 text-xl font-semibold ">Thanh toán</h2>
@@ -524,7 +524,7 @@ const CheckoutPage = () =>
                     </div>
                     <div className="flex justify-between">
                         <p className="font-mono text-xl">Tổng</p>
-                        <p className="font-semibold">{ totalAmount } đ</p>
+                        <p className="font-semibold">{ totalAmount.toLocaleString() } đ</p>
                     </div>
                 </div>
             </div>

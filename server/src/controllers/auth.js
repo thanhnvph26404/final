@@ -774,10 +774,10 @@ export const createOrder = async ( req, res ) =>
     let shippingFee = 0;
     if ( shippingType === 'nhanh' )
     { // Xác định loại vận chuyển
-      shippingFee = 30; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
+      shippingFee = 30000; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
     } else if ( shippingType === 'hỏa tốc' )
     {
-      shippingFee = 50; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
+      shippingFee = 50000; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
     }
     const updatedUser = await Auth.findByIdAndUpdate(
       _id,
