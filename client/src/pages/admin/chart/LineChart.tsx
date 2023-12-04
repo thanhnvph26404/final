@@ -23,12 +23,7 @@ const ChartPage2 = () => {
     const { data: productChart } = useGetProductsQuery(null)
     // console.log(productChart);
 
-    const { data: OrderData } = useGetAllOrderQuery(null)
-    console.log(OrderData);
-
-    const successfulOrders = OrderData?.Order?.filter((order: any) => order.status === "Đã hoàn thành").length;
-
-    console.log(`Số đơn hàng đặt hàng thành công: ${successfulOrders}`);
+   
 
     const [uniqueMonths, setUniqueMonths] = useState(new Set());
     const [startDate, setStartDate] = useState("");

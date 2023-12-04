@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { useGetProductsQuery } from "../../../store/products/product.services";
 import LineChart from "../../admin/chart/LineChart";
 import Doughnut from "../../admin/chart/Doughnut";
 import { defaults } from "chart.js/auto";
+import { useGetAllOrderQuery } from "../../../store/Auth/Auth.services";
 
 defaults.maintainAspectRatio = true;
 defaults.responsive = true;
@@ -18,12 +19,31 @@ interface MonthlySales {
 
 const ChartPage = () => {
   const { data: productChart } = useGetProductsQuery(null);
+  const { data: OrderData } = useGetAllOrderQuery(null)
+  console.log(OrderData);
+
+  // const successfulOrders = OrderData?.Order?.filter((order: any) => order.status === "Đã hoàn thành").length;
+
+  // console.log(`Số đơn hàng đặt hàng thành công: ${successfulOrders}`);
+   useEffect(() => {
+    // Kiểm tra xem có dữ liệu OrderData không và có phải là mảng không
+    if (Array.isArray(OrderData?.Order)) {
+      // Lọc và đếm số đơn hàng thành công
+      const successfulOrdersCount = OrderData.Order.filter(
+        (order: any) => order.status === "Đã hoàn thành"
+      ).length;
+
+      // Cập nhật state successfulOrders
+      setSuccessOrders(successfulOrdersCount);
+    }
+  }, [OrderData]);
 
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [filteredData, setFilteredData] = useState(productChart?.products);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+  const [successOrder, setSuccessOrders] = useState(0);
 
   const handleFilter = () => {
     const filteredData = productChart?.products?.filter((data: any) => {
@@ -58,6 +78,12 @@ const ChartPage = () => {
 
   return (
     <div>
+      <div className="mb-[40px] w-[250px] text-left h-[120px] bg-gray-200 rounded-xl">
+        <div className="pt-[30px] pl-[15px]">
+          <p className="text-[25px] font-semibold">{successOrder}</p>
+          <h1 className="text-[25px] font-semibold">Đơn Thành Công </h1>
+        </div>
+      </div>
       <div className="flex">
         <div className="h-[500px] w-[600px]">
           <div className="flex space-x-6">
