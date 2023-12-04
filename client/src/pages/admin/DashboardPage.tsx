@@ -17,29 +17,11 @@ defaults.plugins.title.color = "black";
 
 const DashboardPage = () => {
 
-  // const [customerCount, setCustomerCount] = useState(0);
-  // const { data: users } = useGetUserListQuery([]);
-  // console.log(users);
-
-  // const userAccounts = users.filter((user:any) => user.role === "User");
-
-  // // Đếm số lượng tài khoản người dùng
-  // const numberOfUserAccounts = userAccounts.length;
-
-  // console.log("Số tài khoản người dùng: ", numberOfUserAccounts);
-
-  // const { data: OrderData } = useGetAllOrderQuery(null)
-  // console.log(OrderData);
-
   
 
   return (
     <div>
-      <div>
-
-      </div>
-
-      <div>
+      {/* <div>
         <div className="flex">
           <div className="h-[400px] w-[600px]">
             <BarChart />
@@ -54,7 +36,7 @@ const DashboardPage = () => {
             <Doughnut />
           </div>
         </div>
-      </div>
+      </div> */}
 
 
     </div>
