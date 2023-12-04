@@ -1,7 +1,7 @@
 // đây là data của FE, không cần lưu vào db
 
 import { BsCreditCard } from "react-icons/bs";
-import { MdFavoriteBorder } from "react-icons/md";
+import { BiSolidDiscount } from "react-icons/bi";
 import { AiOutlineProfile, AiOutlineGift } from "react-icons/ai";
 
 export const profile = [
@@ -35,8 +35,8 @@ export const profile = [
         ],
     },
     {
-        title: "Sản phẩm yêu thích",
-        url: "favorite",
-        Icon: MdFavoriteBorder,
+        title: "Mã voucher của tôi ",
+        url: "myVoucher",
+        Icon: BiSolidDiscount,
     },
 ];

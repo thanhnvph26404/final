@@ -60,5 +60,6 @@ export interface Order
     Address?: string,
     statusHistory: StatusHistory[]
 
+
 }
 
