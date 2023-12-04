@@ -5,22 +5,25 @@ import Popup from "reactjs-popup"
 import 'reactjs-popup/dist/index.css';
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
-import { useAddToCartMutation, useGetUserByTokenMutation } from "../../store/Auth/Auth.services";
+import { useAddToCartMutation, useAdddTowishListMutation, useGetUserByTokenMutation, useGetWishListQuery } from "../../store/Auth/Auth.services";
 import { useAddCommentMutation, useGetCommentbyidprouctQuery } from "../../store/Comment/comment.services";
-import { toastError } from "../../hook/toastify";
+import { toastError, toastSuccess } from "../../hook/toastify";
 import { message } from "antd";
 import { useGetCategoryProductQuery } from "../../store/categoies/category.services";
+import { CiHeart } from "react-icons/ci";
 
 
 const ProductDetail = () =>
 {
+    const location = useLocation();
     const { id } = useParams();
     const { data: product, error, isLoading } = useGetProductQuery( id! );
     const _id = product?.data.category._id
-
     const { data: categoryProduct } = useGetCategoryProductQuery( _id! )
     console.log( categoryProduct );
+    const { data: wistListProduct, refetch } = useGetWishListQuery( [] )
 
+    const [ wishList ] = useAdddTowishListMutation()
     const [ AddToCartMutation ] = useAddToCartMutation()
     const [ AddCommentMutation ] = useAddCommentMutation()
     const [ mauSac, setmauSac ] = useState();
@@ -32,19 +35,47 @@ const ProductDetail = () =>
     const [ listSize, setlistSize ] = useState( [] );
     const [ image, setimage ] = useState();
     const navigate = useNavigate()
-
     const { data: comments } = useGetCommentbyidprouctQuery( id! )
-    console.log( comments );
-
-    const location = useLocation();
-
     const [ getUserByToken ] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
     const token = localStorage.getItem( "token" );
-
     const [ email, setEmail ] = useState( "" );
     const [ name, setName ] = useState( "" );
     const [ comment, setComment ] = useState( "" );
     const [ rating, setRating ] = useState( 0 );
+    useEffect( () =>
+    {
+        const fetchData = async () =>
+        {
+            try
+            {
+                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+                await refetch();
+                // Dữ liệu product detail dc cập nhật 
+            } catch ( error: any )
+            {
+                toastError( error.data.error )   // Xử lý lỗi nếu có
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+    }, [ location.pathname, refetch ] );
+    const addtowishList = ( prodId: any ) =>
+    {
+        wishList( prodId ).unwrap().then( () =>
+        {
+            toastSuccess( "Đã thêm sản phẩm vào danh sách yêu thích" );
+
+            refetch();
+        } ).catch( ( error ) =>
+        {
+            toastError( error.data.message );
+
+
+        } );
+
+
+
+    };
     useEffect( () =>
     {
         if ( token )
@@ -111,7 +142,6 @@ const ProductDetail = () =>
                 .unwrap()
                 .then( ( response ) =>
                 {
-                    console.log( response.data );
                 } )
                 .catch( ( error ) =>
                 {
@@ -244,6 +274,7 @@ const ProductDetail = () =>
     }
 
 
+
     return (
         <div className=" items-center">
 
@@ -262,9 +293,15 @@ const ProductDetail = () =>
                     </div>
                     <div className="mt-[50px]">
                         {/* name */ }
+
                         <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{ product?.data?.name }</h1>
                         { product?.data?.original_price ? (
                             <div className="flex gap-2 text-left mt-[40px]">
+                                <button onClick={ () => addtowishList( product?.data?._id ) }>
+                                    <CiHeart
+
+                                    />
+                                </button>
                                 <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
 
                                     { product?.data?.original_price.toLocaleString() }₫
@@ -668,17 +705,6 @@ const ProductDetail = () =>
             ) }
 
             <div className="space-y-5 " id="commentFormContainer">
-
-
-                {/* <select name="" id="" className="w-[200px] h-[45px] border-2 ml-[100px] ">
-                    <option value="">Mới nhất</option>
-                    <option value="">Đánh giá cao nhất</option>
-                    <option value="">Đánh giá thấp nhất</option>
-                    <option value="">Đánh giá có ảnh</option>
-                    <option value="">Đánh giá có ảnh trước</option>
-                    <option value="">Đánh giá có video trước</option>
-                </select> */}
-
             </div>
         </div>
     )

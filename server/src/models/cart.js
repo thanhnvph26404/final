@@ -50,6 +50,10 @@ const cartSchema = new mongoose.Schema( {
         type: Number,
         default: 0,
     },
+    usedCoupons: [ {
+        type: String,
+        // Mã giảm giá đã sử dụng sẽ được lưu ở đây
+    } ],
 } );
 
 

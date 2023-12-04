@@ -7,10 +7,7 @@ export const voucherSchema = joi.object( {
     code: joi.string().required().messages( errorMessages( "Mã" ) ),
     discount: joi.number().required().messages( errorMessages( "Giảm giá" ) ),
     limit: joi.number().min( 0 ).required().messages( errorMessages( "Giới hạn" ) ),
-    // apply: joi
-    //     .string()
-    //     .required()
-    //     .messages( errorMessages( "Loại sản phẩm áp dụng" ) ),
+    minimumOrderAmount: joi.number().min( 0 ).required().messages( errorMessages( "Giới hạn tiền" ) ),
     startDate: joi.string().required().messages( errorMessages( "Ngày bắt đầu" ) ),
     endDate: joi.string().required().messages( errorMessages( "Ngày kết thúc" ) ),
 } );

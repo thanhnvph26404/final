@@ -17,11 +17,6 @@ const voucherSchema = new mongoose.Schema( {
         type: Number,
         require: true
     },
-    // apply: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Category",
-    //     require: true
-    // },
     startDate: {
         type: Date,
         require: true
@@ -34,6 +29,10 @@ const voucherSchema = new mongoose.Schema( {
         type: String,
         enum: [ "active", "expored" ],
         default: "active"
+    },
+    minimumOrderAmount: {
+        type: Number,
+        required: true
     }
 }, { versionKey: false, timeseries: true } )
 export default mongoose.model( "voucher", voucherSchema )

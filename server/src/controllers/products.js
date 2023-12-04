@@ -1,6 +1,7 @@
 import { productSchema } from "../schemas/products"
 import Category from "../models/categories"
 import Product from "../models/products"
+import Auth from "../models/auth";
 export const create = async ( req, res ) =>
 {
     try
@@ -197,4 +198,35 @@ export const remove = async ( req, res ) =>
         } );
     }
 };
+export const addTowishList = async ( req, res ) =>
+{
+    const { _id } = req.user;
+    const { prodId } = req.body;
+    try
+    {
+        const user = await Auth.findById( _id );
+        const alreadyExists = user.wishList.find( ( id ) => id.toString() === prodId );
+        console.log( alreadyExists );
+        if ( alreadyExists )
+        {
+            return res.status( 400 ).json( { message: "Sản phẩm đã tồn tại trong danh sách yêu thích" } );
+        } else
+        {
+            let updatedUser = await Auth.findByIdAndUpdate(
+                _id,
+                {
+                    $push: { wishList: prodId },
+                },
+                {
+                    new: true,
+                }
+            );
+            res.json( updatedUser );
+        }
+    } catch ( error )
+    {
+        throw new Error( error );
+    }
+};
+
 

@@ -13,7 +13,10 @@ import order from "../models/order";
 import Voucher from "../models/voucher";
 import uniqid from "uniqid"
 import nodemailer from "nodemailer"
-
+import moment from 'moment';
+import qs from 'qs';
+import crypto from 'crypto';
+import { log } from "console";
 config();
 // đăng kí
 export const register = async ( req, res ) =>
@@ -100,7 +103,6 @@ export const verify = async ( req, res ) =>
     const token = req.headers.authorization.split( " " )[ 1 ];
     const decoded = jwt.verify( token, process.env.SECRET_KEY );
 
-    console.log( decoded );
     const email = decoded.email;
 
     const user = await Auth.findOne( { email } );
@@ -147,7 +149,6 @@ export const getAllUser = async ( req, res ) =>
   try
   {
     const user = await Auth.find()
-    console.log( user );
     res.json( {
       user
     } )
@@ -252,7 +253,6 @@ export const updateUser = async ( req, res ) =>
 }
 
 
-// Đăng nhập
 export const logIn = async ( req, res ) =>
 {
   try
@@ -321,7 +321,6 @@ export const getUserByToken = async ( req, res ) =>
     const token = req.headers.authorization.split( " " )[ 1 ];
     const decoded = jwt.verify( token, process.env.SECRET_KEY );
     const user = await Auth.findById( decoded.id );
-    console.log( user );
     if ( !user )
     {
       return res.status( 401 ).json( {
@@ -399,11 +398,12 @@ export const unBlockUser = async ( req, res ) =>
 export const editAddressToken = async ( req, res ) =>
 {
   const { _id } = req.user
-  console.log( _id );
   try
   {
     const user = await Auth.findByIdAndUpdate( _id, {
       address: req?.body?.address,
+      Address: req?.body?.Address,
+      country: req?.body?.country
     }, {
       new: true
     } )
@@ -424,7 +424,6 @@ export const addToCart = async ( req, res ) =>
     const userId = req.user._id;
     const { productId, size, color, quantity } = req.body;
     const users = await Auth.findById( userId );
-    console.log( users );
     const productInfo = await Product.findById( productId );
     const existingCart = await Cart.findOne( { userId } );
     const priceToUse = productInfo.original_price !== undefined && productInfo.original_price !== null
@@ -610,8 +609,6 @@ export const removeFromCart = async ( req, res ) =>
     } );
   }
 };
-
-
 export const getUserCart = async ( req, res ) =>
 {
   const { _id } = req.user
@@ -624,7 +621,6 @@ export const getUserCart = async ( req, res ) =>
     throw new Error( error )
   }
 }
-
 export const emptyCart = async ( req, res ) =>
 {
   const { _id } = req.user
@@ -638,13 +634,11 @@ export const emptyCart = async ( req, res ) =>
     throw new Error( error )
   }
 }
-
-
 export const updateOrderStatus = async ( req, res, next ) =>
 {
   const { status } = req.body;
   const { id } = req.params;
-  const { _id } = req.user
+  const { _id } = req.user;
 
   try
   {
@@ -653,17 +647,17 @@ export const updateOrderStatus = async ( req, res, next ) =>
     // Kiểm tra nếu đơn hàng đã chuyển trạng thái nhất định
     if (
       existingOrder.status === "Đã hoàn thành" ||
-      existingOrder.status === "Đã hủy" || existingOrder.status === "đang chờ được xử lý" || existingOrder.status === "Đã hoàn tiền"
+      existingOrder.status === "Đã hủy" ||
+      existingOrder.status === "đang chờ được xử lý" ||
+      existingOrder.status === "Đã hoàn tiền"
     )
     {
       return res.status( 400 ).json( {
         error: "Không thể thay đổi trạng thái của đơn hàng này",
       } );
     }
-    const isAllowedToChange = canChangeToNewStatus(
-      existingOrder,
-      status
-    );
+
+    const isAllowedToChange = canChangeToNewStatus( existingOrder, status );
 
     if ( !isAllowedToChange )
     {
@@ -676,7 +670,6 @@ export const updateOrderStatus = async ( req, res, next ) =>
     existingOrder.statusHistory.push( {
       status: status,
       updatedBy: _id, // ID của người thực hiện hành động
-
       updatedAt: new Date(),
     } );
 
@@ -691,9 +684,25 @@ export const updateOrderStatus = async ( req, res, next ) =>
       for ( const item of updatedOrder.products )
       {
         const { product, quantity } = item;
+
+        // Update overall product quantity and sold count
         await Product.updateOne(
           { _id: product._id },
           { $inc: { quantity, sold: -quantity } }
+        );
+
+        // Update each ProductVariant quantity
+        const { productVariant } = item;
+        const { size, color } = productVariant;
+
+        // Cập nhật số lượng cho một size và color cụ thể
+        await Product.findOneAndUpdate(
+          {
+            _id: product._id,
+            "ProductVariants.size": size,
+            "ProductVariants.color": color,
+          },
+          { $inc: { "ProductVariants.$.quantity": quantity } }
         );
       }
     }
@@ -723,39 +732,57 @@ const canChangeToNewStatus = ( existingOrder, newStatus ) =>
 
   return !hasChangedToNewStatus;
 };
-
 export const applyCoupon = async ( req, res ) =>
 {
   const { _id } = req.user;
   const { voucher } = req.body;
 
-  const validcoupon = await Voucher.findOne( { code: voucher } )
-  if ( validcoupon === null ) throw new Error( "mã voucher không đúng " );
-  if ( validcoupon.limit <= 0 )
+  const user = await Auth.findOne( { _id } ).populate( 'vouchers' );
+  console.log( user );// Lấy thông tin người dùng và thông tin về các mã giảm giá của họ
+  const cart = await Cart.findOne( { userId: user._id } ).populate( 'items.product' );
+
+  const userVoucher = user.vouchers.find( v => v.code === voucher );
+  console.log( userVoucher );
+  if ( !userVoucher )
   {
-    throw new Error( "Số lượng voucher đã hết" );
+    return res.status( 400 ).json( {
+      error: "bạn chưa có mã giảm giá này",
+    } );
   }
+
+  // Lấy thông tin về mã giảm giá từ collection Voucher để kiểm tra hạn sử dụng và giới hạn tiền
+  const validCoupon = await Voucher.findOne( { code: voucher } );
+
+  // Kiểm tra tính hợp lệ của mã giảm giá
   const currentDate = new Date();
-  if ( currentDate > new Date( validcoupon.endDate ) )
+  if ( currentDate <= new Date( validCoupon.endDate ) && cart.total >= userVoucher.minimumOrderAmount )
   {
-    console.log( "Voucher đã hết hạn" );
-    return { error: "Voucher đã hết hạn" }; // Return an object indicating the error
+    // Check xem mã giảm giá còn khả dụng không
+    const availableVoucher = await Voucher.findOne( { code: voucher, limit: { $gt: 0 } } );
+
+    if ( !availableVoucher )
+    {
+      return res.json( { error: "Mã giảm giá đã hết hoặc không hợp lệ." } );
+    }
+
+    // Tiếp tục xử lý áp dụng mã giảm giá
+    let totalAfterDiscount = ( cart.total - ( cart.total * validCoupon.discount ) / 100 ).toFixed( 2 );
+
+    // Cập nhật giỏ hàng với giá mới và mã giảm giá đã sử dụng
+    await Cart.findOneAndUpdate(
+      { userId: user._id },
+      { totalAfterDiscount },
+      { new: true }
+    );
+    res.json( totalAfterDiscount );
+  } else
+  {
+    res.json( { error: "Mã giảm giá không hợp lệ hoặc đơn hàng không đạt yêu cầu." } );
   }
-  const user = await Auth.findOne( { _id } );
-  let { products, total } = await Cart.findOne( { userId: user._id } ).populate( "items.product" )
-  console.log( total );
-  let totalAfterDiscount = ( total - ( total * validcoupon.discount ) / 100 ).toFixed( 2 );
-  await Cart.findOneAndUpdate( { userId: user._id }, { totalAfterDiscount }, { new: true } );
-  await Voucher.findOneAndUpdate( { code: voucher }, { $inc: { limit: -1 } } );
-  res.json( totalAfterDiscount )
-
-
-
-}
-
+};
 export const createOrder = async ( req, res ) =>
 {
-  const { COD, address, couponApplied, TTONL, Address, shippingType, phone } = req.body;
+  const { COD, address, VNPAY, couponApplied, TTONL, Address, shippingType, phone, discountCode, country } = req.body;
   const { _id } = req.user;
 
   try
@@ -767,21 +794,27 @@ export const createOrder = async ( req, res ) =>
     {
       method = "TTONL";
       paymentStatus = "Paypal";
-    } else if ( !COD )
-    {
-      throw new Error( "Create order failed" );
-    }
+    } else
+      if ( VNPAY )
+      {
+        method = "VNPAY";
+        paymentStatus = "VNPAY";
+      } else if ( !COD )
+      {
+        throw new Error( "Lỗi khi chọn phương thức thanh toán" );
+      }
+
     let shippingFee = 0;
     if ( shippingType === 'nhanh' )
     { // Xác định loại vận chuyển
-      shippingFee = 30; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
+      shippingFee = 30000; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
     } else if ( shippingType === 'hỏa tốc' )
     {
-      shippingFee = 50; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
+      shippingFee = 50000; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
     }
     const updatedUser = await Auth.findByIdAndUpdate(
       _id,
-      { $set: { address, phone } },
+      { $set: { address, phone, Address, country } },
       { new: true }
     );
     if ( !updatedUser )
@@ -790,7 +823,6 @@ export const createOrder = async ( req, res ) =>
     }
     const user = await Auth.findById( _id );
     let userCart = await Cart.findOne( { userId: updatedUser._id } );
-    console.log( userCart );
     let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
 
     let newOrder = await new order( {
@@ -808,14 +840,28 @@ export const createOrder = async ( req, res ) =>
       address,
       Address,
       phone,
-      shippingType
+      shippingType,
+      discountCode,
+      country
     } ).save();
     const newStatus = {
       status: "Đang xử lý",
       updatedBy: _id,
       updatedAt: Date.now(), // Ngày giờ cập nhật
     };
-
+    if ( couponApplied )
+    {
+      const usedVoucher = await Voucher.findOneAndUpdate(
+        { code: discountCode }, // Sử dụng mã giảm giá từ đơn hàng để xác định voucher đã sử dụng
+        { $inc: { limit: -1 } },
+        { new: true }
+      );
+      console.log( usedVoucher );
+      if ( !usedVoucher )
+      {
+        throw new Error( "Không tìm thấy mã giảm giá đã sử dụng" );
+      }
+    }
     // Thêm status mới vào statusHistory của đơn hàng
     await order.findByIdAndUpdate(
       newOrder._id,
@@ -844,10 +890,232 @@ export const createOrder = async ( req, res ) =>
     return res.status( 500 ).json( { error: "Internal server error" } );
   }
 };
+function sortObject ( obj )
+{
+  let sorted = {};
+  let str = [];
+  let key;
+  for ( key in obj )
+  {
+    if ( obj.hasOwnProperty( key ) )
+    {
+      str.push( encodeURIComponent( key ) );
+    }
+  }
+  str.sort();
+  for ( key = 0; key < str.length; key++ )
+  {
+    sorted[ str[ key ] ] = encodeURIComponent( obj[ str[ key ] ] ).replace( /%20/g, "+" );
+  }
+  return sorted;
+}
+export const createPaymentUrl = async ( req, res ) =>
+{
+  const { amount, address, Address, shippingType, phone, discountCode, couponApplied, country } = req.body;
+  const { _id } = req.user
+  try
+  {
+    let date = new Date();
+    let createDate = moment( date ).format( 'YYYYMMDDHHmmss' );
+    let ipAddr = req.headers[ 'x-forwarded-for' ] ||
+      req.connection.remoteAddress ||
+      req.socket.remoteAddress ||
+      req.connection.socket.remoteAddress;
+    let tmnCode = process.env.VNP_TMN_CODE;
+    let secretKey = process.env.VNP_HASH_SECRET;
+    let vnpUrl = process.env.VNP_URL;
+    let returnUrl = process.env.VNP_RETURN_URL;
+    let currCode = 'VND';
+    let orderId = moment( date ).format( 'DDHHmmss' );
+    let vnp_Params = {};
+    vnp_Params[ 'vnp_Version' ] = '2.1.0';
+    vnp_Params[ 'vnp_Command' ] = 'pay';
+    vnp_Params[ 'vnp_TmnCode' ] = tmnCode;
+    vnp_Params[ 'vnp_Locale' ] = "vn";
+    vnp_Params[ 'vnp_CurrCode' ] = currCode;
+    vnp_Params[ 'vnp_TxnRef' ] = orderId;
+    vnp_Params[ 'vnp_OrderInfo' ] = 'Thanh toan cho ma GD:' + orderId;
+    vnp_Params[ 'vnp_OrderType' ] = 'other';
+    vnp_Params[ 'vnp_Amount' ] = amount * 100;
+    vnp_Params[ 'vnp_ReturnUrl' ] = returnUrl;
+    vnp_Params[ 'vnp_IpAddr' ] = ipAddr;
+    vnp_Params[ 'vnp_CreateDate' ] = createDate;
+    vnp_Params = sortObject( vnp_Params );
+    let signData = qs.stringify( vnp_Params, { encode: false } );
+    let hmac = crypto.createHmac( "sha512", secretKey );
+    let signed = hmac.update( new Buffer( signData, 'utf-8' ) ).digest( "hex" );
+    vnp_Params[ 'vnp_SecureHash' ] = signed;
+    vnpUrl += '?' + qs.stringify( vnp_Params, { encode: false } );
+
+    let shippingFee = 0;
+    if ( shippingType === 'nhanh' )
+    { // Xác định loại vận chuyển
+      shippingFee = 30000; // Nếu là giao hàng tiết kiệm, tăng phí vận chuyển lên 30k
+    } else if ( shippingType === 'hỏa tốc' )
+    {
+      shippingFee = 50000; // Nếu là giao hàng hỏa tốc, tăng phí vận chuyển lên 50k
+    }
+    const updatedUser = await Auth.findByIdAndUpdate(
+      _id,
+      { $set: { address, phone, Address, country } },
+      { new: true }
+    );
+    if ( !updatedUser )
+    {
+      throw new Error( "User not found" );
+    }
+    const user = await Auth.findById( _id );
+    let userCart = await Cart.findOne( { userId: updatedUser._id } );
+    let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
+
+    let newOrder = await new order( {
+      products: userCart.items,
+      paymentIntent: {
+        id: uniqid(),
+        method: "VNPAY",
+        amount: finalAmount,
+        status: "thanh toán thành công",
+        created: Date.now(),
+        currency: "VND",
+      },
+      userId: updatedUser._id,
+      paymentStatus: "VNPAY",
+      address,
+      Address,
+      phone,
+      shippingType,
+      discountCode,
+      country
+    } ).save();
+    const newStatus = {
+      status: "Đang xử lý",
+      updatedBy: _id,
+      updatedAt: Date.now(), // Ngày giờ cập nhật
+    };
+    if ( couponApplied )
+    {
+      const usedVoucher = await Voucher.findOneAndUpdate(
+        { code: discountCode }, // Sử dụng mã giảm giá từ đơn hàng để xác định voucher đã sử dụng
+        { $inc: { limit: -1 } },
+        { new: true }
+      );
+      console.log( usedVoucher );
+      if ( !usedVoucher )
+      {
+        throw new Error( "Không tìm thấy mã giảm giá đã sử dụng" );
+      }
+    }
+    // Thêm status mới vào statusHistory của đơn hàng
+    await order.findByIdAndUpdate(
+      newOrder._id,
+      {
+        $push: { statusHistory: newStatus },
+      },
+      { new: true }
+    );
+    // Clear the user's cart after creating the order
+    await Cart.findOneAndDelete( { userId: user._id } );
+
+    let update = userCart.items.map( ( item ) =>
+    {
+      return {
+        updateOne: {
+          filter: { _id: item.product._id },
+          update: { $inc: { sold: +item.quantity } },
+        },
+      };
+    } );
+
+    const updated = await Product.bulkWrite( update, {} );
+
+    return res.status( 200 ).json( {
+      message: "Truy cập đường dẫn",
+      url: vnpUrl,
+
+
+    } );
+  } catch ( error )
+  {
+    console.error( error );
+
+  }
+}
 
 
 
+// export const changeStatusPayment = async ( req, res ) =>
+// {
+//   try
+//   {
+//     return res.status( 200 ).json( { message: "Thanh cong" } );
+//   } catch ( error )
+//   {
+//     return res.status( 500 ).json( { error: 'Lỗi máy chủ nội bộ' } );
+//   }
+// }
+export const vnpayReturn = async ( req, res ) =>
+{
 
+  try
+  {
+
+    // Nhận Tham số từ VNPay
+    let vnp_Params = req.query;
+
+    // Lấy và Xác Minh Chữ Ký An toàn
+    let secureHash = vnp_Params[ 'vnp_SecureHash' ];
+    delete vnp_Params[ 'vnp_SecureHash' ];
+    delete vnp_Params[ 'vnp_SecureHashType' ];
+
+    // Sắp Xếp và Chuẩn Bị Dữ liệu để Xác Minh Chữ Ký
+    vnp_Params = sortObject( vnp_Params );
+
+    // Lấy Cấu Hình và Khóa Bí mật
+    const tmnCode = process.env.VNP_TMN_CODE;
+    const secretKey = process.env.VNP_HASH_SECRET;
+
+    // Tạo và Xác Minh Chữ Ký
+    let signData = qs.stringify( vnp_Params, { encode: false } );
+    let hmac = crypto.createHmac( "sha512", secretKey );
+    let signed = hmac.update( new Buffer( signData, 'utf-8' ) ).digest( "hex" );
+    console.log( signData );
+    // Xử lý Kết Quả và Hiển Thị Trang Tương Ứng
+    if ( secureHash === signed )
+    {
+
+      return res.redirect( "http://localhost:5173/ordersuccess" );
+
+      {
+        return res.status( 500 ).json( { error: 'Lỗi khi cập nhật trạng thái thanh toán' } );
+      }
+    } else
+    {
+      // Xử lý khi chữ ký không hợp lệ
+      return res.status( 400 ).json( { error: 'Chữ ký không hợp lệ' } );
+    }
+
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: 'Lỗi máy chủ nội bộ' } );
+  }
+}
+const changeStatusPayment = async ( _id ) =>
+{
+  try
+  {
+    const cart = await Auth.findById( _id );
+    console.log( cart );
+
+    return true
+    // Kiểm tra và cập nhật thông tin người dùng nếu 
+    // Thực hiện các tác vụ khác nếu cần
+
+  } catch ( error )
+  {
+    console.error( error );
+    return false; // Trả về false nếu có lỗi
+  }
+};
 
 export const getOrders = async ( req, res ) =>
 {
@@ -993,6 +1261,27 @@ export const confirmCancelOrder = async ( req, res ) =>
         { status: 'Đã hủy', cancelReason: orderToCancel.cancelReason, statusHistory: updatedStatusHistory },
         { new: true }
       );
+      for ( const item of orderToCancel.products )
+      {
+        const { product, quantity, productVariant } = item;
+
+        await Product.updateOne(
+          { _id: product._id },
+          { $inc: { quantity, sold: -quantity } }
+        );
+
+        const { size, color } = productVariant;
+
+        await Product.findOneAndUpdate(
+          {
+            _id: product._id,
+            "ProductVariants.size": size,
+            "ProductVariants.color": color,
+          },
+          { $inc: { "ProductVariants.$.quantity": quantity } }
+        );
+      }
+
 
 
       // Gửi email thông báo cho người dùng đăng nhập
@@ -1129,7 +1418,6 @@ export const increaseQuantity = async ( req, res ) =>
     const specificVariant = productVariant.ProductVariants.find(
       ( variant ) => variant.size === size && variant.color === color
     );
-    console.log( specificVariant );
     if ( !specificVariant )
     {
       return res.status( 404 ).json( { message: 'Không tìm thấy biến thể sản phẩm' } );
@@ -1213,6 +1501,109 @@ export const decreaseQuantity = async ( req, res ) =>
     return res.status( 500 ).json( { message: 'Lỗi máy chủ: ' + error.message } );
   }
 };
+export const getWishList = async ( req, res ) =>
+{
+  const { _id } = req.user
 
+  try
+  {
+    const getWish = await Auth.findById( _id ).populate( "wishList" )
+    res.json( getWish )
+  } catch ( error )
+  {
+    throw new Error( error )
+  }
+}
+export const removeWishList = async ( req, res ) =>
+{
+  const { _id } = req.user
+  const productId = req.params.id;
+  try
+  {
+    const User = await Auth.findOne( { _id } )
+    if ( !User )
+    {
+      return res.status( 404 ).json( {
+        message: "người dùng không tồn tại.",
+      } )
+    }
+    const WishList = User.wishList.findIndex( ( item ) =>
+      item._id.toString() === productId );
+    if ( WishList === -1 )
+    {
+      return res.status( 404 ).json( {
+        message: "Sản phẩm không tồn tại trong sản phẩm yêu thích .",
+      } );
+    }
+    User.wishList.splice( WishList, 1 )
+    await User.save();
+    return res.status( 200 ).json( {
+      message: "Đã xóa sản phẩm khỏi danh sách.",
+    } );
+
+  } catch ( error )
+  {
+    console.error( error );
+    return res.status( 500 ).json( {
+      message: "Lỗi máy chủ: " + error.message,
+    } );
+  }
+}
+export const cancleOrder = async ( req, res ) =>
+{
+  const { id } = req.params;
+  const { cancelReason } = req.body;
+
+  const { _id } = req.user
+  try
+  {
+    // Tìm đơn hàng theo orderId
+    const orders = await order.findById( id );
+    if ( !orders )
+    {
+      return res.status( 404 ).json( { message: "Không tìm thấy đơn hàng" } );
+    }
+
+    // Kiểm tra xem đơn hàng có thể hủy hay không
+    if ( orders.status == "Đã hoàn thành" || orders.status == "Đã hủy" )
+    {
+      return res.status( 400 ).json( { message: "Không thể thay đổi trạng thái đơn hàng này " } );
+    }
+
+    // Cập nhật lý do hủy và trạng thái
+    orders.cancelReason = cancelReason;
+    orders.status = "Đã hủy";
+    console.log( cancelReason );
+
+    // Thêm thông tin lý do hủy vào statusHistory
+    orders.statusHistory.push( {
+      status: "Đã hủy",
+      updatedAt: Date.now(),
+      updatedBy: _id, // ID của người thực hiện hành động hủy đơn hàng
+    } );
+
+    // Lưu đơn hàng sau khi cập nhật
+    await orders.save();
+
+    return res.status( 200 ).json( { message: "Đã cập nhật trạng thái hủy đơn hàng" } );
+  } catch ( error )
+  {
+    console.error( "Lỗi khi cập nhật đơn hàng:", error );
+    return res.status( 500 ).json( { message: "Đã xảy ra lỗi khi cập nhật đơn hàng" } );
+  }
+}
+export const getvoucher = async ( req, res ) =>
+{
+  const { _id } = req.user
+
+  try
+  {
+    const getVoucher = await Auth.findById( _id ).populate( "vouchers" )
+    res.json( getVoucher )
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { message: "Đã xảy ra lỗi khi cập nhậtvoucher" } );
+  }
+}
 
 

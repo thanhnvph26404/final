@@ -27,21 +27,29 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    Address: {
+      type: String,
+      required: false
+    },
+    country: {
+      type: String,
+      require: false
+    },
     image: {
       type: String,
       required: false,
     },
     cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-
     cards: [
       {
         type: mongoose.Types.ObjectId,
         ref: "Card",
       },
     ],
+    wishList: [ { type: mongoose.Schema.Types.ObjectId, ref: "Product" } ],
     vouchers: [ {
-      type: Schema.Types.ObjectId, // Hoặc Schema.Types.String nếu bạn lưu trữ dưới dạng chuỗi
-      ref: 'Voucher' // Tham chiếu tới mô hình Voucher nếu đây là ObjectId
+      type: mongoose.Schema.Types.ObjectId, // Hoặc Schema.Types.String nếu bạn lưu trữ dưới dạng chuỗi
+      ref: 'voucher' // Tham chiếu tới mô hình Voucher nếu đây là ObjectId
     } ],
     orders: [
       {

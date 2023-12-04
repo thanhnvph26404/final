@@ -1,6 +1,7 @@
 
 
-export interface IVoucher{
+export interface IVoucher
+{
     _id?: string,
     name: string,
     code: string,
@@ -8,10 +9,12 @@ export interface IVoucher{
     limit: number,
     startDate: string,
     endDate: string,
+    minimumOrderAmount: number,
     status: string
-    
+
 }
 
-export interface IVoucherState {
+export interface IVoucherState
+{
     vouchers: IVoucher[]
 }
