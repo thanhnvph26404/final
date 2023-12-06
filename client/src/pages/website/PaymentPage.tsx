@@ -420,14 +420,12 @@ const CheckoutPage = () =>
 
             createPaymentUrl( paymentData ).unwrap().then( ( response ) =>
             {
-                console.log( response );
-
                 redirectToVNPAY( response?.url );
 
 
             } ).catch( ( error ) =>
             {
-                toastError( "loi" )
+                toastError( error.data.message )
             } )
 
 
@@ -478,9 +476,9 @@ const CheckoutPage = () =>
                         ] }
                     />
                     <div className="mt-5">
-                        <input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="email" value={ cart?.userId?.email } // Hiển thị email
+                        <Input className="w-[274px] h-[48px] max-sm:w-[360px] rounded-md border border-gray-400" type="email" value={ cart?.userId?.email } // Hiển thị email
                             placeholder="email" />
-                        <input className="w-[274px] max-sm:mt-3 max-sm:w-[360px] h-[48px] rounded-md border border-gray-400 sm:ml-4" value={ cart?.userId?.name } // Hiển thị email
+                        <Input className="w-[274px] max-sm:mt-3 max-sm:w-[360px] h-[48px] rounded-md border border-gray-400 sm:ml-4" value={ cart?.userId?.name } // Hiển thị email
                             type="text" placeholder="  Tên" />
                     </div>
                     <div className='mt-5'>
@@ -705,7 +703,7 @@ const CheckoutPage = () =>
                 <div className='max-sm:flex max-sm:items-center max-sm:mt-5 max-sm:justify-between'>
 
 
-                    <input
+                    <Input
                         type="text"
                         placeholder="  Mã giảm giá"
                         value={ discountCode }
@@ -739,12 +737,14 @@ const CheckoutPage = () =>
                             <p>Bạn chưa có mã voucher nào.</p>
                         ) : (
                             <div className="flex space-x-2 flex-wrap">
-                                { getvoucher?.vouchers?.map( ( voucher: any ) => (
-                                    <div key={ voucher?._id } onClick={ () => handleVoucherClick( voucher ) } className="bg-gray-200 flex-wrap rounded-full p-2 text-sm font-medium flex items-center cursor-pointer">
-                                        <p>{ voucher.name }</p>
-                                        <div>Mã code: { voucher.code } ({ voucher.discount } %)</div>
-                                    </div>
-                                ) ) }
+                                <div className="flex flex-col space-y-4 ">
+                                    { getvoucher?.vouchers?.map( ( voucher: any ) => (
+                                        <button key={ voucher?._id } onClick={ () => handleVoucherClick( voucher ) } className="bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px]">
+                                            <p>{ voucher.name }</p>
+                                            <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
+                                        </button>
+                                    ) ) }
+                                </div>
                             </div>
                         ) }
                         <Popup open={ selectedVoucher !== null } onClose={ handleCloseModal }>
@@ -754,7 +754,7 @@ const CheckoutPage = () =>
 
                                 <div className="modal">
                                     <div className="modal-content">
-                                        <span className="close" onClick={ handleCloseModal }>&times;</span>
+                                        <button className="close" onClick={ handleCloseModal }>&times;</button>
                                         <h2>Tên voucher : { selectedVoucher.name } </h2>
                                         <p>Code: { selectedVoucher?.code }</p>
                                         <p>Discount: { selectedVoucher?.discount }%</p>
