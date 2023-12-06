@@ -25,6 +25,10 @@ const voucherSchema = new mongoose.Schema( {
         type: Date,
         require: true
     },
+    detailVoucher: {
+        type: String,
+        require: true
+    },
     status: {
         type: String,
         enum: [ "active", "expored" ],

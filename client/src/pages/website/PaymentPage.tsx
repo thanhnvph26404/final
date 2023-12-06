@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useApplycouponMutation, useCreateOrderMutation, useCreatePaymentUrlMutation, useDeleteoneProductMutation, useGetCartQuery } from '../../store/Auth/Auth.services';
+import { useApplycouponMutation, useCreateOrderMutation, useCreatePaymentUrlMutation, useDeleteoneProductMutation, useGetCartQuery, useGetVoucherQuery } from '../../store/Auth/Auth.services';
 import { toastError, toastSuccess } from '../../hook/toastify';
+import Popup from 'reactjs-popup';
 
 import
 {
@@ -17,6 +18,7 @@ const CheckoutPage = () =>
 {
     const navigate = useNavigate()
     const { data: cart } = useGetCartQuery( [] );
+    const { data: getvoucher } = useGetVoucherQuery( null );
 
     const [ removeOnecart ] = useDeleteoneProductMutation()
     const remove = ( id: any ) =>
@@ -36,7 +38,6 @@ const CheckoutPage = () =>
     const [ phone, setPhone ] = useState( hasPreviousDetails ? phonee : '' ); // State to store phone number
     const [ Address, setAddressS ] = useState( hasPreviousDetails ? Addresss : "" )
     const [ country, setcountry ] = useState( hasPreviousDetails ? countrys : "" )
-
     const [ couponApplied, setCouponApplied ] = useState( false );
     const [ createOrder ] = useCreateOrderMutation();
     const [ discountCode, setDiscountCode ] = useState( '' );
@@ -49,6 +50,17 @@ const CheckoutPage = () =>
     const [ showCODButton, setShowCODButton ] = useState( false );
     const [ addressError, setAddressError ] = useState( '' );
     const [ phoneError, setPhoneError ] = useState( '' );
+    const [ selectedVoucher, setSelectedVoucher ] = useState<any>( null );
+
+    const handleVoucherClick = ( voucher: any ) =>
+    {
+        setSelectedVoucher( voucher ); // Set the selected voucher when clicked
+    };
+
+    const handleCloseModal = () =>
+    {
+        setSelectedVoucher( null ); // Reset selected voucher to close the modal
+    };
     const validateAddress = () =>
     {
         if ( !address.trim() )
@@ -212,6 +224,8 @@ const CheckoutPage = () =>
             setShowPaypalButton( true );
         }
     };
+
+
     const handleApplyCoupon = async () =>
     {
         if ( !cart?.items || cart.items.length === 0 )
@@ -220,42 +234,66 @@ const CheckoutPage = () =>
             return;
         }
 
-        try
+
+        if ( !voucherss )
         {
-            if ( !voucherss )
-            {
-                toastError( "Không có mã giảm giá nào tồn tại" );
-                return;
-            }
-
-
-            const foundVoucher = voucherss.data.find( ( voucher: any ) => voucher.code === discountCode );
-
-            if ( !foundVoucher )
-            {
-                toastError( "Mã giảm giá không hợp lệ" );
-                return;
-            }
-
-            if ( foundVoucher.limit <= 0 )
-            {
-                toastError( "Mã giảm giá đã hết hoặc không còn hiệu lực" );
-                return;
-            }
-
-            // Áp dụng mã giảm giá
-            await voucher( { voucher: discountCode } ).unwrap().then( response =>
-            {
-                toastSuccess( 'Áp mã thành công' );
-                setCouponApplied( true );
-            } ).catch( error =>
-            {
-                toastError( error.data.error );
-            } );
-        } catch ( error )
-        {
-            toastError( 'Đã xảy ra lỗi khi áp dụng mã giảm giá' );
+            toastError( "Không có mã giảm giá nào tồn tại" );
+            return;
         }
+
+        const foundVoucher = voucherss.data.find( ( voucher: any ) => voucher.code === discountCode );
+
+        if ( !foundVoucher )
+        {
+            toastError( "Mã giảm giá không hợp lệ" );
+            return;
+        }
+
+        if ( foundVoucher.limit <= 0 )
+        {
+            toastError( "Mã giảm giá đã hết hoặc không còn hiệu lực" );
+            return;
+        }
+        const currentDate = new Date();
+        const voucherEndDate = new Date( foundVoucher.endDate );
+        const voucherStartDate = new Date( foundVoucher.startDate );
+
+        // Check if current date is beyond voucher end date
+        if ( currentDate > voucherEndDate )
+        {
+            toastError( "Mã giảm giá đã hết hạn" );
+            return;
+        }
+
+        // Check if current date is before voucher start date
+        if ( currentDate < voucherStartDate )
+        {
+            toastError( "Mã giảm giá chưa đến ngày áp dụng" );
+            return;
+        }
+        // Apply coupon only if cart total is greater than or equal to the minimum order amount
+        if ( cart.total < foundVoucher.minimumOrderAmount )
+        {
+            toastError( "Đơn hàng không đạt yêu cầu của mã giảm giá." );
+            return;
+        }
+        if ( cart.total < foundVoucher.minimumOrderAmount )
+        {
+            toastError( "Đơn hàng không đạt yêu cầu của mã giảm giá." );
+            return;
+        }
+
+
+        // Continue with applying the coupon
+        await voucher( { voucher: discountCode } ).unwrap().then( response =>
+        {
+            toastSuccess( 'Áp mã thành công' );
+            setCouponApplied( true );
+        } ).catch( ( error ) =>
+        {
+            toastError( error.data.error );
+        } );
+
     };
 
     const calculateTotalAmount = () =>
@@ -425,6 +463,7 @@ const CheckoutPage = () =>
         }
 
     };
+
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
             <div className="sm:w-[50%]">
@@ -656,7 +695,7 @@ const CheckoutPage = () =>
 
                                 </div>
                             </div>
-                            <p className='max-sm:mr-2'>{ item.productInfo.price }₫</p>
+                            <p className='max-sm:mr-2'>{ item.productInfo.price.toLocaleString() }₫</p>
 
 
                         </div>
@@ -692,6 +731,45 @@ const CheckoutPage = () =>
                     <div className="flex justify-between">
                         <p className="font-mono text-xl">Tổng</p>
                         <p className="font-semibold">{ totalAmount.toLocaleString() } đ</p>
+                    </div>
+
+                    <div className='mt-[50px]'>
+                        <p>CÁC MÃ VOUCHER CỦA TÔI</p>
+                        { getvoucher?.vouchers?.length === 0 ? (
+                            <p>Bạn chưa có mã voucher nào.</p>
+                        ) : (
+                            <div className="flex space-x-2 flex-wrap">
+                                { getvoucher?.vouchers?.map( ( voucher: any ) => (
+                                    <div key={ voucher?._id } onClick={ () => handleVoucherClick( voucher ) } className="bg-gray-200 flex-wrap rounded-full p-2 text-sm font-medium flex items-center cursor-pointer">
+                                        <p>{ voucher.name }</p>
+                                        <div>Mã code: { voucher.code } ({ voucher.discount } %)</div>
+                                    </div>
+                                ) ) }
+                            </div>
+                        ) }
+                        <Popup open={ selectedVoucher !== null } onClose={ handleCloseModal }>
+                            {/* Content inside the Popup */ }
+
+                            { selectedVoucher && (
+
+                                <div className="modal">
+                                    <div className="modal-content">
+                                        <span className="close" onClick={ handleCloseModal }>&times;</span>
+                                        <h2>Tên voucher : { selectedVoucher.name } </h2>
+                                        <p>Code: { selectedVoucher?.code }</p>
+                                        <p>Discount: { selectedVoucher?.discount }%</p>
+                                        <p>Điều kiện : { selectedVoucher?.detailVoucher }</p>
+                                        <p>Số lượng  : { selectedVoucher?.limit }</p>
+                                        <p> Ngày bắt đầu voucher : { selectedVoucher?.startDate }</p>
+                                        <p> Ngày hết hạn voucher : { selectedVoucher?.endDate }</p>
+
+
+
+                                        {/* Add other voucher details you want to display */ }
+                                    </div>
+                                </div>
+                            ) }
+                        </Popup>
                     </div>
                 </div>
             </div>
