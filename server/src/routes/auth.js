@@ -25,7 +25,7 @@ router.post( "/creatOrder", authMiddlware, createOrder )
 router.get( "/getOrder", authMiddlware, getOrders )
 router.get( "/getoneOrder/:id", authMiddlware, getoneOrders )
 router.get( "/getcancletrueOrder", authMiddlware, getCancelledOrders )
-router.get( "/getcanclefalseOrder", authMiddlware, getCancelledtrueOrders )
+router.post( "/getStatusOrder", authMiddlware, getCancelledtrueOrders )
 router.delete( "/removeWishList/:id", authMiddlware, removeWishList )
 router.get( "/getAllOrder", authMiddlware, getAllOrders )
 router.get( "/getCart", authMiddlware, getUserCart );

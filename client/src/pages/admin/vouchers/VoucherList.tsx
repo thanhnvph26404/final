@@ -29,6 +29,7 @@ const VouCherList = () =>
         endDate: string,
         minimumOrderAmount: number
         status: string,
+        detailVoucher: string
 
     }
 
@@ -64,7 +65,7 @@ const VouCherList = () =>
     };
 
     const dataSource = voucherState?.map(
-        ( { _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status }: IVoucher ) => ( {
+        ( { _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status, detailVoucher }: IVoucher ) => ( {
             key: _id || "", // Thêm kiểm tra null hoặc undefined
             name,
             code,
@@ -73,7 +74,8 @@ const VouCherList = () =>
             startDate,
             endDate,
             minimumOrderAmount,
-            status
+            status,
+            detailVoucher
         } )
     );
 
@@ -119,13 +121,18 @@ const VouCherList = () =>
             key: 'status',
         },
         {
+            title: 'chi tiết voucher ',
+            dataIndex: 'detailVoucher',
+            key: 'detailVoucher',
+        },
+        {
             title: 'Action',
             key: 'action',
             render: ( _, record ) => (
                 <Space size="middle">
-                    <Link to={ `editVoucher/${ record.key }` }>
+                    {/* <Link to={ `editVoucher/${ record.key }` }>
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Link>
+                    </Link> */}
 
                     <Popconfirm
                         title="Xóa danh mục"

@@ -16,11 +16,22 @@ const OrderList = () =>
     const [ confirmCancelOrder ] = useConfirmCancelOrderMutation();
     const [ cancelReason, setCancelReason ] = useState( '' );
     const [ selectedOrderId, setSelectedOrderId ] = useState( null );
+    const MIN_CANCEL_REASON_LENGTH = 10; // Minimum length for cancel reason
 
     const [ cancels ] = useCancleOrdersMutation()
     const handleCancelOrder = async () =>   
     {
+        if ( cancelReason.trim().length === 0 )
+        {
+            toastError( 'Vui lòng nhập lý do hủy đơn hàng.' );
+            return; // Stop the process if cancel reason is empty
+        }
 
+        if ( cancelReason.trim().length < MIN_CANCEL_REASON_LENGTH )
+        {
+            toastError( 'Lý do hủy quá ngắn. Vui lòng nhập ít nhất 10 ký tự.' );
+            return; // Stop the process if cancel reason is too short
+        }
         const cancel: any = {
             id: orderData?._id,
             cancelReason: cancelReason,
@@ -185,17 +196,17 @@ const OrderList = () =>
                             </div>
                             <div className="flex space-x-4 mt-4 ml-[20px]  ">
                                 <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
-                                <p className="text-gray-500 font-semibold">Address</p>
+                                <p className="text-gray-500 font-semibold">địa chỉ </p>
                             </div>
                             <div className=" mt-4 ml-[50px]">
-                                <p className="text-[15px] text-black-500 font-bold" >{ orderData?.userId?.address }</p>
+                                <p className="text-[15px] text-black-500 font-bold" >NGÕ 230/69 mễ trì thượng nhà số 6 </p>
                             </div>
                             <div className="flex space-x-4 mt-4 ml-[20px]  ">
                                 <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
                                 <p className="text-gray-500 font-semibold">Địa chỉ thêm</p>
                             </div>
                             <div className=" mt-4 ml-[50px]">
-                                <p className="text-[15px] text-black-500 font-bold" >{ orderData?.Address }</p>
+                                <p className="text-[15px] text-black-500 font-bold" >Phường mễ trì </p>
                             </div>
 
 
@@ -215,10 +226,24 @@ const OrderList = () =>
                             </div>
                             <div className="flex space-x-4 mt-4 ml-[20px]  ">
                                 <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
-                                <p className="text-gray-500 font-semibold">Address</p>
+                                <p className="text-gray-500 font-semibold">Thành phố </p>
                             </div>
                             <div className=" mt-4 ml-[50px]">
                                 <p className="text-[15px] text-black-500 font-bold" >{ orderData?.userId?.address }</p>
+                            </div>
+                            <div className="flex space-x-4 mt-4 ml-[20px]  ">
+                                <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
+                                <p className="text-gray-500 font-semibold">Quận huyện </p>
+                            </div>
+                            <div className=" mt-4 ml-[50px]">
+                                <p className="text-[15px] text-black-500 font-bold" >{ orderData?.Address }</p>
+                            </div>
+                            <div className="flex space-x-4 mt-4 ml-[20px]  ">
+                                <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
+                                <p className="text-gray-500 font-semibold">làng ngõ xóm </p>
+                            </div>
+                            <div className=" mt-4 ml-[50px]">
+                                <p className="text-[15px] text-black-500 font-bold" >{ orderData?.country }</p>
                             </div>
                         </div>
 
