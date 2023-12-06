@@ -37,8 +37,7 @@ const ProductDetail = () => {
     const [image, setimage] = useState();
     const navigate = useNavigate()
     const { data: comments } = useGetCommentbyidprouctQuery(id!)
-    const [getUserByToken] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
-    const token = localStorage.getItem("token");
+
 
     useEffect(() => {
         const fetchData = async () => {

@@ -4,7 +4,7 @@ import { useAddCommentMutation, useGetCommentbyidprouctQuery } from "../store/Co
 import { useGetUserByTokenMutation } from "../store/Auth/Auth.services";
 import { message } from "antd";
 import Table, { ColumnsType } from "antd/es/table";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const Comment = (props: any) => {
 
@@ -148,6 +148,7 @@ const Comment = (props: any) => {
             <div className="w-full sm:w-3/4 px-4 sm:px-8 mt-3">
                 <div className="flex mt-5">
                     <p className="hidden sm:block w-3/4 font-mono text-xl">Bình luận</p>
+                    <Link to={"/comment/655ccc2ee2774e2e50993f8a"}>add ccmt</Link>
                 </div>
                 <div className="mx-auto" style={{ marginTop: 100, width: 1200 }}>
                     <Table
