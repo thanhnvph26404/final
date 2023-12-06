@@ -14,6 +14,7 @@ import { useState } from "react";
 
 const HomePage = () => {
   const navigate = useNavigate();
+
   const { data: vouchers } = useGetVoucherListQuery(null)
   const [voucherss] = useSaveVoucherMutation()
   const [isVoucherSaved, setIsVoucherSaved] = useState(false);
@@ -35,6 +36,7 @@ const HomePage = () => {
     }).catch((error) => {
       toastError(error.data.message)
     })
+
   };
   const handleGetProductDetail = (idProduct: string) => {
     window.scrollTo(0, 0);
@@ -50,6 +52,7 @@ const HomePage = () => {
       <div className="flex items-center justify-center sm:justify-start">
         <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />
       </div>
+
       {/* Danh mục sản phẩm */}
       <div className="flex flex-col  space-x-[20px] mt-[20px] ml-[100px]">
       </div>
@@ -63,16 +66,21 @@ const HomePage = () => {
                 onClick={() => saveVoucher(voucher?._id)}
                 disabled={isVoucherSaved} // Check if the voucher ID exists in the user's list
                 className={`ml-2 ${isVoucherSaved ? 'bg-gray-400' : 'bg-blue-500'} text-white px-2 py-1 rounded-md text-xs font-medium`}
+
               >
                 {isVoucherSaved ? 'Voucher Đã Lưu' : 'Nhận'}
               </button>
             </div>
+
           ))}
+
         </div>
       </Marquee>
       <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
       <div className="flex space-x-[20px] mt-[20px] ml-[100px]">
+
         {categories?.data.map((category: any) => {
+
           return (
             <div className="relative w-full sm:w-80 flex-col rounded-xl bg-clip-border text-gray-700 ">
               <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
@@ -204,8 +212,10 @@ const HomePage = () => {
                     </p>
                   )}
 
+
                   <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
                   <p className="text-center text-[20px] font-semibold">{product.name}</p>
+
                   <div className="flex space-x-4 pl-[130px] mb-4">
                     {product.original_price ? (
                       <>
@@ -269,6 +279,7 @@ const HomePage = () => {
 
                   <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
                   <p className="text-center text-[20px] font-semibold">{product.name}</p>
+
                   <div className="flex space-x-4 pl-[130px] mb-4">
                     <>
                       <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>

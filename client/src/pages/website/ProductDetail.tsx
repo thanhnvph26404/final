@@ -200,6 +200,7 @@ const ProductDetail = () => {
                         <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{product?.data?.name}</h1>
                         {product?.data?.original_price ? (
                             <div className="flex gap-2 text-left mt-[40px]">
+
                                 <span className="text-[#f83a3a] text-sm md:text-[20px] font-thin">
                                     {product?.data?.original_price.toLocaleString()}₫
                                 </span>
@@ -208,6 +209,7 @@ const ProductDetail = () => {
                                 </span>
                                 <p className="bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[5px]">
                                     Tiết kiệm {(product?.data?.price - product?.data?.original_price).toLocaleString()}₫
+
                                 </p>
                                 <button onClick={() => addtowishList(product?.data?._id)}>
                                     <HeartFilled className="text-[20px] text-red-500" />
@@ -216,7 +218,9 @@ const ProductDetail = () => {
                         ) : (
                             <div className="flex gap-2 text-left mt-[40px]">
                                 <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
+
                                     {product?.data?.price.toLocaleString()}₫
+
                                 </span>
                             </div>
                         )}
