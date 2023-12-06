@@ -37,8 +37,7 @@ const ProductDetail = () => {
     const [image, setimage] = useState();
     const navigate = useNavigate()
     const { data: comments } = useGetCommentbyidprouctQuery(id!)
-    const [getUserByToken] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
-    const token = localStorage.getItem("token");
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -202,16 +201,16 @@ const ProductDetail = () => {
                             <div className="flex gap-2 text-left mt-[40px]">
 
                                 <span className="text-[#f83a3a] text-sm md:text-[20px] font-thin">
-                                    { product?.data?.original_price.toLocaleString() }₫
+                                    {product?.data?.original_price.toLocaleString()}₫
                                 </span>
                                 <span className="line-through text-sm md:text-[20px] font-extralight text-[#23314bb3]">
-                                    { product?.data?.price.toLocaleString() }₫
+                                    {product?.data?.price.toLocaleString()}₫
                                 </span>
                                 <p className="bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[5px]">
-                                    Tiết kiệm { ( product?.data?.price - product?.data?.original_price ).toLocaleString() }₫
+                                    Tiết kiệm {(product?.data?.price - product?.data?.original_price).toLocaleString()}₫
 
                                 </p>
-                                <button onClick={ () => addtowishList( product?.data?._id ) }>
+                                <button onClick={() => addtowishList(product?.data?._id)}>
                                     <HeartFilled className="text-[20px] text-red-500" />
                                 </button>
                             </div>
@@ -219,7 +218,7 @@ const ProductDetail = () => {
                             <div className="flex gap-2 text-left mt-[40px]">
                                 <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
 
-                                    { product?.data?.price.toLocaleString() }₫
+                                    {product?.data?.price.toLocaleString()}₫
 
                                 </span>
                             </div>
@@ -250,7 +249,7 @@ const ProductDetail = () => {
                         </div>
                         <div className="mt-[30px]">
 
-                            <p className="text-[#23314BB3] text-[20px]">Số lượng sản phẩm đã bán : { product?.data?.sold }</p>
+                            <p className="text-[#23314BB3] text-[20px]">Số lượng sản phẩm đã bán : {product?.data?.sold}</p>
                         </div>
                         <div className="mt-[30px]">
                             <hr className="w-[600px]" />
