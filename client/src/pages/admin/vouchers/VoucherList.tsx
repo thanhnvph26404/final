@@ -123,9 +123,9 @@ const VouCherList = () =>
             key: 'action',
             render: ( _, record ) => (
                 <Space size="middle">
-                    <Link to={ `editVoucher/${ record.key }` }>
+                    {/* <Link to={ `editVoucher/${ record.key }` }>
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Link>
+                    </Link> */}
 
                     <Popconfirm
                         title="Xóa danh mục"
