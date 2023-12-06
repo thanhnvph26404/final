@@ -29,6 +29,7 @@ const VouCherList = () =>
         endDate: string,
         minimumOrderAmount: number
         status: string,
+        detailVoucher: string
 
     }
 
@@ -64,7 +65,7 @@ const VouCherList = () =>
     };
 
     const dataSource = voucherState?.map(
-        ( { _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status }: IVoucher ) => ( {
+        ( { _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status, detailVoucher }: IVoucher ) => ( {
             key: _id || "", // Thêm kiểm tra null hoặc undefined
             name,
             code,
@@ -73,7 +74,8 @@ const VouCherList = () =>
             startDate,
             endDate,
             minimumOrderAmount,
-            status
+            status,
+            detailVoucher
         } )
     );
 
@@ -117,6 +119,11 @@ const VouCherList = () =>
             title: 'Trạng thái',
             dataIndex: 'status',
             key: 'status',
+        },
+        {
+            title: 'chi tiết voucher ',
+            dataIndex: 'detailVoucher',
+            key: 'detailVoucher',
         },
         {
             title: 'Action',

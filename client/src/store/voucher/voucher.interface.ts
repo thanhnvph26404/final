@@ -10,7 +10,8 @@ export interface IVoucher
     startDate: string,
     endDate: string,
     minimumOrderAmount: number,
-    status: string
+    status: string,
+    detailVoucher: string
 
 }
 

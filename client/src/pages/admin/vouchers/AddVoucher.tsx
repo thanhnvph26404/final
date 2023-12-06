@@ -27,7 +27,8 @@ const AddVoucher = () =>
             startDate: data.startDate,
             endDate: data.endDate,
             minimumOrderAmount: data.minimumOrderAmount,
-            status: data.status
+            status: data.status,
+            detailVoucher: data.detailVoucher
         }
         try
         {
@@ -145,14 +146,28 @@ const AddVoucher = () =>
                         <input type="number" placeholder='giới hạn tiền '
                             className='px-3 py-2 placeholder:text-sm placeholder:text-[#777980] font-normal outline-none border border-[#E0E2E7] rounded-lg w-full mt-1'
                             { ...register( 'minimumOrderAmount', {
-                                required: 'Ngày kết thúc bắt buộc nhập',
+                                required: 'giới hạn tiền bắt  buộc nhập',
                                 minLength: {
                                     value: 4,
-                                    message: 'Tối thiểu 4 kí tư',
+                                    message: 'tiền phải lớn hơn 0',
                                 },
                             } ) } />
 
                         { errors.minimumOrderAmount && <p className='text-red-500'>{ errors.minimumOrderAmount.message }</p> }
+                    </div>
+                    <div className="mb-4">
+                        <h5 className='text-sm text-[#777980] font-medium mt-4'>chi tiết voucher</h5>
+                        <textarea placeholder='chi tiết voucher'
+                            className='px-3 py-2 placeholder:text-sm placeholder:text-[#777980] font-normal outline-none border border-[#E0E2E7] rounded-lg w-full mt-1'
+                            { ...register( 'detailVoucher', {
+                                required: 'chi tiết voucher bắt  buộc nhập',
+                                minLength: {
+                                    value: 10,
+                                    message: 'chi tiết phải lớn hơn 10 kí tự ',
+                                },
+                            } ) } />
+
+                        { errors.detailVoucher && <p className='text-red-500'>{ errors.detailVoucher.message }</p> }
                     </div>
                 </div>
 
