@@ -71,7 +71,7 @@ const orderSchema = new mongoose.Schema( {
     paymentStatus: {
         type: String,
         default: "thanh toán khi nhận hàng",
-        enum: [ "thanh toán khi nhận hàng", "Paypal" ]
+        enum: [ "thanh toán khi nhận hàng", "Paypal", "VNPAY" ]
 
 
     },
@@ -97,12 +97,7 @@ const orderSchema = new mongoose.Schema( {
     },
     cancelReason: {
         type: String,
-        enum: [
-            "chọn sản phẩm khác",
-            "đổi địa chỉ",
-            "muốn chọn màu,size khác",
-            "lý do khác"
-        ]
+
         // Trường lý do hủy đơn hàng
     },
     cancelRequest: {
@@ -116,6 +111,9 @@ const orderSchema = new mongoose.Schema( {
     Address: {
         type: String,
     },
+    country: {
+        type: String
+    }
     // notes: {
     //     type: String
     // },

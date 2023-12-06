@@ -4,6 +4,8 @@ import { ICartData } from "../Cart/cartInterface";
 import { Order, OrderItem } from "../Order/order";
 
 import { IVoucher } from "../voucher/voucher.interface";
+import { Iproductdata } from "../products/product.interface";
+import { boolean } from "yup";
 const authApi = createApi( {
     reducerPath: "auth",
     tagTypes: [ "Auth" ],
@@ -155,7 +157,7 @@ const authApi = createApi( {
             invalidatesTags: [ "Auth" ],
         } ),
         editUserByToken: builder.mutation( {
-            query: ( data: { address: string | null } ) =>
+            query: ( data: { address: string | null, Address: string, country: string } ) =>
             {
                 const token = localStorage.getItem( "token" )
 
@@ -261,24 +263,39 @@ const authApi = createApi( {
 
             invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
         } ),
-        createOrder: builder.mutation<Order, { COD: boolean, couponApplied: boolean, Address: string, address: string, phone: string, TTONL: boolean, shippingType: string }>( {
-            query: ( { COD, couponApplied, Address, TTONL, shippingType, address, phone } ) =>
+        createOrder: builder.mutation<Order, { COD: boolean, VNPAY: boolean, couponApplied: boolean, Address: string, country: string, address: string, phone: string, TTONL: boolean, shippingType: string, discountCode: string }>( {
+            query: ( { COD, couponApplied, Address, VNPAY, TTONL, shippingType, address, phone, discountCode, country } ) =>
             {
                 const token = localStorage.getItem( "token" );
 
-                return {
+                let endpoint = 'auth/creatOrder'; // endpoint cần sửa đổi
 
-                    url: 'auth/creatOrder',
+
+                return {
+                    url: endpoint,
                     method: 'POST',
-                    body: { COD, couponApplied, Address, TTONL, shippingType, phone, address },
+                    body: { COD, couponApplied, Address, TTONL, shippingType, phone, address, VNPAY, discountCode, country },
                     headers: {
                         Authorization: "Bearer " + token,
                     }
                 }
-
             },
             invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+        } ),
+        getVnpayreturn: builder.query( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `auth/vnpay_return`,
+                    method: "GET",
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
 
+            providesTags: [ "Auth" ],
         } ),
         deleteoneProduct: builder.mutation<ICartData[], string>( {
             query: ( id ) =>  
@@ -404,11 +421,143 @@ const authApi = createApi( {
                 }
             },
         } ),
+        adddTowishList: builder.mutation<void, { prodId: string }>( {
+            query: ( prodId ) => 
+            {
+                const token = localStorage.getItem( "token" )
+                return {
+                    url: "/auth/wishList",
+                    method: "PUT",
+                    body: { prodId },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+            invalidatesTags: [ "Auth" ]
+        } ),
+        getWishList: builder.query( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" )
+                return {
+                    url: "/auth/getWishlist",
+                    headers: {
+                        Authorization: "Bearer " + token,
+
+                    }
+                }
+            }
+        } ),
+        deleteoneWishList: builder.mutation<Iproductdata[], string>( {
+            query: ( id ) =>  
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+                    url: `auth/removeWishList/${ id }`,
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+
+            invalidatesTags: [ 'Auth' ], // Nếu có thay đổi, cập nhật lại dữ liệu
+        } ),
+
+        createPaymentUrl: builder.mutation<void, { amount: number, phone: number, address: string, Address: string, shippingType: string, country: string, couponApplied: boolean, discountCode: string }>( {
+            query: ( { amount, phone, address, Address, shippingType, couponApplied, discountCode, country } ) => 
+            {
+                const token = localStorage.getItem( "token" );
+
+                return {
+                    url: '/auth/create_payment_url',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: "Bearer " + token,
+                    },
+                    body: { amount, phone, address, Address, shippingType, couponApplied, discountCode, country },
+                    // Thêm các thông tin khác vào body nếu cần
+                }
+            },
+        } ),
+        chaneStatusOrder: builder.mutation( {
+            query: ( idOrder: string ) =>
+            ( {
+                url: "auth/changeStatusPayment",
+                body: idOrder
+            } )
+        } ),
+        cancleOrders: builder.mutation<void, { id: string, cancelReason: string }>( {
+            query: ( { id, cancelReason } ) =>
+            {
+                const token = localStorage.getItem( "token" )
+                return {
+                    url: `/auth/cancelOrder/${ id }`,
+                    method: "PUT",
+                    body: { cancelReason },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ "Auth" ],
+        } ),
+        saveVoucher: builder.mutation<void, { voucherId: string }>( {
+            query: ( voucherId ) =>
+            {
+                const token = localStorage.getItem( "token" )
+                return {
+                    url: `/auth/saveVoucher`,
+                    method: "PUT",
+                    body: { voucherId },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+
+                }
+            },
+            invalidatesTags: [ "Auth" ]
+        } ),
+        getVoucher: builder.query( {
+            query: () =>
+            {
+                const token = localStorage.getItem( "token" )
+                return {
+                    url: "/auth/getvouchers",
+                    headers: {
+                        Authorization: "Bearer " + token,
+
+                    }
+                }
+            }
+        } ),
+        getOrdersByStatus: builder.mutation( {
+            query: ( { status, startDate, endDate } ) =>
+            {
+                // Xử lý request query tại đây để gửi yêu cầu đúng đắn
+                const body = { status, startDate, endDate };
+                const token = localStorage.getItem( "token" )
+
+                return {
+                    url: '/auth/getStatusOrder', // Địa chỉ endpoint API của bạn
+                    method: 'POST',
+                    body,
+                    headers: {
+                        Authorization: "Bearer " + token,
+
+                    }
+                };
+            },
+        } ),
+
 
     } )
 } )
 export const {
-    useLoginMutation, useAddToCartMutation, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

@@ -19,7 +19,7 @@ import size from "./routes/size";
 import color from "./routes/color";
 import comment from "./routes/comment";
 import productDiscount from "./routes/productDistcount"
-// import Payment from "./routes/payment";
+import payment from "./routes/payment";
 
 
 // import cartRouter from "./routes/cart";
@@ -57,7 +57,7 @@ app.use( "/size", size );
 app.use( "/comment", comment );
 app.use( "/productDiscount", productDiscount );
 
-// app.use( "/payment", Payment );
+app.use( "/payment", payment );
 
 
 

@@ -16,6 +16,7 @@ const Account = () =>
     const token = localStorage.getItem( "token" );
 
     const [ currentUser, setCurrentUser ] = useState<IUser | null>( null );
+    console.log( currentUser );
 
     useEffect( () =>
     {
@@ -59,6 +60,7 @@ const Account = () =>
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="font-medium text-gray-800 text-lg">Địa chỉ </h3>
 
+
                         <Link to={ `/profile/order-address` } className="text-rose-500">
                             Edit
                         </Link>
@@ -66,6 +68,10 @@ const Account = () =>
 
                     <div className="space-y-1">
                         <h4 className="text-gray-700 font-medium">{ currentUser?.address }</h4>
+                        <h4 className="text-gray-700 font-medium">{ currentUser?.Address }</h4>
+
+                        <h4 className="text-gray-700 font-medium">{ currentUser?.country }</h4>
+
 
 
                     </div>

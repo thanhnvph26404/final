@@ -7,94 +7,115 @@ import { Link } from "react-router-dom";
 import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
+const ListProduct = () => {
 
+    const { data: products, isLoading } = useGetProductsQuery([])
+    const [remove] = useDeleteProductMutation()
 
+    const [data, setdata] = useState();
+    console.log(products?.products);
+    useEffect(() => {
+        if (products.products.length) {
+            const newproducts = products?.products?.slice().reverse() // sắp xếp lại mảng
+            const data1: Iproductdata[] = newproducts.map((item: Iproductdata) => {
+                const count = item.ProductVariants.reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue.quantity
+                }, 0)
+                console.log(count);
 
-const ListProduct = () =>
-{
+                return {
+                    key: item._id,
+                    sanpham: {
+                        id: item._id,
+                        image: item.images[0],
+                        name: item.name
+                    },
+                    soluong: count,
+                    ...item
+                }
 
-    const { data } = useGetProductsQuery( [] )
-    const [ remove ] = useDeleteProductMutation()
-    console.log( data );
-
-
-
-    const removeProduct = ( id: string ) =>
-    {
-        remove( id )
+            });
+            setdata(data1)
+        }
+    }, [isLoading])
+    const removeProduct = (id: string) => {
+        remove(id)
 
     };
 
+    console.log(data);
+
     const columns: ColumnsType<Iproductdata> = [
         {
-            title: "Ảnh sản phẩm",
-            dataIndex: "images",
-            key: "images",
-            render: ( images ) => (
-                <div className="">
-                    {/* {images.map((image: any, index: any) => ( */ }
-                    <img src={ images[ 0 ]?.url } alt={ `Product Image` } style={ { width: 100 } } />
-                    {/* // ))} */ }
+            title: " sản phẩm",
+            dataIndex: "sanpham",
+            key: "sanpham",
+            render: (sanpham) => (
+                <div className="flex w-[100px] items-center">
+                    <img src={sanpham.image.url} alt={`Product Image`} style={{ width: 50 }} />
+                    <div className=" flex flex-col justify-between">
+                        <p className="line-clamp-2 text-base overflow-hidden">
+                            {sanpham.name}
+
+                        </p>
+                        <span className="text-sm  overflow-hidden  text-gray-66 ">
+                            {"ID:" + sanpham.id}
+
+                        </span>
+
+                    </div>
                 </div>
+
             ),
         },
         {
-            title: "Tên sản phẩm",
-            dataIndex: "name",
-            key: "name",
-            render: ( text ) => <p>{ text }</p>,
+            title: "Số lượng",
+            dataIndex: "soluong",
+            key: "soluong",
+            render: (number) => <p className="ml-3">{number.toLocaleString()}</p>,
+
         },
+
         {
             title: "Giá  gốc",
             dataIndex: "price",
             key: "price",
-            render: ( number ) => <p>{ number.toLocaleString() }đ</p>,
+            render: (number) => <p>{number.toLocaleString()}đ</p>,
 
         },
         {
             title: "Giá  giảm",
             dataIndex: "original_price",
             key: "original_price",
-            render: ( number ) => <p>{ number.toLocaleString() }đ</p>,
+            render: (number) => <p>{number.toLocaleString()}đ</p>,
         }
         ,
         {
-            title: "Danh mục",
-            dataIndex: "category",
-            key: "category",
-            render: ( category ) => <p>{ category.title }</p>,
+            title: "Đã cập nhập",
+            dataIndex: "updatedAt",
+            key: "update",
+            render: (update) => <div className="text-sm text-gray-66 flex flex-col">
+                <div className=""> {update.slice(0, 10)}</div>
+                <div className="">   {update.slice(11, 16)}</div>
 
-
-        },
-        {
-            title: "Brand",
-            dataIndex: "brand",
-            key: "brand",
-            render: ( brand ) => <p>{ brand?.title }</p>,
-
-
-        },
-        {
-            title: "Mô tả",
-            dataIndex: "description",
-            key: "description",
-            ellipsis: true,
-            render: ( text ) => <div >{ text }</div>,
-        },
+            </div>,
+        }
+        ,
         {
             title: "Hành động",
             key: "action",
-            render: ( record ) => (
+            render: (record) => (
                 <Space size="small" className="w-10">
-                    <Link to={ `productDetailAdmin/${ record._id }` }>
+                    <Link to={`productDetailAdmin/${record._id}`}>
                         <EyeFilled className="text-[20px]" />
                     </Link>
 
                     <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
-                        onConfirm={ () => removeProduct( record._id ) }
+                        onConfirm={() => removeProduct(record._id)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -106,7 +127,7 @@ const ListProduct = () =>
                     >
 
 
-                        <Link to={ `/admin/product/${ record._id }` }><MdEdit />
+                        <Link to={`/admin/product/${record._id}`}><MdEdit />
                         </Link>
                     </Button>
                 </Space>
@@ -114,25 +135,18 @@ const ListProduct = () =>
         },
     ];
 
-    const ListProduct = data?.products?.map( ( item: any ) =>
-    {
-        return {
-            key: item._id,
-            ...item,
 
-        };
-    } );
 
     return (
-        <div style={ { marginTop: 100, paddingRight: 50 } }>
-            <Button type="primary" className="bg-blue-500" style={ { marginBottom: 30 } }>
-                <Link to={ "/admin/products/add" }>Thêm Sản Phẩm</Link>
+        <div style={{ marginTop: 100, paddingRight: 50 }}>
+            <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
+                <Link to={"/admin/products/add"}>Thêm Sản Phẩm</Link>
             </Button>
             <Table
-                style={ { backgroundColor: "white", marginTop: 100, } }
-                columns={ columns }
-                dataSource={ ListProduct }
-                pagination={ { pageSize: 6 } }
+                style={{ backgroundColor: "white", marginTop: 100, }}
+                columns={columns}
+                dataSource={data}
+                pagination={{ pageSize: 6 }}
             />
         </div>
     );

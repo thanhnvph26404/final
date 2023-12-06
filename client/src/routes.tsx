@@ -48,6 +48,10 @@ import ProductDetailAdmin from "./pages/admin/products/ProductDetailAdmin";
 import OrderDetail from "./pages/website/OrderDetail";
 import ListSize from "./pages/admin/size/listSize";
 import AddSize from "./pages/admin/size/addSize";
+import WishList from "./pages/website/WishList";
+import Myvoucher from "./pages/website/Profile/Myvoucher";
+import Listcomment from "./pages/admin/comment/listcomment";
+import CreateComment from "./pages/website/CreateComment";
 
 
 
@@ -112,6 +116,9 @@ export const router = createBrowserRouter([
             { path: 'warranty', element: <Warranty /> },
             { path: 'privacy', element: <Privacy /> },
             { path: 'rules', element: <Rules /> },
+            { path: 'WishList', element: <WishList /> },
+
+
 
             // { index: true, element: <Navigate to={ 'home' } /> },    
 
@@ -165,6 +172,7 @@ export const router = createBrowserRouter([
                     },
                     { path: 'orders', element: <PurchaseHistory /> },
                     { path: 'orderDetail/:id', element: <OrderDetail /> },
+                    { path: 'myVoucher', element: <Myvoucher /> },
 
                     {
                         path: "change-password",
@@ -183,6 +191,7 @@ export const router = createBrowserRouter([
             { path: 'login', element: <LoginPage /> },
             { path: 'signup', element: <SignupPage /> },
             { path: 'ordersuccess', element: <OrderSuccess /> },
+            { path: 'feedback/:id', element: <CreateComment /> },
 
         ],
 
@@ -227,6 +236,7 @@ export const router = createBrowserRouter([
 
                     { path: 'orders', element: <ListOrder /> },
                     { path: 'chart', element: <ChartPage /> },
+                    { path: 'comments', element: <Listcomment /> },
 
 
                 ]

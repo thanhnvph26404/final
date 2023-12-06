@@ -2,27 +2,48 @@
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import "react-multi-carousel/lib/styles.css";
 import { useGetProductsQuery } from "../../store/products/product.services";
-import { useAppDispatch } from "../../store/hook";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useGetproductDiscountApiQuery, useGetproductDiscountApiSoldQuery } from "../../store/productDiscount/productDiscont";
 import { useGetCategoryListQuery } from "../../store/categoies/category.services";
+import { useSaveVoucherMutation } from "../../store/Auth/Auth.services";
+import { toastError, toastSuccess } from "../../hook/toastify";
+import { useGetVoucherListQuery } from "../../store/voucher/voucher.service";
+import Marquee from "react-fast-marquee";
+import { useState } from "react";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const handleGetProductDetail = (idProduct: string) => {
-    navigate(`/home/product-detail/${idProduct}`)
-  }
+
+  const { data: vouchers } = useGetVoucherListQuery(null)
+  const [voucherss] = useSaveVoucherMutation()
+  const [isVoucherSaved, setIsVoucherSaved] = useState(false);
+  console.log(vouchers);
   const { data: productList } = useGetProductsQuery(null);
   const { data: productsold } = useGetproductDiscountApiSoldQuery(null)
   const { data: productDiscont } = useGetproductDiscountApiQuery(null)
-  const { data: categoies } = useGetCategoryListQuery(null)
-  console.log(productDiscont);
+  const { data: categories } = useGetCategoryListQuery(null)
 
-  console.log(categoies);
-  // if (isLoading) {
-  //   return <>Loading...</>
-  // }
+  // Hàm thêm sản phẩm vào danh sách yêu thích
+
+  const saveVoucher = (voucherId: any) => {
+    console.log(voucherId);
+
+    voucherss(voucherId).unwrap().then((response: any) => {
+      console.log(response);
+      setIsVoucherSaved(true);
+      toastSuccess("Đã lưu voucher")
+    }).catch((error) => {
+      toastError(error.data.message)
+    })
+
+  };
+  const handleGetProductDetail = (idProduct: string) => {
+    window.scrollTo(0, 0);
+    navigate(`/home/product-detail/${idProduct}`)
+  }
+
+
 
 
   return (
@@ -31,10 +52,35 @@ const HomePage = () => {
       <div className="flex items-center justify-center sm:justify-start">
         <img src="/bannerfirst.jpg" alt="" className="w-full sm:w-auto" />
       </div>
+
       {/* Danh mục sản phẩm */}
+      <div className="flex flex-col  space-x-[20px] mt-[20px] ml-[100px]">
+      </div>
+      <Marquee className='  text-center text-sm font-medium py-3'>
+        <div className="flex space-x-4">
+          {vouchers?.data?.map((voucher: any) => (
+            <div key={voucher?._id} className="bg-gray-200 space-x-5  rounded-full p-2 text-sm font-medium flex items-center">
+              <p>{voucher.name}</p>
+              <div> Mã code: {voucher.code}  ({voucher.discount}%)</div>
+              <button
+                onClick={() => saveVoucher(voucher?._id)}
+                disabled={isVoucherSaved} // Check if the voucher ID exists in the user's list
+                className={`ml-2 ${isVoucherSaved ? 'bg-gray-400' : 'bg-blue-500'} text-white px-2 py-1 rounded-md text-xs font-medium`}
+
+              >
+                {isVoucherSaved ? 'Voucher Đã Lưu' : 'Nhận'}
+              </button>
+            </div>
+
+          ))}
+
+        </div>
+      </Marquee>
       <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
       <div className="flex space-x-[20px] mt-[20px] ml-[100px]">
-        {categoies?.data.map((category: any) => {
+
+        {categories?.data.map((category: any) => {
+
           return (
             <div className="relative w-full sm:w-80 flex-col rounded-xl bg-clip-border text-gray-700 ">
               <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
@@ -82,10 +128,16 @@ const HomePage = () => {
 
       <div className="flex flex-wrap space-x-5 ml-[120px]">
         {productList?.products?.map((product: any) => {
+
+
           return (
-            <Link to={`/home/product-detail/${product._id}`} className="" key={product._id}>
-              <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
-                <div className="relative h-100 rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+
+
+
+            <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
+
+              <button onClick={() => handleGetProductDetail(product._id)} className="" key={product._id}>
+                <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
 
                   {product.original_price && (
                     <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
@@ -111,8 +163,9 @@ const HomePage = () => {
                     + Thêm nhanh
                   </button>
                 </div>
-              </div>
-            </Link>
+              </button>
+            </div>
+
           );
         })}
       </div>
@@ -159,8 +212,10 @@ const HomePage = () => {
                     </p>
                   )}
 
-                  <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+
+                  <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
                   <p className="text-center text-[20px] font-semibold">{product.name}</p>
+
                   <div className="flex space-x-4 pl-[130px] mb-4">
                     {product.original_price ? (
                       <>
@@ -222,8 +277,9 @@ const HomePage = () => {
                   </p>
 
 
-                  <img className="object-cover w-full" src="/sp1.jpg" alt="profile-picture" />
+                  <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
                   <p className="text-center text-[20px] font-semibold">{product.name}</p>
+
                   <div className="flex space-x-4 pl-[130px] mb-4">
                     <>
                       <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>

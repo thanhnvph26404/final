@@ -1,4 +1,4 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AiOutlineUser, } from "react-icons/ai";
 import { CiSettings, CiSearch } from "react-icons/ci";
 import { LiaShoppingBasketSolid } from "react-icons/lia"
@@ -8,22 +8,43 @@ import { useCallback, useEffect, useState } from "react";
 import { HiOutlineX } from "react-icons/hi"
 import { RiUserLine } from "react-icons/ri"
 import Marquee from "react-fast-marquee";
+import { CiHeart } from "react-icons/ci";
 
 import "./style.css"
 import { BiHelpCircle, BiChevronDown } from "react-icons/bi";
 import { IUser } from "../../../store/Auth/Auth.interface";
-import { useGetCartQuery } from "../../../store/Auth/Auth.services";
+import { useGetCartQuery, useGetWishListQuery } from "../../../store/Auth/Auth.services";
+import { toastError } from "../../../hook/toastify";
 
 type UserMenuProps = {
   currentUser: IUser | null;
 };
 const Header = ( { currentUser }: UserMenuProps ) =>
 {
+  const location = useLocation();
 
   // Default to 0 if cart or items array is null or undefined
+  const { data: wistListProduct, refetch } = useGetWishListQuery( [] )
 
-  const { data: cart, refetch } = useGetCartQuery( [] );
+  const { data: cart } = useGetCartQuery( [] );
 
+  useEffect( () =>
+  {
+    const fetchData = async () =>
+    {
+      try
+      {
+        // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+        await refetch();
+        // Dữ liệu product detail dc cập nhật 
+      } catch ( error: any )
+      {
+        toastError( error.data.error )   // Xử lý lỗi nếu có
+      }
+    };
+
+    fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+  }, [ location.pathname, refetch ] );
   const navigate = useNavigate();
   const [ isOpen, setIsOpen ] = useState( false );
   const togglesDropdown = () =>
@@ -89,36 +110,21 @@ const Header = ( { currentUser }: UserMenuProps ) =>
 
   const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
   const cartItemCount = cart?.items?.length || 0;
+  const wishList = wistListProduct?.wishList.length || 0
   useEffect( () =>
   {
     if ( !check )
     {
       // Nếu không có token (đã đăng xuất), cập nhật lại giá trị cartItemCount
+      const wishList = 0
+      console.log( wishList );
+      refetch()
       const cartItemCount = 0;
       console.log( cartItemCount );
     }
   }, [ check ] );
 
 
-
-  // Thiết lập hẹn giờ để xóa token sau 15 phút
-  // useEffect( () =>
-  // {
-  //   // Thêm một sự kiện "beforeunload" cho cửa sổ trình duyệt
-  //   window.addEventListener( "beforeunload", clearTokenOnUnload );
-
-  //   return () =>
-  //   {
-  //     // Gỡ bỏ sự kiện khi component unmount
-  //     window.removeEventListener( "beforeunload", clearTokenOnUnload );
-  //   };
-  // }, [] );
-
-  // const clearTokenOnUnload = () =>
-  // {
-  //   // Xóa token khỏi Local Storage khi người dùng rời khỏi trang
-  //   localStorage.removeItem( "token" );
-  // };
 
   return (
     <>
@@ -231,6 +237,17 @@ const Header = ( { currentUser }: UserMenuProps ) =>
 
           <nav className="">
             <ul className="flex flex-row mt-2 mr-16 gap-3">
+              <Link className="ml-2 h-6 w-6 relative" to="wishList">
+                <button className="">
+                  <CiHeart className="h-6 w-6" />
+                </button>
+                { check && wishList > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs px-2">
+                    { wishList }
+                  </span>
+                ) }
+              </Link>
+
               <div onClick={ toggleSearch } >
                 <span className="inline-block">
                   <CiSearch className="w-6 h-6" />

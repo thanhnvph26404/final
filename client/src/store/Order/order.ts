@@ -58,7 +58,9 @@ export interface Order
     cancelReason?: string,
     address?: string;
     Address?: string,
+    country?: string,
     statusHistory: StatusHistory[]
+
 
 }
 

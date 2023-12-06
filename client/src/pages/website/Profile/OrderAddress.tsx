@@ -23,6 +23,8 @@ const OrderAddress = ( { currentUser }: addressProps ) =>
             {
                 const userData = {
                     address: values.address,
+                    Address: values.Address,
+                    country: values.country,
                     token: token,
                 };
 
@@ -63,6 +65,32 @@ const OrderAddress = ( { currentUser }: addressProps ) =>
                                 id='address'
                                 name='address'
                                 placeholder="Địa chỉ"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="Address"
+                            rules={ [
+                                { required: true, message: 'Vui lòng nhập huyện thị xã ' },
+                            ] }
+                            initialValue={ currentUser?.Address }
+                        >
+                            <Input
+                                id='Address'
+                                name='Address'
+                                placeholder="huyện thị xã"
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name="country"
+                            rules={ [
+                                { required: true, message: 'Vui lòng nhập làng thôn số nhà' },
+                            ] }
+                            initialValue={ currentUser?.country }
+                        >
+                            <Input
+                                id='country'
+                                name='country'
+                                placeholder="làng thôn số nhà "
                             />
                         </Form.Item>
                     </div>
