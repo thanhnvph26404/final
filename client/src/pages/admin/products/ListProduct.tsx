@@ -8,10 +8,6 @@ import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/pr
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { log } from "console";
-
-
-
 
 const ListProduct = () => {
 
