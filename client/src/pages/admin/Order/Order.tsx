@@ -1,24 +1,58 @@
 import { Space, Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { DatePicker, Select } from "antd";
 
 import { Link } from "react-router-dom";
-import { useGetAllOrderQuery, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
-import { IOrder, enumStatus } from "../../../store/Auth/Auth.interface";
-import { useState } from "react";
+import { useGetAllOrderQuery, useGetOrdersByStatusMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
+import { IOrder, StatusOrder, enumStatus } from "../../../store/Auth/Auth.interface";
+import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
 import { TiEye } from "react-icons/ti";
-import { toastError } from "../../../hook/toastify";
-
+import { toastError, toastSuccess } from "../../../hook/toastify";
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const ListOrder = () =>
 {
     const [ updateOrderStatus ] = useUpdateOrderStatusMutation();
     const [ editingRowId, setEditingRowId ] = useState( null );
     const [ editedStatus, setEditedStatus ] = useState( "" );
+    const [ filteredOrders, setFilteredOrders ] = useState( [] );
+    const [ allOrders, setAllOrders ] = useState( [] );
 
+    const [ status, setStatus ] = useState( "" );
+    const [ startDate, setStartDate ] = useState( null );
+    const [ endDate, setEndDate ] = useState( null );
+    const [ statusOrder ] = useGetOrdersByStatusMutation()
+    const { data } = useGetAllOrderQuery( [] )
 
+    console.log( statusOrder );
+    const handleFilter = () =>
+    {
+        const statusoder = {
+            status,
+            startDate,
+            endDate,
+        };
 
+        // Nếu không có bất kỳ điều kiện nào được áp dụng, hiển thị tất cả đơn hàng
+        if ( !status && !startDate && !endDate )
+        {
+            setFilteredOrders( allOrders );
+            return;
+        }
 
+        // Xử lý lọc dữ liệu dựa trên điều kiện đã chọn
+        statusOrder( statusoder )
+            .unwrap()
+            .then( ( res ) =>
+            {
+                toastSuccess( "Lọc thành công" );
+                setFilteredOrders( res );
+                console.log( res );
+                // Lưu dữ liệu đơn hàng đã lọc vào state
+            } );
+    };
     const handleToggleEdit = ( id: any, status: any ) =>
     {
         if ( editingRowId === id )
@@ -45,8 +79,13 @@ const ListOrder = () =>
             toastError( error.data.error )
         }
     };
-    const { data } = useGetAllOrderQuery( [] )
-    console.log( data );
+    useEffect( () =>
+    {
+        if ( data )
+        {
+            setAllOrders( data?.Order || [] );
+        }
+    }, [ data ] );
     const columns: ColumnsType<IOrder> = [
 
         {
@@ -98,32 +137,32 @@ const ListOrder = () =>
             key: "status",
             render: ( status, record ) => (
                 <div className="grid grid-cols-2">
-                  <div>
-                  <span className="" style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>           
-                    </span>
-                    { editingRowId === record._id ? (
-                        <select
-                            value={ editedStatus }
-                            onChange={ ( e ) => setEditedStatus( e.target.value ) }
-                        >
-                            { enumStatus.map( ( enumItem ) => (
-                                <option key={ enumItem } value={ enumItem }>
-                                    { enumItem }
-                                </option>
-                            ) ) }
-                        </select>
-                    ) : (
-                        <span>{ status }</span>
-                    ) }
-                  </div>
                     <div>
-                    <Button
-                        type="primary"
-                        className="bg-blue-500"
-                        onClick={ () => handleToggleEdit( record._id, status ) }
-                    >
-                        { editingRowId === record._id ? "Update" : <AiFillEdit /> }
-                    </Button>
+                        <span className="" style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>
+                        </span>
+                        { editingRowId === record._id ? (
+                            <select
+                                value={ editedStatus }
+                                onChange={ ( e ) => setEditedStatus( e.target.value ) }
+                            >
+                                { enumStatus.map( ( enumItem ) => (
+                                    <option key={ enumItem } value={ enumItem }>
+                                        { enumItem }
+                                    </option>
+                                ) ) }
+                            </select>
+                        ) : (
+                            <span>{ status }</span>
+                        ) }
+                    </div>
+                    <div>
+                        <Button
+                            type="primary"
+                            className="bg-blue-500"
+                            onClick={ () => handleToggleEdit( record._id, status ) }
+                        >
+                            { editingRowId === record._id ? "Update" : <AiFillEdit /> }
+                        </Button>
                     </div>
                 </div>
             ),
@@ -147,22 +186,42 @@ const ListOrder = () =>
         },
     ];
 
-    const ListProduct = data?.Order.map( ( item: any ) =>
-    {
-        return {
-            key: item._id,
-            ...item,
+    const displayOrders = filteredOrders.length >= 0 ? filteredOrders : allOrders;
 
-        };
-    } );
 
     return (
         <div style={ { marginTop: 100, paddingRight: 50 } }>
+            <Select value={ status } onChange={ ( value ) => setStatus( value ) }>
+                <Option value="">Tất cả trạng thái</Option>
+                {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
+                { StatusOrder.map( ( statusItem ) => (
+                    <Option key={ statusItem } value={ statusItem }>
+                        { statusItem }
+                    </Option>
+                ) ) }
+            </Select>
+
+            <RangePicker
+                onChange={ ( dates: any ) =>
+                {
+                    if ( dates && dates.length === 2 )
+                    {
+                        setStartDate( dates[ 0 ] );
+                        setEndDate( dates[ 1 ] );
+                    } else
+                    {
+                        setStartDate( null );
+                        setEndDate( null );
+                    }
+                } }
+            />
+
+            <Button onClick={ handleFilter }>Lọc</Button>
 
             <Table
                 style={ { backgroundColor: "white", marginTop: 100, } }
                 columns={ columns }
-                dataSource={ ListProduct }
+                dataSource={ displayOrders || [] }
                 pagination={ { pageSize: 6 } }
                 rowClassName={ ( record ) =>
                     record.status === "Đã hủy" || record.status === "đang chờ được xử lý" ? "cancelled-row" : ""

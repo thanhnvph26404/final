@@ -60,25 +60,6 @@ export interface ICardUser
     main: boolean;
 }
 
-// export interface IOrderUser
-// {
-//     _id?: string;
-//     userId: string;
-//     products: IProductsOrderUser[];
-//     totalPrice: number;
-//     paymentMethod: string;
-//     payment?: string;
-//     status: string;
-// }
-
-// export interface IProductsOrderUser
-// {
-//     _id?: string;
-//     product: string;
-//     name: string;
-//     price: number;
-//     quantity: number;
-// }
 
 export interface ICommentUser
 {
@@ -118,6 +99,19 @@ export const enumStatus = [
     "shipper đã lấy hàng",
     "đơn hàng đang chuẩn bị được giao đến bạn",
     "người bán đang chuẩn bị hàng",
+
+
+];
+export const StatusOrder = [
+    "Chờ thanh toán",
+    "Đang xử lý",
+    "Đang giao hàng",
+    "Đã hoàn tiền",
+    "Đã hoàn thành",
+    "shipper đã lấy hàng",
+    "đơn hàng đang chuẩn bị được giao đến bạn",
+    "người bán đang chuẩn bị hàng",
+    "Đã hủy"
 
 
 ];

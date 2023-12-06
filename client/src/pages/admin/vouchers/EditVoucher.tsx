@@ -57,7 +57,8 @@ const EditVoucher = () =>
             startDate: data.startDate,
             endDate: data.endDate,
             minimumOrderAmount: data.minimumOrderAmount,
-            status: data.status
+            status: data.status,
+            detailVoucher: data.detailVoucher
 
         };
         try

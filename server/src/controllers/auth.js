@@ -738,11 +738,10 @@ export const applyCoupon = async ( req, res ) =>
   const { voucher } = req.body;
 
   const user = await Auth.findOne( { _id } ).populate( 'vouchers' );
-  console.log( user );// Lấy thông tin người dùng và thông tin về các mã giảm giá của họ
   const cart = await Cart.findOne( { userId: user._id } ).populate( 'items.product' );
 
   const userVoucher = user.vouchers.find( v => v.code === voucher );
-  console.log( userVoucher );
+  console.log( cart.total );
   if ( !userVoucher )
   {
     return res.status( 400 ).json( {
@@ -755,7 +754,7 @@ export const applyCoupon = async ( req, res ) =>
 
   // Kiểm tra tính hợp lệ của mã giảm giá
   const currentDate = new Date();
-  if ( currentDate <= new Date( validCoupon.endDate ) && cart.total >= userVoucher.minimumOrderAmount )
+  if ( currentDate <= new Date( validCoupon.endDate ) && currentDate >= new Date( validCoupon.startDate ) && cart.total >= userVoucher.minimumOrderAmount )
   {
     // Check xem mã giảm giá còn khả dụng không
     const availableVoucher = await Voucher.findOne( { code: voucher, limit: { $gt: 0 } } );
@@ -1085,9 +1084,7 @@ export const vnpayReturn = async ( req, res ) =>
 
       return res.redirect( "http://localhost:5173/ordersuccess" );
 
-      {
-        return res.status( 500 ).json( { error: 'Lỗi khi cập nhật trạng thái thanh toán' } );
-      }
+
     } else
     {
       // Xử lý khi chữ ký không hợp lệ
@@ -1375,10 +1372,25 @@ export const getCancelledOrders = async ( req, res ) =>
 };
 export const getCancelledtrueOrders = async ( req, res ) =>
 {
+  const { status, startDate, endDate } = req.body;
+
   try
   {
-    const cancelledOrders = await order.find( { cancelRequest: false } );
-    res.json( cancelledOrders );
+    let query = { status: status };
+
+    // Kiểm tra xem startDate và endDate có được cung cấp không
+    if ( !startDate || !endDate )
+    {
+      // Nếu không có startDate hoặc endDate, truy xuất đơn hàng theo status
+      const orders = await order.find( query );
+      res.json( orders );
+    } else
+    {
+      // Nếu có startDate và endDate, thêm điều kiện cho ngày tháng
+      query.createdAt = { $gte: new Date( startDate ), $lte: new Date( endDate ) };
+      const orders = await order.find( query );
+      res.json( orders );
+    }
   } catch ( error )
   {
     return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
