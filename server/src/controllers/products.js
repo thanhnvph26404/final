@@ -24,19 +24,44 @@ export const create = async ( req, res ) =>
             } );
         }
 
-        const data = await Product.create( req.body );
+        const variantsToBeAdded = req.body.ProductVariants;
+        console.log( variantsToBeAdded );
+        // Check for duplicate variants with the same size and color
+        const duplicateVariants = variantsToBeAdded.filter( ( variant, index, self ) =>
+            index !== self.findIndex( ( v ) => v.size === variant.size && v.color === variant.color )
+        );
 
-        if ( !data )
+        if ( duplicateVariants.length > 0 )
+        {
+            return res.status( 400 ).json( {
+                message: `Bạn đã nhập 2 trường biến thể giống nhau Size ${ variantsToBeAdded[ 0 ].size } và Màu ${ variantsToBeAdded[ 0 ].color }. Vui lòng nhập lại.`,
+            } );
+        }
+        const data = await Product.create( {
+            name: req.body.name,
+            price: req.body.price,
+            original_price: req.body.original_price,
+            description: req.body.description,
+            brand: req.body.brand,
+            images: req.body.images,
+            category: req.body.category,
+            comments: req.body.comments,
+            ProductVariants: variantsToBeAdded,
+        } );
+
+        if ( data )
+        {
+            return res.status( 200 ).json( {
+                message: "Thêm sản phẩm và biến thể thành công",
+                data: data,
+            } );
+        } else
         {
             return res.status( 404 ).json( {
                 message: "Thêm sản phẩm thất bại",
             } );
         }
 
-        return res.status( 200 ).json( {
-            message: "Thêm sản phẩm thành công",
-            data: data,
-        } );
     } catch ( error )
     {
         return res.status( 500 ).json( {
@@ -44,6 +69,7 @@ export const create = async ( req, res ) =>
         } );
     }
 };
+
 
 
 
@@ -142,29 +168,49 @@ export const updateProduct = async ( req, res ) =>
         {
             const errors = error.details.map( ( err ) => err.message );
             return res.status( 400 ).json( {
-                message: errors
+                message: errors,
             } );
         }
+
         const checkCategory = await Category.findById( req.body.category );
         if ( !checkCategory )
         {
             return res.status( 400 ).json( {
-                message: "danh mục không tồn tại",
+                message: "Danh mục không tồn tại",
             } );
         }
+
+        const variantsToBeUpdated = req.body.ProductVariants;
+
+        const duplicateVariants = variantsToBeUpdated.filter(
+            ( variant, index, self ) =>
+                index !==
+                self.findIndex(
+                    ( v ) => v.size === variant.size && v.color === variant.color
+                )
+        );
+
+        if ( duplicateVariants.length > 0 )
+        {
+            return res.status( 400 ).json( {
+                message: `Bạn đã nhập 2 trường biến thể giống nhau Size ${ variantsToBeUpdated[ 0 ].size } và Màu ${ variantsToBeUpdated[ 0 ].color }. Vui lòng nhập lại.`,
+            } );
+        }
+
         const data = await Product.findByIdAndUpdate( req.params.id, req.body, {
-            new: true
-        } )
-            ;
+            new: true,
+        } );
+
         if ( !data )
         {
             return res.status( 404 ).json( {
-                message: "cập nhật thất bại ",
+                message: "Cập nhật thất bại ",
             } );
         }
+
         return res.status( 200 ).json( {
-            message: "cập nhật thành công ",
-            data
+            message: "Cập nhật thành công ",
+            data,
         } );
     } catch ( error )
     {
@@ -172,7 +218,7 @@ export const updateProduct = async ( req, res ) =>
             message: "Lỗi server: " + error.message,
         } );
     }
-}
+};
 
 
 export const remove = async ( req, res ) =>
