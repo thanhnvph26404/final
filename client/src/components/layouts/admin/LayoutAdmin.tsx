@@ -102,7 +102,7 @@ const LayoutAdmin = () =>
       <Sider collapsible collapsed={ collapsed } theme='light' style={ { background: colorBgContainer } } onCollapse={ ( value ) => setCollapsed( value ) } >
         <div className="demo-logo-vertical" />
         <Link to={ "/" }>
-          <div className=' text-2xl text-center py-4'>Bee Fashion</div>
+          <div className="font-serif text-[#404040] text-[27px] text-center mt-4 mb-4">Bee Fashion</div>
         </Link>
         <Menu defaultSelectedKeys={ [ '1' ] } mode="inline">
           { items.map( ( item ) =>

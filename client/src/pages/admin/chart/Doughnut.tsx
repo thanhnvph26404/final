@@ -1,11 +1,6 @@
 // import { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Line, Doughnut } from "react-chartjs-2";
-// import axios from "axios";
-// import { Line } from "react-chartjs-2/dist/typedCharts";
-// import { Line } from "react-chartjs-2";
-import sourceData from '../../../data/revenueData.json'
-// import sourceData1 from "../../data/sourceData.json"
 import { useGetProductsQuery } from "../../../store/products/product.services"
 import { useGetAllOrderQuery, useGetOrderQuery } from "../../../store/Auth/Auth.services";
 import { IOrder } from "../../../store/Auth/Auth.interface";

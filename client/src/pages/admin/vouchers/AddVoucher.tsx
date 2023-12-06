@@ -55,7 +55,6 @@ const AddVoucher = () =>
 
             <div className=" h-10">
                 <h1 className="text-2xl font-semibold ">Thêm voucher</h1>
-
             </div>
             <form action="" onSubmit={ handleSubmit( onSubmit ) }>
                 <div className='max-w-full border-[#E0E2E7] border rounded-lg mx-auto mt-10 bg-white p-6'>
@@ -143,13 +142,13 @@ const AddVoucher = () =>
                     </div>
                     <div className="mb-4">
                         <h5 className='text-sm text-[#777980] font-medium mt-4'>Giới hạn tiền </h5>
-                        <input type="number" placeholder='giới hạn tiền  '
+                        <input type="number" placeholder='giới hạn tiền '
                             className='px-3 py-2 placeholder:text-sm placeholder:text-[#777980] font-normal outline-none border border-[#E0E2E7] rounded-lg w-full mt-1'
                             { ...register( 'minimumOrderAmount', {
                                 required: 'Ngày kết thúc bắt buộc nhập',
                                 minLength: {
                                     value: 4,
-                                    message: 'Tên voucher cần tối thiểu 4 kí tư',
+                                    message: 'Tối thiểu 4 kí tư',
                                 },
                             } ) } />
 
