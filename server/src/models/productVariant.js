@@ -1,4 +1,4 @@
-import { number } from "joi"
+
 import mongoose from "mongoose"
 
 const productVariantSchema = new mongoose.Schema( {

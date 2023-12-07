@@ -1,4 +1,4 @@
-import express from "express";
+const express = require('express');
 import multer from "multer";
 import {  uploadImage, uploadImages, updateImage } from "../controllers/upload"
 import { CloudinaryStorage } from "multer-storage-cloudinary";

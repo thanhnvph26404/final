@@ -1,5 +1,5 @@
-import express, { Router } from "express"
 
+const express = require('express');
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOrderStatus, createOrder, applyCoupon, getOrders, getAllOrders, getUserCart, removeFromCart, getoneOrders, cancelOrderRequest, confirmCancelOrder, getCancelledOrders, getCancelledtrueOrders, increaseQuantity, decreaseQuantity, getWishList, removeWishList, cancleOrder, createPaymentUrl, vnpayReturn, getvoucher } from "../controllers/auth"
 import { addTowishList } from "../controllers/products"

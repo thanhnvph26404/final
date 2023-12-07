@@ -1,4 +1,4 @@
-import express from "express"
+const express = require('express');
 import { creatComment, getAllComment, updateComment, deleteComment, getOneComment, getCommentbyidproduct } from "../controllers/comment"
 const router = express.Router()
 router.get("/", getAllComment)

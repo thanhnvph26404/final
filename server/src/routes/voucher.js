@@ -1,4 +1,4 @@
-import express from "express"
+const express = require('express');
 import { creatVoucher, updateVoucher, checkVoucher, getAll, getOne, remove } from "../controllers/voucher"
 import { loginMiddleware } from "../middleware/loginPermission";
 

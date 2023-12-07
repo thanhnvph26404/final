@@ -1,4 +1,4 @@
-import express from "express"
+const express = require('express');
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 import { getAll, create, remove, update ,getbyidatribute , getOne } from "../controllers/valueattribute"
 const router = express.Router()

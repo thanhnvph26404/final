@@ -86,6 +86,8 @@ const Comment = (props: any) => {
             AddCommentMutation(commentProduct)
                 .unwrap()
                 .then((response) => {
+                    console.log(response);
+
                 })
                 .catch((error) => {
                     message.error(error.data.message);
