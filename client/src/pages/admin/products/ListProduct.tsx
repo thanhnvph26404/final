@@ -3,7 +3,7 @@ import type { ColumnsType } from "antd/es/table";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
@@ -12,21 +12,37 @@ import { toastError } from "../../../hook/toastify";
 
 const ListProduct = () =>
 {
-
+    const location = useLocation()
     const { data: products, isLoading, refetch } = useGetProductsQuery( {
         gte: 0, // Assuming value[0] contains the minimum price
         lte: 10000000, // Assuming value[1] contains the maximum price
     } )
+    useEffect( () =>
+    {
+        const fetchData = async () =>
+        {
+            try
+            {
+                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+                await refetch();
+                // Dữ liệu giỏ hàng đã được cập nhật
+            } catch ( error: any )
+            {
+                toastError( error.data.error )   // Xử lý lỗi nếu có
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+    }, [ location.pathname, refetch ] );
     const [ remove ] = useDeleteProductMutation()
 
     const [ data, setdata ] = useState();
-    console.log( products?.products );
     useEffect( () =>
     {
-        if ( products.products.length )
+        if ( products?.products?.length )
         {
             const newproducts = products?.products?.slice().reverse() // sắp xếp lại mảng
-            const data1: Iproductdata[] = newproducts.map( ( item: Iproductdata ) =>
+            const data1: any = newproducts.map( ( item: any ) =>
             {
                 const count = item.ProductVariants.reduce( ( accumulator: any, currentValue: any ) =>
                 {
@@ -48,31 +64,14 @@ const ListProduct = () =>
             } );
             setdata( data1 )
         }
-    }, [ isLoading ] )
-    useEffect( () =>
-    {
-        const fetchData = async () =>
-        {
-            try
-            {
-                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
-                await refetch();
-                // Dữ liệu giỏ hàng đã được cập nhật
-            } catch ( error: any )
-            {
-                toastError( error.data.error )   // Xử lý lỗi nếu có
-            }
-        };
+    }, [ isLoading, refetch ] )
 
-        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
-    }, [ location.pathname, refetch ] );
     const removeProduct = ( id: string ) =>
     {
         remove( id )
 
     };
 
-    console.log( data );
 
     const columns: ColumnsType<Iproductdata> = [
         {
@@ -101,7 +100,7 @@ const ListProduct = () =>
             title: "Số lượng",
             dataIndex: "soluong",
             key: "soluong",
-            render: ( number ) => <p className="ml-3">{ number.toLocaleString() }</p>,
+            render: ( number ) => <p className="ml-3">{ number?.toLocaleString() }</p>,
 
         },
 
