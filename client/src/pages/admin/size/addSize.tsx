@@ -34,40 +34,43 @@ const AddSize = () => {
         }
     };
 
-    return (<div className="w-100" style={{ marginTop: 100, backgroundColor: "white" }}>
-        <h3 style={{ marginTop: 20, marginBottom: 50, color: "black" }}>
-            Thêm kích Cỡ Mới
-        </h3>
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 800 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-            validateMessages={validateMessages}
-        >
-            <Form.Item
-                label="size Name"
-                name="size"
-                rules={[
-                    { required: true, message: "vui lòng nhập kích cỡ!" },
-                    { max: 255 },
-                ]}
-                hasFeedback
-            >
-                <Input />
-            </Form.Item>
+    return (
+        <div>
+            <div className='mb-[20px]'>
+                <h1 className='text-[25px] font-semibold text-[#23314B]'>Thêm Kích Cỡ</h1>
+            </div>
+            <div className="bg-white">
+                <Form className="pt-[20px] pb-[30px]"
+                    name="basic"
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    style={{ maxWidth: 800 }}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    autoComplete="off"
+                    validateMessages={validateMessages}
+                >
+                    <Form.Item
+                        label="Tên Kích Cỡ"
+                        name="size"
+                        rules={[
+                            { required: true, message: "vui lòng nhập kích cỡ!" },
+                            { max: 255 },
+                        ]}
+                        hasFeedback
+                    >
+                        <Input />
+                    </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit" className="bg-blue-500">
-                    Thêm Size
-                </Button>
-            </Form.Item>
-        </Form>
-    </div>
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type="primary" htmlType="submit" className="bg-blue-500">
+                            Thêm Kích Cỡ
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+        </div>
     )
 };
 
