@@ -65,12 +65,6 @@ const items = [
     path: 'customers', // Đường dẫn tới khách hàng
   },
   {
-    label: 'Liên hệ',
-    key: '10',
-    icon: <BiSolidUserPin className='text-gray-85 text-lg  hover:text-[#1D1F2C]  ' />,
-    path: 'contacts', // Đường dẫn tới liên hệ
-  },
-  {
     label: 'Bình luận',
     key: '11',
     icon: <FaCommentAlt className='text-gray-85 text-lg  hover:text-[#1D1F2C]  ' />,
