@@ -70,14 +70,6 @@ export const create = async ( req, res ) =>
     }
 };
 
-
-
-
-
-
-
-
-
 export const getAll = async ( req, res ) =>
 {
     try
@@ -100,6 +92,10 @@ export const getAll = async ( req, res ) =>
         }
 
         // Phân trang
+        if ( req.query.category )
+        {
+            queryObj.category = req.query.category;
+        }
         const page = req.query.page;
         const limit = req.query.limit;
         const skip = ( page - 1 ) * limit;
@@ -116,7 +112,7 @@ export const getAll = async ( req, res ) =>
         // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
         query = query
             .populate( "category" )
-            .populate( "brand" ).populate( "ProductVariants" )
+            .populate( "brand" ).populate( "ProductVariants" ).sort( { createdAt: -1 } )
         const products = await query;
 
         res.status( 200 ).json( {
