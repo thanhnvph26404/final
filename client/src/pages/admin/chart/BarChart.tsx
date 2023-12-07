@@ -18,7 +18,12 @@ interface MonthlySales {
 }
 
 const ChartPage = () => {
-  const { data: productChart } = useGetProductsQuery(null);
+  const { data: productChart } = useGetProductsQuery({
+    gte:0,
+    lte:1000000
+  }); 
+  console.log(productChart);
+  
   const { data: OrderData } = useGetAllOrderQuery(null)
   console.log(OrderData);
 
@@ -47,8 +52,10 @@ const ChartPage = () => {
       ).length;
 
       const cancelOrderCount = OrderData.Order.filter(
-        (order: any) => order.status === "đang chờ được xử lý"
+        (order: any) => order.status === "Đã hủy"
       ).length;
+      
+      
 
       // Cập nhật state successfulOrders
       setSuccessOrders(successfulOrdersCount);
