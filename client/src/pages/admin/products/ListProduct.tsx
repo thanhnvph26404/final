@@ -8,19 +8,23 @@ import { useDeleteProductMutation, useGetProductsQuery } from "../../../store/pr
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
+import { toastError } from "../../../hook/toastify";
 
 const ListProduct = () => {
 
-    const { data: products, isLoading } = useGetProductsQuery([])
+    const { data: products, isLoading, refetch } = useGetProductsQuery({
+        gte: 0, // Assuming value[0] contains the minimum price
+        lte: 10000000, // Assuming value[1] contains the maximum price
+    })
     const [remove] = useDeleteProductMutation()
 
-    const [data, setdata] = useState();
+    const [data, setdata] = useState<Iproductdata[]>();
     console.log(products?.products);
     useEffect(() => {
-        if (products.products.length) {
+        if (products?.products && products.products.length > 0) {
             const newproducts = products?.products?.slice().reverse() // sắp xếp lại mảng
-            const data1: Iproductdata[] = newproducts.map((item: Iproductdata) => {
-                const count = item.ProductVariants.reduce((accumulator, currentValue) => {
+            const data1 = newproducts.map((item: Iproductdata) => {
+                const count = item.ProductVariants.reduce((accumulator: any, currentValue: any) => {
                     return accumulator + currentValue.quantity
                 }, 0)
                 console.log(count);
@@ -40,6 +44,19 @@ const ListProduct = () => {
             setdata(data1)
         }
     }, [isLoading])
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
+                await refetch();
+                // Dữ liệu giỏ hàng đã được cập nhật
+            } catch (error: any) {
+                toastError(error.data.error)   // Xử lý lỗi nếu có
+            }
+        };
+
+        fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+    }, [location.pathname, refetch]);
     const removeProduct = (id: string) => {
         remove(id)
 
@@ -49,7 +66,7 @@ const ListProduct = () => {
 
     const columns: ColumnsType<Iproductdata> = [
         {
-            title: " sản phẩm",
+            title: "Sản phẩm",
             dataIndex: "sanpham",
             key: "sanpham",
             render: (sanpham) => (
@@ -74,7 +91,7 @@ const ListProduct = () => {
             title: "Số lượng",
             dataIndex: "soluong",
             key: "soluong",
-            render: (number) => <p className="ml-3">{number.toLocaleString()}</p>,
+            render: (number) => <p className="ml-4">{number.toLocaleString()}</p>,
 
         },
 
@@ -82,25 +99,31 @@ const ListProduct = () => {
             title: "Giá  gốc",
             dataIndex: "price",
             key: "price",
-            render: (number) => <p>{number.toLocaleString()}đ</p>,
+            render: (number) => <p>{number?.toLocaleString()}đ</p>,
 
         },
         {
             title: "Giá  giảm",
             dataIndex: "original_price",
             key: "original_price",
-            render: (number) => <p>{number.toLocaleString()}đ</p>,
+            render: (number) => <p>{number?.toLocaleString()}đ</p>,
         }
         ,
         {
-            title: "Đã cập nhập",
+            title: "Đã cập nhật",
             dataIndex: "updatedAt",
             key: "update",
-            render: (update) => <div className="text-sm text-gray-66 flex flex-col">
-                <div className=""> {update.slice(0, 10)}</div>
-                <div className="">   {update.slice(11, 16)}</div>
+            render: (update) => {
+                const dateObject = new Date(update);
+                const formattedDate = dateObject.toISOString().slice(0, 10);
 
-            </div>,
+
+                return (
+                    <div className="text-sm text-gray-66 flex flex-col" >
+                        <div className="">{formattedDate}</div>
+                    </div >
+                );
+            },
         }
         ,
         {
@@ -138,16 +161,19 @@ const ListProduct = () => {
 
 
     return (
-        <div style={{ marginTop: 100, paddingRight: 50 }}>
-            <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
-                <Link to={"/admin/products/add"}>Thêm Sản Phẩm</Link>
-            </Button>
-            <Table
-                style={{ backgroundColor: "white", marginTop: 100, }}
-                columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 6 }}
-            />
+        <div >
+            <div className="mb-[20px]">
+                <Button type="primary" className="bg-blue-500" >
+                    <Link to={"/admin/products/add"}>Thêm Sản Phẩm</Link>
+                </Button>
+            </div>
+            <div className="">
+                <Table
+                    columns={columns}
+                    dataSource={data}
+                    pagination={{ pageSize: 6 }}
+                />
+            </div>
         </div>
     );
 };

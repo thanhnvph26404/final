@@ -14,12 +14,15 @@ import { useState } from "react";
 
 const HomePage = () => {
   const navigate = useNavigate();
-
   const { data: vouchers } = useGetVoucherListQuery(null)
   const [voucherss] = useSaveVoucherMutation()
   const [isVoucherSaved, setIsVoucherSaved] = useState(false);
   console.log(vouchers);
-  const { data: productList } = useGetProductsQuery(null);
+  const { data: productList, isLoading, isError } = useGetProductsQuery({
+    gte: 0, // Assuming value[0] contains the minimum price
+    lte: 10000000, // Assuming value[1] contains the maximum price
+  }); console.log(productList);
+
   const { data: productsold } = useGetproductDiscountApiSoldQuery(null)
   const { data: productDiscont } = useGetproductDiscountApiQuery(null)
   const { data: categories } = useGetCategoryListQuery(null)

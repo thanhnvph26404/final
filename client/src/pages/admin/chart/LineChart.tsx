@@ -20,10 +20,13 @@ interface MonthlySales {
 const ChartPage2 = () => {
 
 
-    const { data: productChart } = useGetProductsQuery(null)
+    const { data: productChart } = useGetProductsQuery({
+        gte: 0,
+        lte: 1000000
+    })
     // console.log(productChart);
 
-   
+
 
     const [uniqueMonths, setUniqueMonths] = useState(new Set());
     const [startDate, setStartDate] = useState("");

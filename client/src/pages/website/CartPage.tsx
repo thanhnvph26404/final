@@ -160,24 +160,45 @@ const CartPage = () =>
                 </div>
 
                 <div className="w-full sm:w-1/4 mt-4 sm:mt-0">
-                    <div className="border border-gray-300 rounded-md px-4 py-6 sm:px-8 sm:py-9">
+                    { check ? (
+                        <div className="border border-gray-300 rounded-md px-4 py-6 sm:px-8 sm:py-9">
 
-                        <div className="flex justify-between text-lg sm:text-xl text-[#23314B] py-4 font-semibold">
-                            <p>Tổng cộng</p>
-                            <p>{ cart?.total } VND</p>
+                            <div className="flex justify-between text-lg sm:text-xl text-[#23314B] py-4 font-semibold">
+                                <p>Tổng cộng</p>
+                                <p>{ cart?.total } VND</p>
+                            </div>
+                            <p>Phí vận chuyển (nếu có) sẽ được tính toán trong trang thanh toán.</p>
+                            <textarea placeholder="Ghi chú đơn hàng" className="w-[282px] sm:w-[220px] h-[115px] sm:h-[60px] border my-4 border-gray-300 rounded-md" name="" id="" />
+                            <Link to="/payment">
+                                <button
+                                    className="border rounded-full text-white w-[282px] sm:w-[220px] h-[62px] sm:h-[60px] bg-[#23314B]"
+                                    disabled={ !cart || !cart.items || cart.items.length === 0 }
+                                    onClick={ () => dispatch( addOrder( { ...cart, total: 0 } ) ) }
+                                >
+                                    <LockOutlined /> Thanh toán
+                                </button>
+                            </Link>
                         </div>
-                        <p>Phí vận chuyển (nếu có) sẽ được tính toán trong trang thanh toán.</p>
-                        <textarea placeholder="Ghi chú đơn hàng" className="w-[282px] sm:w-[220px] h-[115px] sm:h-[60px] border my-4 border-gray-300 rounded-md" name="" id="" />
-                        <Link to="/payment">
-                            <button
-                                className="border rounded-full text-white w-[282px] sm:w-[220px] h-[62px] sm:h-[60px] bg-[#23314B]"
-                                disabled={ !cart || !cart.items || cart.items.length === 0 }
-                                onClick={ () => dispatch( addOrder( { ...cart, total: 0 } ) ) }
-                            >
-                                <LockOutlined /> Thanh toán
-                            </button>
-                        </Link>
-                    </div>
+                    ) : (
+                        <div className="border border-gray-300 rounded-md px-4 py-6 sm:px-8 sm:py-9">
+
+                            <div className="flex justify-between text-lg sm:text-xl text-[#23314B] py-4 font-semibold">
+                                <p>Tổng cộng</p>
+                                <p>0 VND</p>
+                            </div>
+                            <p>Phí vận chuyển (nếu có) sẽ được tính toán trong trang thanh toán.</p>
+                            <textarea placeholder="Ghi chú đơn hàng" className="w-[282px] sm:w-[220px] h-[115px] sm:h-[60px] border my-4 border-gray-300 rounded-md" name="" id="" />
+                            <Link to={ "" }>
+                                <button
+                                    className="border rounded-full text-white w-[282px] sm:w-[220px] h-[62px] sm:h-[60px] bg-[#23314B]"
+                                    disabled={ !cart || !cart.items || cart.items.length === 0 }
+                                >
+                                    <LockOutlined /> Thanh toán
+                                </button>
+                            </Link>
+                        </div>
+                    ) }
+
                 </div>
             </div>
         </div>
