@@ -1,6 +1,6 @@
 // import { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Line, Doughnut } from "react-chartjs-2";
+import { Line, Doughnut,Pie } from "react-chartjs-2";
 import { useGetProductsQuery } from "../../../store/products/product.services"
 import { useGetAllOrderQuery, useGetOrderQuery } from "../../../store/Auth/Auth.services";
 import { IOrder } from "../../../store/Auth/Auth.interface";
@@ -82,7 +82,7 @@ const ChartPage3 = () => {
                         <button >Filter</button>
                     </div>
                 </div> */}
-                <Doughnut
+                <Pie
                     data={{
                         labels: Object.keys(remainingQuantities),
                         datasets: [
