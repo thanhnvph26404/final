@@ -192,7 +192,7 @@ const ChartPage = () =>
       <div>
         <div className="w-[400px]">
           {/* Hiển thị biểu đồ Doughnut */ }
-          {/* <PieChart /> */ }
+          <PieChart />
         </div>
       </div>
     </div>
