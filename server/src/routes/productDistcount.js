@@ -1,4 +1,4 @@
-import express from "express";
+const express = require('express');
 import { findProductsDiscounted, findProductsSoldOverTwenty } from "../controllers/productDisount";
 
 const router = express.Router();

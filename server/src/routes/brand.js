@@ -1,4 +1,4 @@
-import express from "express"
+const express = require('express');
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 import { creatBrand, deleteBrand, getAllBrand, getOneBrand, updateBrand } from "../controllers/brand"
 const router = express.Router()

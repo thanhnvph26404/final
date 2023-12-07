@@ -1,4 +1,4 @@
-import express from "express"
+const express = require('express');
 import { create, getAll, update, remove, getOne } from "../controllers/color"
 const router = express.Router()
 router.get( "/", getAll )

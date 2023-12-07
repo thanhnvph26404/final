@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import express from "express";
+const express = require('express');
 import morgan from "morgan";
 import cors from 'cors';
 import connectDB from "./config/database";

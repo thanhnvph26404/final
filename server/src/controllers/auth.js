@@ -16,7 +16,7 @@ import nodemailer from "nodemailer"
 import moment from 'moment';
 import qs from 'qs';
 import crypto from 'crypto';
-import { log } from "console";
+
 config();
 // đăng kí
 export const register = async ( req, res ) =>
