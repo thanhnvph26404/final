@@ -181,13 +181,13 @@ const ProductByCategoryPage = () => {
                     <div className="" >
                       <div className="relative ">
                         <img className="object-cover w-full" src={product?.images[0]?.url} alt="" />
-                        <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
+                        <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]"> Tiết kiệm {(product.price - product.original_price).toLocaleString()}₫</p>
                         <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
                       </div>
                       <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">{product.name}</p>
                       <p className="flex justify-center gap-2">
-                        <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.price}₫</span>
-                        <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.original_price}₫</span>
+                        <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.original_price}₫</span>
+                        <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price}₫</span>
                       </p>
                     </div>
 

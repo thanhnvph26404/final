@@ -104,11 +104,33 @@ const VouCherList = () =>
             title: 'Ngày bắt đầu',
             dataIndex: 'startDate',
             key: 'startDate',
+            render: (update) => {
+                const dateObject = new Date(update);
+                const formattedDate = dateObject.toISOString().slice(0, 10);
+
+
+                return (
+                    <div className="text-sm text-gray-66 flex flex-col" >
+                        <div className="">{formattedDate}</div>
+                    </div >
+                );
+            },
         },
         {
             title: 'Ngày kết thúc',
             dataIndex: 'endDate',
             key: 'endDate',
+            render: (update) => {
+                const dateObject = new Date(update);
+                const formattedDate = dateObject.toISOString().slice(0, 10);
+
+
+                return (
+                    <div className="text-sm text-gray-66 flex flex-col" >
+                        <div className="">{formattedDate}</div>
+                    </div >
+                );
+            },
         },
         {
             title: 'Giới hạn tiền',
@@ -121,7 +143,7 @@ const VouCherList = () =>
             key: 'status',
         },
         {
-            title: 'chi tiết voucher ',
+            title: 'Chi tiết voucher ',
             dataIndex: 'detailVoucher',
             key: 'detailVoucher',
         },
