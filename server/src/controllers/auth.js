@@ -1600,13 +1600,44 @@ export const cancleOrder = async ( req, res ) =>
     {
       return res.status( 404 ).json( { message: "Không tìm thấy đơn hàng" } );
     }
+    const userId = orders.userId;
+    console.log( userId );
+    const user = await Auth.findById( userId );
+    if ( !user )
+    {
+      return res.status( 404 ).json( { message: 'Không tìm thấy thông tin người dùng' } );
+    }
+
+    const userEmail = user.email;
 
     // Kiểm tra xem đơn hàng có thể hủy hay không
     if ( orders.status == "Đã hoàn thành" || orders.status == "Đã hủy" )
     {
       return res.status( 400 ).json( { message: "Không thể thay đổi trạng thái đơn hàng này " } );
     }
-
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
+    const mailOptions = {
+      from: 'your_email@example.com', // Địa chỉ email của bạn
+      to: userEmail, // Sử dụng thông tin email từ đơn hàng
+      subject: 'Thông báo: Đơn hàng đã được hủy',
+      text: 'Đơn hàng của bạn đã được hủy thành công. Chi tiết lý do: ' + cancelReason,
+    };
+    transporter.sendMail( mailOptions, function ( error, info )
+    {
+      if ( error )
+      {
+        console.error( 'Lỗi khi gửi email:', error );
+      } else
+      {
+        console.log( 'Email thông báo đã được gửi: ' + info.response );
+      }
+    } );
     // Cập nhật lý do hủy và trạng thái
     orders.cancelReason = cancelReason;
     orders.status = "Đã hủy";

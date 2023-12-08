@@ -16,6 +16,13 @@ export const productApi = createApi( {
                 providesTags: [ 'product' ]
             } )
         } ),
+        locProducts: builder.query( {
+            query: ( { category, brand, minPrice, maxPrice } ) => ( {
+                url: `http://localhost:8080/auth/product?category=${ category }&brand=${ brand }&minPrice=${ minPrice }&maxPrice=${ maxPrice }`,
+                method: 'GET',
+                providesTags: [ 'product' ]
+            } )
+        } ),
         getProductss: builder.query( {
             query: () => ``,
             providesTags: [ 'product' ]
@@ -73,7 +80,7 @@ export const productApi = createApi( {
 
 } )
 
-export const { useAddProductMutation, useGetProductssQuery, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery, useSortByProductQuery } = productApi
+export const { useAddProductMutation, useLocProductsQuery, useGetProductssQuery, useDeleteProductMutation, useEditProductMutation, useGetProductQuery, useGetProductsQuery, useSortByProductQuery } = productApi
 
 
 

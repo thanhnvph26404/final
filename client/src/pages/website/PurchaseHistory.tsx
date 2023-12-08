@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Modal, Select, Table } from 'antd';
+import { Button, Input, Modal, Select, Table } from 'antd';
 import Container from '../../components/layouts/website/Container';
 import { useCancelOrderMutation, useGetOrderQuery, useUpdateOrderStatusMutation } from '../../store/Auth/Auth.services';
 import { Link } from 'react-router-dom';
@@ -129,7 +129,7 @@ const PurchaseHistory = () =>
                                             Hủy đơn hàng
                                         </Button>
                                         <Modal
-                                            title='Chọn lý do hủy đơn hàng'
+                                            title='Nhập lý do hủy đơn hàng'
                                             visible={ showModal && selectedOrderId === order._id }
                                             onCancel={ handleCancel }
                                             footer={ [
@@ -141,16 +141,11 @@ const PurchaseHistory = () =>
                                                 </Button>,
                                             ] }
                                         >
-                                            <Select
-                                                defaultValue=''
-                                                onChange={ ( value ) => setCancelReason( value ) }
+                                            <Input
+                                                onChange={ ( e ) => setCancelReason( e.target.value ) }
                                                 style={ { width: '100%' } }
-                                                placeholder='Chọn lý do hủy đơn hàng'
-                                            >
-                                                <Option value='đổi địa chỉ'>Đổi địa chỉ</Option>
-                                                <Option value='Change of mind'>Thay đổi ý kiến</Option>
-                                                {/* Thêm các lý do khác vào đây */ }
-                                            </Select>
+                                                placeholder='Nhập lý do hủy đơn hàng'
+                                            />
                                         </Modal>
                                     </div>
                                 </div>
@@ -172,6 +167,12 @@ const PurchaseHistory = () =>
                                 </div>
                             ) }
                         </div>
+                        { order.status === 'Đã hủy' && order.cancelReason && (
+                            <div className='px-2'>
+                                <p>Lý do hủy đơn hàng: { order.cancelReason }</p>
+                                {/* Hiển thị thông báo hoặc thông tin khác cho người dùng */ }
+                            </div>
+                        ) }
                         <Table dataSource={ order.products ? [ order.products[ 0 ] ] : [] }>
                             <body className="" key={ order.products._id }>
                                 <Column

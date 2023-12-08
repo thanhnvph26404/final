@@ -2,32 +2,40 @@ import { Space, Table, Button, Popconfirm, Input } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
+import { Select } from 'antd';
 
 import { Link, useLocation } from "react-router-dom";
-import { useDeleteProductMutation, useGetProductsQuery, useGetProductssQuery } from "../../../store/products/product.services";
+import { useDeleteProductMutation, useGetProductssQuery, useLocProductsQuery } from "../../../store/products/product.services";
 import { Iproductdata } from "../../../store/products/product.interface";
 import { EyeFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { toastError, toastSuccess } from "../../../hook/toastify";
+import { useGetCategoryListQuery } from "../../../store/categoies/category.services";
+import { useGetBrandListQuery } from "../../../store/Brand/brand.services";
 
 
+const { Option } = Select;
 
 
 const ListProduct = () =>
 {
     const location = useLocation()
 
-    const [ minPrice, setMinPrice ] = useState( "" ); // Giá tiền tối thiểu
-    const [ maxPrice, setMaxPrice ] = useState( "" ); // Giá tiền tối đa
+    const [ category, setCategory ] = useState( '' );
+    const [ brand, setBrand ] = useState( '' );
+    const [ minPrice, setMinPrice ] = useState( '' );
+    const [ maxPrice, setMaxPrice ] = useState( '' ); // Giá tiền tối đa
     const [ products, setProducts ] = useState( [] ); // State lưu trữ sản phẩm
     const { data: product } = useGetProductssQuery( null )
-    console.log( product );
+    const { data: categorys } = useGetCategoryListQuery( null )
+    const { data: brands } = useGetBrandListQuery( null )
+    const { data, refetch } = useLocProductsQuery( {
+        category: category,
+        brand: brand,
+        minPrice: minPrice,
+        maxPrice: maxPrice,
 
-    const { data, isLoading, refetch } = useGetProductsQuery( {
-        gte: minPrice,
-        lte: maxPrice,
     } );
-    console.log( data );
 
     useEffect( () =>
     {
@@ -177,7 +185,7 @@ const ListProduct = () =>
 
     return (
         <div className="mt-8 px-10">
-            <Button type="primary" className="mb-4">
+            <Button type="primary" className="mb-4 bg-blue-500 ">
                 <Link to="/admin/products/add">Thêm Sản Phẩm</Link>
             </Button>
 
@@ -185,24 +193,75 @@ const ListProduct = () =>
                 <Input
                     type="number"
                     value={ minPrice }
-                    onChange={ ( e ) => setMinPrice( e.target.value ) }
+                    onChange={ ( e: any ) =>
+                    {
+                        const enteredValue = e.target.value;
+                        // Chỉ cho phép giá trị không âm
+                        if ( enteredValue >= 0 || enteredValue === '' )
+                        {
+                            setMinPrice( enteredValue );
+                        }
+                    } }
                     placeholder="Giá tối thiểu"
                     className="border border-gray-300 p-1 rounded"
+                    style={ { width: 150 } }
                 />
                 <Input
                     type="number"
                     value={ maxPrice }
-                    onChange={ ( e ) => setMaxPrice( e.target.value ) }
+                    onChange={ ( e: any ) =>
+                    {
+                        const enteredValue = e.target.value;
+                        // Chỉ cho phép giá trị không âm
+                        if ( enteredValue >= 0 || enteredValue === '' )
+                        {
+                            setMaxPrice( enteredValue );
+                        }
+                    } }
                     placeholder="Giá tối đa"
                     className="border border-gray-300 p-1 rounded"
+                    style={ { width: 150 } }
                 />
-                <Button onClick={ handleFilterByPrice }>
+
+                <Select
+                    placeholder="Chọn Category"
+                    className="w-50"
+                    value={ category }
+                    onChange={ ( value ) => setCategory( value ) }
+                    style={ { width: 200 } }
+                >
+                    <Option value="">Tất cả category</Option>
+
+                    { categorys &&
+                        categorys?.data?.map( ( category: any ) => (
+                            <Option key={ category._id } value={ category.title }>
+                                { category.title }
+                            </Option>
+                        ) ) }
+                </Select>
+                <Select
+                    placeholder="Chọn Brand"
+                    value={ brand }
+                    onChange={ ( value ) => setBrand( value ) }
+                    style={ { width: 200 } }
+                >
+                    <Option value="">Tất cả brand</Option>
+
+                    { brands &&
+                        brands?.brand?.map( ( brand: any ) => (
+                            <Option key={ brand._id } value={ brand.title }>
+                                { brand.title }
+                            </Option>
+                        ) ) }
+                </Select>
+                <Button className="bg-blue-500" onClick={ handleFilterByPrice }>
                     Lọc sản phẩm
                 </Button>
-                <Button type="primary" onClick={ handleGetAllProducts }>
+                <Button className="bg-blue-500" type="primary" onClick={ handleGetAllProducts }>
                     Hiển thị tất cả sản phẩm
                 </Button>
             </div>
+
 
             <Table
                 style={ { backgroundColor: 'white' } }

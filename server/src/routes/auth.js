@@ -1,9 +1,8 @@
 
-// const express = require('express');
-import express from 'express';
+import express, { Router } from "express"
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOrderStatus, createOrder, applyCoupon, getOrders, getAllOrders, getUserCart, removeFromCart, getoneOrders, cancelOrderRequest, confirmCancelOrder, getCancelledOrders, getCancelledtrueOrders, increaseQuantity, decreaseQuantity, getWishList, removeWishList, cancleOrder, createPaymentUrl, vnpayReturn, getvoucher, findOrderByid } from "../controllers/auth"
-import { addTowishList } from "../controllers/products"
+import { addTowishList, locproduct } from "../controllers/products"
 import { saveVoucherToUser } from "../controllers/voucher"
 
 const router = express.Router()
@@ -45,6 +44,8 @@ router.get( '/vnpay_return', vnpayReturn )
 // router.post( '/changeStatusPayment', changeStatusPayment )
 router.put( "/saveVoucher", authMiddlware, saveVoucherToUser )
 router.get( "/getvouchers", authMiddlware, getvoucher )
+router.get( "/product", locproduct )
+
 
 
 
