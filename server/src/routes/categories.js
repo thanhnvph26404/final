@@ -1,4 +1,5 @@
-const express = require('express');
+// const express = require('express');
+import express from 'express';
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 
 import { create, getAll, getCategoryProduct, getOne, remove, update } from "../controllers/categories";

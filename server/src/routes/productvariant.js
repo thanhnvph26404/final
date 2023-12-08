@@ -1,4 +1,5 @@
-const express = require('express');
+// const express = require('express');
+import express from 'express';
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 import { getAll, create, remove, update ,getOne} from "../controllers/productVariant"
 const router = express.Router()

@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
-const express = require('express');
+// const express = require('express');
+import express from 'express';
 import morgan from "morgan";
 import cors from 'cors';
 import connectDB from "./config/database";
