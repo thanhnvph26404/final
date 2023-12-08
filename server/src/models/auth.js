@@ -40,12 +40,7 @@ const userSchema = new mongoose.Schema(
       required: false,
     },
     cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
-    cards: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Card",
-      },
-    ],
+
     wishList: [ { type: mongoose.Schema.Types.ObjectId, ref: "Product" } ],
     vouchers: [ {
       type: mongoose.Schema.Types.ObjectId, // Hoặc Schema.Types.String nếu bạn lưu trữ dưới dạng chuỗi
@@ -61,12 +56,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    favorites: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Favorite",
-      },
-    ],
     comments: [
       {
         type: mongoose.Types.ObjectId,

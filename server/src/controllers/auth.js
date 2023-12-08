@@ -1042,16 +1042,7 @@ export const createPaymentUrl = async ( req, res ) =>
 
 
 
-// export const changeStatusPayment = async ( req, res ) =>
-// {
-//   try
-//   {
-//     return res.status( 200 ).json( { message: "Thanh cong" } );
-//   } catch ( error )
-//   {
-//     return res.status( 500 ).json( { error: 'Lỗi máy chủ nội bộ' } );
-//   }
-// }
+
 export const vnpayReturn = async ( req, res ) =>
 {
 
@@ -1376,26 +1367,60 @@ export const getCancelledtrueOrders = async ( req, res ) =>
 
   try
   {
-    let query = { status: status };
+    let query = {};
 
-    // Kiểm tra xem startDate và endDate có được cung cấp không
-    if ( !startDate || !endDate )
+    // Kiểm tra xem có cả hai startDate và endDate không
+    if ( startDate && endDate )
     {
-      // Nếu không có startDate hoặc endDate, truy xuất đơn hàng theo status
-      const orders = await order.find( query );
-      res.json( orders );
+      query.createdAt = { $gte: new Date( startDate ), $lte: new Date( endDate ) };
+
+      if ( status )
+      {
+        // Nếu có cả startDate và endDate, thêm điều kiện cho cả trạng thái và thời gian
+        query.status = status;
+      }
+    } else if ( status )
+    {
+      // Nếu không có startDate và endDate, nhưng có status, áp dụng điều kiện cho trạng thái
+      query.status = status;
     } else
     {
-      // Nếu có startDate và endDate, thêm điều kiện cho ngày tháng
-      query.createdAt = { $gte: new Date( startDate ), $lte: new Date( endDate ) };
-      const orders = await order.find( query );
-      res.json( orders );
+      // Nếu không có cả startDate, endDate và status, trả về lỗi
+      return res.status( 400 ).json( { error: "Vui lòng cung cấp ít nhất startDate hoặc endDate." } );
     }
+
+    const orders = await order.find( query ).populate( "userId" );
+    res.json( orders );
   } catch ( error )
   {
     return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
   }
 };
+export const findOrderByid = async ( req, res ) =>
+{
+  const { orderId } = req.body;
+
+  try
+  {
+    if ( !orderId )
+    {
+      return res.status( 400 ).json( { error: "Vui lòng cung cấp ID đơn hàng." } );
+    }
+
+    const foundOrder = await order.findOne( { "paymentIntent.id": orderId } ).populate( "userId" );
+
+    if ( !foundOrder )
+    {
+      return res.status( 404 ).json( { error: "Không tìm thấy đơn hàng với ID này trong paymentIntent." } );
+    }
+
+    res.json( foundOrder );
+  } catch ( error )
+  {
+    return res.status( 500 ).json( { error: "Lỗi server: " + error.message } );
+  }
+};
+
 export const increaseQuantity = async ( req, res ) =>
 {
   const { _id } = req.user;
@@ -1575,13 +1600,44 @@ export const cancleOrder = async ( req, res ) =>
     {
       return res.status( 404 ).json( { message: "Không tìm thấy đơn hàng" } );
     }
+    const userId = orders.userId;
+    console.log( userId );
+    const user = await Auth.findById( userId );
+    if ( !user )
+    {
+      return res.status( 404 ).json( { message: 'Không tìm thấy thông tin người dùng' } );
+    }
+
+    const userEmail = user.email;
 
     // Kiểm tra xem đơn hàng có thể hủy hay không
     if ( orders.status == "Đã hoàn thành" || orders.status == "Đã hủy" )
     {
       return res.status( 400 ).json( { message: "Không thể thay đổi trạng thái đơn hàng này " } );
     }
-
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
+    const mailOptions = {
+      from: 'your_email@example.com', // Địa chỉ email của bạn
+      to: userEmail, // Sử dụng thông tin email từ đơn hàng
+      subject: 'Thông báo: Đơn hàng đã được hủy',
+      text: 'Đơn hàng của bạn đã được hủy thành công. Chi tiết lý do: ' + cancelReason,
+    };
+    transporter.sendMail( mailOptions, function ( error, info )
+    {
+      if ( error )
+      {
+        console.error( 'Lỗi khi gửi email:', error );
+      } else
+      {
+        console.log( 'Email thông báo đã được gửi: ' + info.response );
+      }
+    } );
     // Cập nhật lý do hủy và trạng thái
     orders.cancelReason = cancelReason;
     orders.status = "Đã hủy";

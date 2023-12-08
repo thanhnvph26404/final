@@ -3,7 +3,7 @@ import type { ColumnsType } from "antd/es/table";
 import { DatePicker, Select } from "antd";
 
 import { Link } from "react-router-dom";
-import { useGetAllOrderQuery, useGetOrdersByStatusMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
+import { useGetAllOrderQuery, useGetOrdersByIdMutation, useGetOrdersByStatusMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
 import { IOrder, StatusOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
@@ -19,14 +19,40 @@ const ListOrder = () =>
     const [ editedStatus, setEditedStatus ] = useState( "" );
     const [ filteredOrders, setFilteredOrders ] = useState( [] );
     const [ allOrders, setAllOrders ] = useState( [] );
+    const [ orderId, setOrderId ] = useState( "" );
+    const [ selectedOrder, setSelectedOrder ] = useState<any>( [] );
+    console.log( selectedOrder );
 
     const [ status, setStatus ] = useState( "" );
     const [ startDate, setStartDate ] = useState( null );
     const [ endDate, setEndDate ] = useState( null );
     const [ statusOrder ] = useGetOrdersByStatusMutation()
     const { data } = useGetAllOrderQuery( [] )
+    const [ byorderId ] = useGetOrdersByIdMutation()
+    const handleFindOrderById = async () =>
+    {
+        if ( !orderId )
+        {
+            setFilteredOrders( allOrders );
+            setSelectedOrder( [] ); // Set selectedOrder thành một mảng rỗng
+            return;
+        }
 
-    console.log( statusOrder );
+        console.log( orderId );
+
+        byorderId( { orderId } )
+            .unwrap()
+            .then( ( response ) =>
+            {
+                // Kiểm tra nếu response không phải là một mảng
+                const updatedSelectedOrder = Array.isArray( response ) ? response : [ response ];
+                setSelectedOrder( updatedSelectedOrder );
+            } )
+            .catch( ( error ) =>
+            {
+                toastError( error.data.message );
+            } );
+    };
     const handleFilter = () =>
     {
         const statusoder = {
@@ -49,7 +75,8 @@ const ListOrder = () =>
             {
                 toastSuccess( "Lọc thành công" );
                 setFilteredOrders( res );
-                console.log( res );
+                setSelectedOrder( [] ); // Cập nhật selectedOrder thành một mảng rỗng
+
                 // Lưu dữ liệu đơn hàng đã lọc vào state
             } );
     };
@@ -197,45 +224,63 @@ const ListOrder = () =>
         },
     ];
 
-    const displayOrders = filteredOrders.length >= 0 ? filteredOrders : allOrders;
+    const displayOrders = selectedOrder.length > 0 ? selectedOrder : filteredOrders.length > 0 ? filteredOrders : allOrders;
 
+    console.log( selectedOrder );
 
     return (
-        <div style={ { marginTop: 100, paddingRight: 50 } }>
-            <Select value={ status } onChange={ ( value ) => setStatus( value ) }>
-                <Option value="">Tất cả trạng thái</Option>
-                {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
-                { StatusOrder.map( ( statusItem ) => (
-                    <Option key={ statusItem } value={ statusItem }>
-                        { statusItem }
-                    </Option>
-                ) ) }
-            </Select>
+        <div className="mt-8 px-10"> {/* Sử dụng classes của Tailwind để thiết lập margin-top và padding-right */ }
+            <div className="flex gap-4 items-center mb-4">
+                <Select value={ status } onChange={ ( value ) => setStatus( value ) } className="w-48">
+                    <Option value="">Tất cả trạng thái</Option>
+                    {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
+                    { StatusOrder.map( ( statusItem ) => (
+                        <Option key={ statusItem } value={ statusItem }>
+                            { statusItem }
+                        </Option>
+                    ) ) }
+                </Select>
 
-            <RangePicker
-                onChange={ ( dates: any ) =>
-                {
-                    if ( dates && dates.length === 2 )
+                <RangePicker
+                    onChange={ ( dates: any ) =>
                     {
-                        setStartDate( dates[ 0 ] );
-                        setEndDate( dates[ 1 ] );
-                    } else
-                    {
-                        setStartDate( null );
-                        setEndDate( null );
-                    }
-                } }
-            />
+                        if ( dates && dates.length === 2 )
+                        {
+                            setStartDate( dates[ 0 ] );
+                            setEndDate( dates[ 1 ] );
+                        } else
+                        {
+                            setStartDate( null );
+                            setEndDate( null );
+                        }
+                    } }
+                    className="w-64"
+                />
 
-            <Button onClick={ handleFilter }>Lọc</Button>
+                <Button onClick={ handleFilter } className="bg-blue-500 text-white">
+                    Lọc
+                </Button>
+
+                <input
+                    type="text"
+                    placeholder="Nhập mã ID đơn hàng"
+                    value={ orderId }
+                    onChange={ ( e ) => setOrderId( e.target.value ) }
+                    className="border border-gray-300 p-1 rounded"
+                />
+
+                <Button onClick={ handleFindOrderById } className="bg-blue-500 text-white">
+                    Tìm đơn hàng
+                </Button>
+            </div>
 
             <Table
-                style={ { backgroundColor: "white", marginTop: 100, } }
+                className="bg-white"
                 columns={ columns }
                 dataSource={ displayOrders || [] }
                 pagination={ { pageSize: 6 } }
                 rowClassName={ ( record ) =>
-                    record.status === "Đã hủy" || record.status === "đang chờ được xử lý" ? "cancelled-row" : ""
+                    record.status === 'Đã hủy' || record.status === 'đang chờ được xử lý' ? 'cancelled-row' : ''
                 }
             />
         </div>

@@ -119,7 +119,7 @@ const CartPage = () =>
                                             />
                                         ) }
                                         <div>
-                                            <a href="#">{ item.productInfo.name } </a>
+                                            <Link to={ `/home/product-detail/${ item.product._id }` }>{ item.productInfo.name } </Link>
                                             <p className="text-gray-400">{ item.productInfo.price }đ</p>
                                             <p className="text-gray-600 font-semibold">{ item.productVariant.size }</p>
                                             <p className="text-gray-600 font-semibold">{ item.productVariant.color }</p>
