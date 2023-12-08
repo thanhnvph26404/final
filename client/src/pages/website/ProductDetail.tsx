@@ -265,12 +265,12 @@ const ProductDetail = () => {
                         <div className="mt-[20px] space-x-10">
                             {listcolor?.map((color, index) => (
 
-                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] w-[50px]  h-[45px] ${mauSac === color ? 'border-2 border-[#23314BB3]  rounded-full ' : ''}`} onClick={() => handleChangeMauSac(color)}>{color}</button>
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] w-[70px]  h-[45px] ${mauSac === color ? 'border-2 border-[#23314BB3]  rounded-[10px]  ' : ''}`} onClick={() => handleChangeMauSac(color)}>{color}</button>
                             ))}
                         </div>
                         <div className="mt-[20px] space-x-10">
                             {listSize?.map((item, index) => (
-                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] w-[50px]  h-[45px] ${kichCo === item?.size ? 'border-2 border-[#23314BB3] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item)}>{item.size}</button>
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] w-[50px]  h-[45px] ${kichCo === item?.size ? 'border-2 border-[#23314BB3] rounded-[10px] text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item)}>{item.size}</button>
                             ))}
 
 
