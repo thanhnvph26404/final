@@ -1,4 +1,5 @@
-const express = require('express');
+// const express = require('express');
+import express from 'express';
 import { getAll, create, update, remove, getOne } from "../controllers/size"
 const router = express.Router()
 router.get("/", getAll)

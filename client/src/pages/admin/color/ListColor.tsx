@@ -35,7 +35,7 @@ const ListColor = () => {
             render: (text) => <p>{text}</p>,
         },
         {
-            title: "Action",
+            title: "Hành động",
             key: "action",
             render: (record) => (
                 <Space size="middle">
