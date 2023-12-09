@@ -64,7 +64,7 @@ const HomePage = () => {
           {vouchers?.data?.map((voucher: any) => (
             <div key={voucher?._id} className="bg-gray-200 space-x-5  rounded-full p-2 text-sm font-medium flex items-center">
               <p>{voucher.name}</p>
-              <div> Mã code: {voucher.code}  ({voucher.discount}%)</div>
+              <div> Mã code: {voucher.code}  (Giảm {voucher.discount}%)</div>
               <button
                 onClick={() => saveVoucher(voucher?._id)}
                 disabled={isVoucherSaved} // Check if the voucher ID exists in the user's list

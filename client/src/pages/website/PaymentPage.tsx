@@ -544,7 +544,7 @@ const CheckoutPage = () =>
                             <p className="mr-4 font-semibold">30.000đ</p>
                         </div>
                     </label>
-                    <label htmlFor='expressShipping' className={ `radio-button flex ` } >
+                    {/* <label htmlFor='expressShipping' className={ `radio-button flex ` } >
 
                         <input
                             type="radio"
@@ -559,7 +559,7 @@ const CheckoutPage = () =>
                             <p className="ml-4 max-sm:w-[360px]">Giao hàng hỏa tốc</p>
                             <p className="mr-4 font-semibold">50.000đ</p>
                         </div>
-                    </label>
+                    </label> */}
                     <h2 className="mt-5 text-xl font-semibold ">Thanh toán</h2>
                     <p className="text-gray-600">Toàn bộ các giao dịch được bảo mật và mã hóa.</p>
                     <div className='w-[40%]'>

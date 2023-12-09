@@ -139,9 +139,9 @@ const ProductDetail = () => {
                         <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{product?.data?.name}</h1>
                         <p className="flex gap-2 text-left mt-[40px]">
                             {/* price */}
-                            <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.price}₫</span>
-                            <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.original_price}₫</span>
-                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm {product?.data?.original_price - product?.data?.price}₫</p>
+                            <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.original_price}₫</span>
+                            <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.price}₫</span>
+                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm {product?.data?.price - product?.data?.original_price}₫</p>
                         </p>
                         <div className="mt-[30px]">
                             <hr className="w-[600px]" />
@@ -159,12 +159,12 @@ const ProductDetail = () => {
                         <div className="mt-[20px] space-x-10">
                             {listcolor?.map((color, index) => (
 
-                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === color ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac(color)}>{color}</button>
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${mauSac === color ? 'border-2 border-[#23314BB3] w-[70px]  h-[55px] rounded-xl text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeMauSac(color)}>{color}</button>
                             ))}
                         </div>
                         <div className="mt-[20px] space-x-10">
                             {listSize?.map((item, index) => (
-                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === item?.size ? 'border-2 border-[#23314BB3] w-[60px]  h-[55px] rounded-full text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item)}>{item.size}</button>
+                                <button key={index} className={`rounded-full text-[20px] text-[#23314BB3] ${kichCo === item?.size ? 'border-2 border-[#23314BB3] w-[70px]  h-[55px] rounded-xl text-[20px] text-[#23314BB3]' : ''}`} onClick={() => handleChangeKichCo(item)}>{item.size}</button>
                             ))}
                         </div>
                     </div>

@@ -70,7 +70,7 @@ const ListColor = () => {
     });
 
     return (
-        <div style={{ marginTop: 100, width: 1200 }}>
+        <div>
             <Button type="primary" className="bg-blue-500" style={{ marginBottom: 30 }}>
                 <Link to={"/admin/color/add"}>Thêm  màu</Link>
             </Button>

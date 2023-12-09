@@ -201,7 +201,7 @@ const ListOrder = () =>
 
 
     return (
-        <div style={ { marginTop: 100, paddingRight: 50 } }>
+        <div >
             <Select value={ status } onChange={ ( value ) => setStatus( value ) }>
                 <Option value="">Tất cả trạng thái</Option>
                 {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
