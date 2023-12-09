@@ -540,7 +540,7 @@ const CheckoutPage = () =>
                         />
                         <div className="border rounded-md border-black  flex justify-between sm:w-[565px] h-[55px] items-center bg-[#F5F6FB] ">
 
-                            <p className="ml-4 max-sm:w-[360px]">Giao hàng tiết kiệm</p>
+                            <p className="ml-4 max-sm:w-[360px]">Giao hàng đồng giá</p>
                             <p className="mr-4 font-semibold">30.000đ</p>
                         </div>
                     </label>

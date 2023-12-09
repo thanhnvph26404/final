@@ -554,10 +554,31 @@ const authApi = createApi( {
         } ),
 
 
+        getOrdersById: builder.mutation( {
+            query: ( { orderId } ) =>
+            {
+                // Xử lý request query tại đây để gửi yêu cầu đúng đắn
+                const body = { orderId };
+                const token = localStorage.getItem( "token" )
+
+                return {
+                    url: '/auth/getIdOrder', // Địa chỉ endpoint API của bạn
+                    method: 'POST',
+                    body,
+                    headers: {
+                        Authorization: "Bearer " + token,
+
+                    }
+                };
+            },
+        } ),
+
+
+
     } )
 } )
 export const {
-    useLoginMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useGetOrdersByIdMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi
