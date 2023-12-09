@@ -243,6 +243,7 @@ const ListOrder = () =>
 
                 <RangePicker
                     onChange={ ( dates: any ) =>
+
                     {
                         if ( dates && dates.length === 2 )
                         {
