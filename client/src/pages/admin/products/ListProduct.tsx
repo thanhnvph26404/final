@@ -69,7 +69,7 @@ const ListProduct = () => {
                 return
             }
             setProducts(filteredProducts);
-            toastSuccess("Lấy thành công");
+            toastSuccess("Lọc sản phẩm thành công");
         } catch (error) {
             console.error(error);
         }
@@ -237,7 +237,7 @@ const ListProduct = () => {
                             </Option>
                         ))}
                 </Select>
-                <Button className="bg-blue-500" onClick={handleFilterByPrice}>
+                <Button className="bg-blue-500" type="primary" onClick={handleFilterByPrice}>
                     Lọc sản phẩm
                 </Button>
                 <Button className="bg-blue-500" type="primary" onClick={handleGetAllProducts}>
