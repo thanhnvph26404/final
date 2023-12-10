@@ -185,8 +185,9 @@ const Listcomment = () => {
                 </Button>
 
             </div>
+
             <Table
-                style={{ backgroundColor: "white", marginTop: 50, }}
+                className="bg-white"
                 columns={columns}
                 dataSource={data1}
                 pagination={{ pageSize: 8 }}

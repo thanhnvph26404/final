@@ -132,12 +132,18 @@ const ListProduct = () => {
             title: 'Đã cập nhật',
             dataIndex: 'updatedAt',
             key: 'update',
-            render: (update) => (
-                <div className="text-sm text-gray-66 flex flex-col">
-                    <div className="">{update.slice(0, 10)}</div>
-                    <div className="">{update.slice(11, 16)}</div>
-                </div>
-            ),
+
+            render: (update) => {
+                const dateObject = new Date(update);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
+
+
+                return (
+                    <div className="text-sm text-gray-66 flex flex-col" >
+                        <div className="">{formattedDate}</div>
+                    </div >
+                );
+            }
         },
         {
             title: 'Hành động',
