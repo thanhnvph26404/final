@@ -132,6 +132,7 @@ const ListProduct = () => {
             title: 'Đã cập nhật',
             dataIndex: 'updatedAt',
             key: 'update',
+
             render: (update) => {
                 const dateObject = new Date(update);
                 const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
@@ -143,7 +144,6 @@ const ListProduct = () => {
                     </div >
                 );
             }
-
         },
         {
             title: 'Hành động',

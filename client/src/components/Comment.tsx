@@ -19,6 +19,8 @@ const Comment = (props: any) => {
     }
 
     const id = props.idpro
+    console.log(id);
+
     const { data: comments, isLoading } = useGetCommentbyidprouctQuery(id)
 
     const [getUserByToken] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
@@ -60,7 +62,7 @@ const Comment = (props: any) => {
     };
     const handleAddComment = (e: any) => {
         e.preventDefault();
-        console.log(email);
+        console.log(id);
 
         if (!email) {
             toastError("Bạn đang để trống email ");

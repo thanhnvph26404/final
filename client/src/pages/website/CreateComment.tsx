@@ -8,7 +8,7 @@ import { useAddCommentMutation } from "../../store/Comment/comment.services";
 const CreateComment = () => {
 
     const { id } = useParams()
-    const { data: order, isLoading } = useGetOneOrderQuery(id)
+    const { data: order } = useGetOneOrderQuery(id)
     const [AddCommentMutation] = useAddCommentMutation()
     const [ratings, setRatings] = useState([
         5, 5, 5, 5, 5, 5, 5, 5, 5
@@ -25,8 +25,7 @@ const CreateComment = () => {
 
     };
 
-
-    const handleAddComment = (e: any) => {
+    const handleAddComment = async (e: any) => {
         e.preventDefault();
         var valid = true
         const comments = document.getElementsByName('comment')
@@ -36,8 +35,10 @@ const CreateComment = () => {
                 valid = false
             }
         })
+        let newcmt = [];
+
         if (order && valid) {
-            order.products.map((item, index) => {
+            newcmt = await Promise.all(order.products.map(async (item, index) => {
                 const commentProduct: any = {
                     product: item.product?._id,
                     name: order?.userId.name,
@@ -45,18 +46,17 @@ const CreateComment = () => {
                     email: order?.userId.email,
                     feedback: ratings[index]
                 }
-
-                console.log(commentProduct);
-
-                AddCommentMutation(commentProduct)
+                await AddCommentMutation(commentProduct)
                     .unwrap()
                     .then((response) => {
                         message.info("bình luận thành công")
+
                     })
-                    .catch((error) => {
-                        message.error(error.data.message);
-                    });
-            })
+
+            }))
+
+            console.log("list new cmt", newcmt);
+
             navigate('/home/product-detail/' + order.products[0].product?._id)
 
 
