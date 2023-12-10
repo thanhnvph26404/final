@@ -1,13 +1,13 @@
-const express = require('express');
+import express, { Router } from "express"
 
 import
-  {
-    getSecurityCode,
-    resetPassword,
-    getCode,
-    checkCode,
-    changePassword,
-  } from "../controllers/password";
+{
+  getSecurityCode,
+  resetPassword,
+  getCode,
+  checkCode,
+  changePassword,
+} from "../controllers/password";
 import { authMiddlware } from "../middleware/checkPermission";
 
 

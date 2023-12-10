@@ -81,7 +81,7 @@ const LoginPage = () =>
 
                         <hr className="border-gray-400" />
                         <Link to={ "/forgot-password" } className="  mt-5 text-xs border-b border-gray-400 py-4">
-                            Forgot your password?
+                            Quên mật khẩu?
                         </Link>
                         <div className="mt-5  text-xs flex justify-between py-3 items-center">
                             <p>If you don't have an account..</p>

@@ -54,48 +54,50 @@ const Updatecolor = () => {
         }
     };
     return (
-        <div className="w-100" style={{ marginTop: 100, backgroundColor: "white" }}>
-            <h3 style={{ marginBottom: 50, marginTop: 20, color: "black" }}>
-                Update color
-            </h3>
-            <Form
+        <div>
+            <div className='mb-[20px]'>
+                <h1 className='text-[25px] font-semibold text-[#23314B]'>Thêm Màu</h1>
+            </div>
+            <div className="bg-white pt-[20px] pb-[30px]">
+                <Form
 
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                form={form}
-                style={{ maxWidth: 800 }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                validateMessages={validateMessages}
-            >
-                <Form.Item
-                    label=""
-                    name="_id"
-                    initialValue={_id}
-                    style={{ display: "none" }}
-                    rules={[{ required: true, message: "vui lòng nhập kích cỡ!" }]}
+                    labelCol={{ span: 8 }}
+                    wrapperCol={{ span: 16 }}
+                    form={form}
+                    style={{ maxWidth: 800 }}
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    validateMessages={validateMessages}
                 >
-                    <Input />
-                </Form.Item>
+                    <Form.Item
+                        label=""
+                        name="_id"
+                        initialValue={_id}
+                        style={{ display: "none" }}
+                        rules={[{ required: true, message: "vui lòng nhập kích cỡ!" }]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-                <Form.Item<FieldType>
-                    label="Tên màu"
-                    name="color"
-                    rules={[
-                        { required: true, message: "vui lòng nhập Màu !" },
-                        { max: 255 },
-                    ]}
-                    hasFeedback
-                >
-                    <Input />
-                </Form.Item>
+                    <Form.Item<FieldType>
+                        label="Tên màu"
+                        name="color"
+                        rules={[
+                            { required: true, message: "vui lòng nhập Màu !" },
+                            { max: 255 },
+                        ]}
+                        hasFeedback
+                    >
+                        <Input />
+                    </Form.Item>
 
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit" className="bg-blue-500">
-                        Cập nhập màu
-                    </Button>
-                </Form.Item>
-            </Form>
+                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+                        <Button type="primary" htmlType="submit" className="bg-blue-500">
+                            Cập nhập màu
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
         </div>
     );
 };

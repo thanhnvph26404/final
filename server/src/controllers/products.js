@@ -1,5 +1,7 @@
 import { productSchema } from "../schemas/products"
 import Category from "../models/categories"
+import Brand from "../models/brand"
+
 import Product from "../models/products"
 import Auth from "../models/auth";
 export const create = async ( req, res ) =>
@@ -70,14 +72,6 @@ export const create = async ( req, res ) =>
     }
 };
 
-
-
-
-
-
-
-
-
 export const getAll = async ( req, res ) =>
 {
     try
@@ -100,6 +94,10 @@ export const getAll = async ( req, res ) =>
         }
 
         // Phân trang
+        if ( req.query.category )
+        {
+            queryObj.category = req.query.category;
+        }
         const page = req.query.page;
         const limit = req.query.limit;
         const skip = ( page - 1 ) * limit;
@@ -116,7 +114,7 @@ export const getAll = async ( req, res ) =>
         // Sử dụng populate để nhúng dữ liệu từ các mối quan hệ
         query = query
             .populate( "category" )
-            .populate( "brand" ).populate( "ProductVariants" )
+            .populate( "brand" ).populate( "ProductVariants" ).sort( { createdAt: -1 } )
         const products = await query;
 
         res.status( 200 ).json( {
@@ -127,6 +125,51 @@ export const getAll = async ( req, res ) =>
         res.status( 500 ).json( {
             message: "Server error: " + error.message,
         } );
+    }
+};
+export const locproduct = async ( req, res ) =>
+{
+    const { category, brand, minPrice, maxPrice } = req.query;
+
+    try
+    {
+
+        // Khởi tạo các điều kiện tìm kiếm
+        const queryConditions = {};
+
+        // Tìm ID của category dựa trên tên
+        if ( category )
+        {
+            const foundCategory = await Category.findOne( { title: category } );
+            if ( foundCategory )
+            {
+                queryConditions.category = foundCategory._id;
+            }
+        }
+
+        // Tìm ID của brand dựa trên tên
+        if ( brand )
+        {
+            const foundBrand = await Brand.findOne( { title: brand } );
+            if ( foundBrand )
+            {
+                queryConditions.brand = foundBrand._id;
+            }
+        }
+
+        // Thêm điều kiện lọc theo giá nếu được cung cấp
+        if ( minPrice && maxPrice )
+        {
+            queryConditions.price = { $gte: minPrice, $lte: maxPrice };
+        }
+        console.log( queryConditions );
+        // Tìm sản phẩm dựa trên điều kiện query
+        const products = await Product.find( queryConditions ).populate( "category" ).populate( "brand" );
+
+        res.status( 200 ).json( { products } );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { message: 'Server error: ' + error.message } );
     }
 };
 

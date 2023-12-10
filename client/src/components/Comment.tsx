@@ -19,6 +19,8 @@ const Comment = (props: any) => {
     }
 
     const id = props.idpro
+    console.log(id);
+
     const { data: comments, isLoading } = useGetCommentbyidprouctQuery(id)
 
     const [getUserByToken] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
@@ -60,7 +62,7 @@ const Comment = (props: any) => {
     };
     const handleAddComment = (e: any) => {
         e.preventDefault();
-        console.log(email);
+        console.log(id);
 
         if (!email) {
             toastError("Bạn đang để trống email ");
@@ -149,8 +151,8 @@ const Comment = (props: any) => {
         <div className="">
             <div className="w-full sm:w-3/4 px-4 sm:px-8 mt-3">
                 <div className="flex mt-5">
-                    <p className="hidden sm:block w-3/4 font-mono text-xl">Bình luận</p>
-                    <Link to={"/comment/655ccc2ee2774e2e50993f8a"}>add ccmt</Link>
+                    <p className="hidden sm:block w-3/4  text-[25px]">Bình luận</p>
+                    {/* <Link to={"/comment/655ccc2ee2774e2e50993f8a"}>add ccmt</Link> */}
                 </div>
                 <div className="mx-auto" style={{ marginTop: 100, width: 1200 }}>
                     <Table

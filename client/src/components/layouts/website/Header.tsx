@@ -169,7 +169,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                         {/* Các mục menu dropdown */ }
                         <div className="flex flex-col px-8">
                           <li>
-                            <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
+                            <Link to="/collection" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                               Bộ sưu tập
                               <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
                             </Link>

@@ -52,7 +52,11 @@ import WishList from "./pages/website/WishList";
 import Myvoucher from "./pages/website/Profile/Myvoucher";
 import Listcomment from "./pages/admin/comment/listcomment";
 import CreateComment from "./pages/website/CreateComment";
+
 import Contact from "./pages/website/Contact";
+=======
+import CollectionPage from "./pages/website/CollectionPage";
+
 
 
 
@@ -119,6 +123,7 @@ export const router = createBrowserRouter([
             { path: 'privacy', element: <Privacy /> },
             { path: 'rules', element: <Rules /> },
             { path: 'WishList', element: <WishList /> },
+            { path: 'collection', element: <CollectionPage /> },
 
 
 

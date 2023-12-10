@@ -13,31 +13,33 @@ import { useGetcolorListQuery } from "../../../store/valueAttribute/colorsevice"
 import { useEditProductMutation, useGetProductQuery } from "../../../store/products/product.services";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 
-const UpdateProduct = () => {
+const UpdateProduct = () =>
+{
     const navigate = useNavigate();
     const { id } = useParams();
-    const { data: product, isLoading } = useGetProductQuery(id!);
+    const { data: product, isLoading } = useGetProductQuery( id! );
 
-    const { data: categories } = useGetCategoryListQuery([]);
-    const { data: brands } = useGetBrandListQuery([]);
-    const { data: size } = useGetsizeListQuery([])
-    const { data: color } = useGetcolorListQuery([])
-    const [EditProductMutation] = useEditProductMutation();
-    const [loadings, setLoadings] = useState(false);
+    const { data: categories } = useGetCategoryListQuery( [] );
+    const { data: brands } = useGetBrandListQuery( [] );
+    const { data: size } = useGetsizeListQuery( [] )
+    const { data: color } = useGetcolorListQuery( [] )
+    const [ EditProductMutation ] = useEditProductMutation();
+    const [ loadings, setLoadings ] = useState( false );
 
-    console.log(product);
-    const [fileList, setFileList] = useState<any[]>([])
+    console.log( product );
+    const [ fileList, setFileList ] = useState<any[]>( [] )
 
-    const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-        setFileList(newFileList);
-    const [form] = Form.useForm();
-
-
-    const setFields = () => {
+    const handleChange: UploadProps[ 'onChange' ] = ( { fileList: newFileList } ) =>
+        setFileList( newFileList );
+    const [ form ] = Form.useForm();
 
 
-        setFileList(product?.data?.images)
-        form.setFieldsValue({
+    const setFields = () =>
+    {
+
+
+        setFileList( product?.data?.images )
+        form.setFieldsValue( {
             _id: product?.data?._id,
             name: product?.data?.name,
             price: product?.data?.price,
@@ -47,14 +49,15 @@ const UpdateProduct = () => {
             imgUrl: product?.data?.images,
             category: product?.data?.category?._id,
             ProductVariants: product?.data?.ProductVariants
-        });
+        } );
 
 
     };
 
-    useEffect(() => {
+    useEffect( () =>
+    {
         setFields()
-    }, [isLoading])
+    }, [ isLoading ] )
 
 
 
@@ -68,277 +71,304 @@ const UpdateProduct = () => {
             range: '${label} must be between ${min} and ${max}',
         }
     }
-    const validateDiscount = (rule: any, value: any) => {
-        const price = parseFloat(value);
-        const originalPrice = form.getFieldValue('price');
-        if (price > originalPrice) {
-            return Promise.reject('Giá giảm không thể lớn hơn giá gốc');
+    const validateDiscount = ( rule: any, value: any ) =>
+    {
+        const price = parseFloat( value );
+        const originalPrice = form.getFieldValue( 'price' );
+        if ( price > originalPrice )
+        {
+            return Promise.reject( 'Giá giảm không thể lớn hơn giá gốc' );
         }
         return Promise.resolve();
     };
 
-    const onFinishFailed = (errorInfo: any) => {
-        console.log("Failed:", errorInfo);
+    const onFinishFailed = ( errorInfo: any ) =>
+    {
+        console.log( "Failed:", errorInfo );
     };
-    const beforeUpload = () => {
+    const beforeUpload = () =>
+    {
         return false;
     };
 
 
 
 
-    const onSubmit = async (data: any) => {
-        // setLoadings(true);
-        let newurls = [];
+    const onSubmit = async ( data: any ) =>
+    {
+        setLoadings( true );
+        let newUrls = [];
 
-        // Check if data.images exists and has a fileList property
-        if (data.imgUrl && data.imgUrl.fileList) {
-            console.log(data.imgUrl.fileList)
-            newurls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
-                if (item.originFileObj) {
+        if ( data.imgUrl && data.imgUrl.fileList )
+        {
+            newUrls = await Promise.all( data.imgUrl.fileList.map( async ( item: any ) =>
+            {
+                if ( item.originFileObj )
+                {
                     const formData = new FormData();
-                    formData.append("image", item.originFileObj);
-                    const API_key = "42d2b4a414af48bbc306d6456dd1f943"
+                    formData.append( "image", item.originFileObj );
+                    const API_key = "42d2b4a414af48bbc306d6456dd1f943";
                     const apiResponse: any = await axios.post(
-                        `https://api.imgbb.com/1/upload?key=${API_key}`,
+                        `https://api.imgbb.com/1/upload?key=${ API_key }`,
                         formData
-                    )
+                    );
 
                     return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
+                } else
+                {
+                    return item;
                 }
-                else {
-                    return item
-                }
-            }))
-
-        } else {
-            newurls = data.imgUrl
+            } ) );
+        } else
+        {
+            newUrls = data.imgUrl;
         }
 
+        const productVariants = data.ProductVariants || [];
+        const existingVariants = new Set<string>();
 
-        const newProduct = {
+        let hasDuplicate = false;
+        let duplicateIndexes: number[] = [];
+
+        productVariants.forEach( ( variant: any, index: number ) =>
+        {
+            const { color, size } = variant;
+            const variantKey = `${ color }-${ size }`;
+
+            if ( existingVariants.has( variantKey ) )
+            {
+                hasDuplicate = true;
+                duplicateIndexes.push( index );
+            } else
+            {
+                existingVariants.add( variantKey );
+            }
+        } );
+
+        if ( hasDuplicate )
+        {
+            const errorFields = duplicateIndexes.map( ( index ) => ( {
+                name: [ 'ProductVariants', index, 'color' ],
+                errors: [ 'Biến thể đã tồn tại' ],
+            } ) );
+
+            form.setFields( errorFields );
+            setLoadings( false );
+            return;
+        }
+
+        const updatedProduct = {
             _id: data._id,
             name: data.name,
             price: data.price,
             original_price: data.original_price,
             description: data.description,
             brand: data.brand,
-            images: newurls,
+            images: newUrls,
             category: data.category,
-            ProductVariants: data.ProductVariants
+            ProductVariants: data.ProductVariants,
         };
-        console.log(newProduct);
 
-        try {
-            await EditProductMutation(newProduct).unwrap().then(() => {
-                toastSuccess('sửa sản phẩm thành công!');
-            }).then(() => {
-                navigate('/admin/products');
-            });
-        } catch (error: any) {
-            toastError(error.data.message);
-        } finally {
-            setLoadings(false);
+        try
+        {
+            await EditProductMutation( updatedProduct ).unwrap().then( () =>
+            {
+                toastSuccess( 'Sửa sản phẩm thành công!' );
+                navigate( '/admin/products' );
+            } );
+        } catch ( error: any )
+        {
+            toastError( error.data.message );
+        } finally
+        {
+            setLoadings( false );
         }
-    }
+    };
 
 
     return (
-        <div>
-            <div>
-                <div className='mb-[20px]'>
-                    <h1 className='text-[25px] font-semibold text-[#23314B]'>Sửa Sản Phẩm</h1>
-                </div>
-            </div>
-            <div className="w-100 bg-white" >
-                <Form
-                    name="Form"
-                    className='pt-[40px]'
-                    form={form}
-                    labelCol={{ span: 8 }}
-                    wrapperCol={{ span: 16 }}
-                    style={{ maxWidth: 800 }}
-                    initialValues={{ remember: true }}
-                    onFinish={onSubmit}
-                    onFinishFailed={onFinishFailed}
-                    validateMessages={validateMessages}
-                    autoComplete="off"
+        <div className="w-100" style={ { marginTop: 100, backgroundColor: "white" } }>
+            <h3 style={ { marginTop: 20, marginBottom: 50, color: "black" } }>
+                sửa sản phẩm
+            </h3>
+            <Form
+                name="Form"
+
+                form={ form }
+                labelCol={ { span: 8 } }
+                wrapperCol={ { span: 16 } }
+                style={ { maxWidth: 800 } }
+                initialValues={ { remember: true } }
+                onFinish={ onSubmit }
+                onFinishFailed={ onFinishFailed }
+                validateMessages={ validateMessages }
+                autoComplete="off"
+            >
+                <Form.Item
+                    label="Tên sản Phẩm"
+                    name="_id"
+                    hidden
+                    rules={ [
+                        { required: true },
+                        { whitespace: true },
+                        { min: 6, max: 255 },
+                    ] }
+                    hasFeedback
                 >
-                    <Form.Item
-                        label="Tên sản Phẩm"
-                        name="_id"
-                        hidden
-                        rules={[
-                            { required: true },
-                            { whitespace: true },
-                            { min: 6, max: 255 },
-                        ]}
-                        hasFeedback
-                    >
-                        <Input />
-                    </Form.Item>
+                    <Input />
+                </Form.Item>
 
-                    <Form.Item
-                        label="Tên sản Phẩm"
-                        name="name"
-                        rules={[
-                            { required: true },
-                            { whitespace: true },
-                            { min: 6, max: 255 },
-                        ]}
-                        hasFeedback
-                    >
-                        <Input />
-                    </Form.Item>
-                    <Form.Item
-                        label="Danh mục"
-                        name="category"
-                        className='pr-[60px]'
-                        rules={[
-                            { required: true },
-                        ]}
-                        hasFeedback
-                    >
-                        <Select id="">
-                            {categories?.data?.map((Category: any) => (
-                                <Select.Option key={Category?._id} value={Category?._id}>
-                                    {Category?.title}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        label="Thương hiệu"
-                        name="brand"
-                        className='pr-[10px]'
-                        rules={[
-                            { required: true },
-                        ]}
-                        hasFeedback
-                    >
-                        <Select id="">
-                            {brands?.brand?.map((brand: any) => (
-                                <Select.Option key={brand._id} value={brand._id}>
-                                    {brand.title}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
-                    <Form.Item
-                        label="Giá gốc"
-                        name="price"
-                        className='pr-[100px]'
-                        rules={[
-                            { required: true, message: 'Vui lòng nhập giá gốc' },
-                            { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
-                        ]}
-                    >
-                        <InputNumber />
-                    </Form.Item>
-                    <Form.Item
-                        label="Giá giảm"
-                        className='pr-[90px]'
-                        name="original_price"
-                        rules={[
+                <Form.Item
+                    label="Tên sản Phẩm"
+                    name="name"
+                    rules={ [
+                        { required: true },
+                        { whitespace: true },
+                        { min: 6, max: 255 },
+                    ] }
+                    hasFeedback
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item
+                    label="Danh mục"
+                    name="category"
+                    rules={ [
+                        { required: true },
+                    ] }
+                    hasFeedback
+                >
+                    <Select id="">
+                        { categories?.data?.map( ( Category: any ) => (
+                            <Select.Option key={ Category?._id } value={ Category?._id }>
+                                { Category?.title }
+                            </Select.Option>
+                        ) ) }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    label="Thương hiệu"
+                    name="brand"
+                    rules={ [
+                        { required: true },
+                    ] }
+                    hasFeedback
+                >
+                    <Select id="">
+                        { brands?.brand?.map( ( brand: any ) => (
+                            <Select.Option key={ brand._id } value={ brand._id }>
+                                { brand.title }
+                            </Select.Option>
+                        ) ) }
+                    </Select>
+                </Form.Item>
+                <Form.Item
+                    label="Giá gốc"
+                    name="price"
+                    rules={ [
+                        { required: true, message: 'Vui lòng nhập giá gốc' },
+                        { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
+                    ] }
+                >
+                    <InputNumber />
+                </Form.Item>
+                <Form.Item
+                    label="Giá giảm"
+                    name="original_price"
+                    rules={ [
 
-                            { type: 'number', min: 1, max: 100000000, message: 'Giá giảm không hợp lệ' },
-                            { validator: validateDiscount },
-                        ]}
-                    >
-                        <InputNumber />
-                    </Form.Item>
-                    <Form.Item
-                        labelCol={{ span: 3 }}
-                        label="Chi tiết"
-                        className='pl-[150px]'
-                        name="description"
-                        rules={[{ required: true }]}
-                        hasFeedback
-                    >
-                        <ReactQuill />
-                    </Form.Item>
-                    <Form.Item
-                        label="Ảnh sản phẩm"
-                        name="imgUrl"
-                        className='pl-[10px]'
-                        wrapperCol={{ offset: 3, span: 16 }}
-                        rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
-                    >
-                        <Upload fileList={fileList} accept="image/*" listType="picture-card" multiple beforeUpload={beforeUpload}
-                            onChange={handleChange} >
-                            <Button icon={<UploadOutlined />} block>
-                                Chọn ảnh
-                            </Button>
-                        </Upload>
-                    </Form.Item>
-                    <Form.List name="ProductVariants">
-                        {(fields, { add, remove }) => (
-                            <div>
-                                {fields?.map(({ key, name, fieldKey, ...restField }) => (
-                                    <Space key={key} >
-                                        <Form.Item className='pl-[160px] '
-                                            {...restField}
-                                            name={[name, 'color']}  // Đặt tên cho trường "size"
-                                            label="Color"
-                                            rules={[{ required: true, message: 'Color is required' }]}
-                                        >
+                        { type: 'number', min: 1, max: 100000000, message: 'Giá giảm không hợp lệ' },
+                        { validator: validateDiscount },
+                    ] }
+                >
+                    <InputNumber />
+                </Form.Item>
+                <Form.Item
+                    labelCol={ { span: 3 } }
+                    label="Chi tiết"
+                    name="description"
+                    rules={ [ { required: true } ] }
+                    hasFeedback
+                >
+                    <ReactQuill />
+                </Form.Item>
+                <Form.Item
+                    label="Ảnh sản phẩm"
+                    name="imgUrl"
 
-                                            <Select className='pl-[20px]'  id="">
-                                                {color?.data?.map((color: any, index: any) => (
-                                                    <Select.Option key={index} value={color.color}>
-                                                        {color.color}
-                                                    </Select.Option>
-                                                ))}
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item
-                                            {...restField}
-                                            name={[name, 'size']}  // Đặt tên cho trường "color"
-                                            label="Size"
-                                            rules={[{ required: true, message: 'Size is required' }]}
-                                        >
-
-                                            <Select className='pl-[20px]' id="">
-                                                {size?.data?.map((size: any) => (
-                                                    <Select.Option value={size.size}>
-                                                        {size.size}
-                                                    </Select.Option>
-                                                ))}
-                                            </Select>
-                                        </Form.Item>
-                                        <Form.Item
-
-                                            {...restField}
-                                            name={[name, 'quantity']}  // Đặt tên cho trường "quantity"
-                                            label="Số lượng"
-                                            rules={[{ required: true, message: 'Quantity is required' }]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-
-                                        <MinusCircleOutlined className='pl-[10px] pb-[30px]' onClick={() => { remove(name); }} />
-                                    </Space>
-                                ))}
-                                <Form.Item>
-                                    <Button
-                                        type="dashed"
-                                        onClick={() => { add(); }}
-                                        icon={<PlusOutlined />}
-                                    >
-                                        Thêm biến thể sản phẩm
-                                    </Button>
-                                </Form.Item>
-                            </div>
-                        )}
-                    </Form.List>
-                    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                        <Button type="primary" loading={loadings} className="bg-blue-500" htmlType="submit">
-                            Cập nhập sản phẩm
+                    wrapperCol={ { offset: 3, span: 16 } }
+                    rules={ [ { required: true, message: "Vui lòng chọn ảnh sản phẩm" } ] }
+                >
+                    <Upload fileList={ fileList } accept="image/*" listType="picture-card" multiple beforeUpload={ beforeUpload }
+                        onChange={ handleChange } >
+                        <Button icon={ <UploadOutlined /> } block>
+                            Chọn ảnh
                         </Button>
-                    </Form.Item>
-                </Form>
-            </div >
-        </div>
+                    </Upload>
+                </Form.Item>
+                <Form.List name="ProductVariants">
+                    { ( fields, { add, remove } ) => (
+                        <div>
+                            { fields.map( ( field: any, index ) => (
+                                <Space key={ field.key } style={ { display: 'flex', marginBottom: 8 } } align="start">
+                                    <Form.Item
+                                        { ...field }
+                                        name={ [ field.name, 'color' ] }
+                                        fieldKey={ [ field.fieldKey, 'color' ] }
+                                        label="Color"
+                                        rules={ [ { required: true, message: 'Color is required' } ] }
+                                    >
+                                        <Select placeholder="Select color">
+                                            { color?.data?.map( ( color: any ) => (
+                                                <Select.Option key={ color._id } value={ color.color }>
+                                                    { color.color }
+                                                </Select.Option>
+                                            ) ) }
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        { ...field }
+                                        name={ [ field.name, 'size' ] }
+                                        fieldKey={ [ field.fieldKey, 'size' ] }
+                                        label="Size"
+                                        rules={ [ { required: true, message: 'Size is required' } ] }
+                                    >
+                                        <Select placeholder="Select size">
+                                            { size?.data?.map( ( size: any ) => (
+                                                <Select.Option key={ size._id } value={ size.size }>
+                                                    { size.size }
+                                                </Select.Option>
+                                            ) ) }
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        { ...field }
+                                        name={ [ field.name, 'quantity' ] }
+                                        fieldKey={ [ field.fieldKey, 'quantity' ] }
+                                        label="Số lượng"
+                                        rules={ [ { required: true, message: 'Quantity is required' } ] }
+                                    >
+                                        <InputNumber placeholder="Quantity" min={ 0 } />
+                                    </Form.Item>
+                                    <MinusCircleOutlined onClick={ () => remove( field.name ) } />
+                                </Space>
+                            ) ) }
+                            <Form.Item>
+                                <Button type="dashed" onClick={ () => add() } icon={ <PlusOutlined /> }>
+                                    Thêm biến thể sản phẩm
+                                </Button>
+                            </Form.Item>
+                        </div>
+                    ) }
+                </Form.List>
+
+                <Form.Item wrapperCol={ { offset: 8, span: 16 } }>
+                    <Button type="primary" loading={ loadings } className="bg-blue-500" htmlType="submit">
+                        cập nhập sản phẩm
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div >
     );
 };
 

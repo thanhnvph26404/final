@@ -64,7 +64,7 @@ const HomePage = () => {
           {vouchers?.data?.map((voucher: any) => (
             <div key={voucher?._id} className="bg-gray-200 space-x-5  rounded-full p-2 text-sm font-medium flex items-center">
               <p>{voucher.name}</p>
-              <div> Mã code: {voucher.code}  ({voucher.discount}%)</div>
+              <div> Mã code: {voucher.code}  (Giảm {voucher.discount}%)</div>
               <button
                 onClick={() => saveVoucher(voucher?._id)}
                 disabled={isVoucherSaved} // Check if the voucher ID exists in the user's list
@@ -81,24 +81,22 @@ const HomePage = () => {
       </Marquee>
       <h1 className="text-4xl sm:text-6xl font-[Noto sans] text-[#23314B] font-medium md:pt-10 lg:pt-16 text-center">Danh Mục Sản Phẩm</h1>
       <div className="flex space-x-[20px] mt-[20px] ml-[100px]">
-
         {categories?.data.map((category: any) => {
-
           return (
-            <div className="relative w-full sm:w-80 flex-col rounded-xl bg-clip-border text-gray-700 ">
-              <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 ">
-                <div className="object-cover w-full transform scale-100 group-hover:scale-110 transition-transform bg-gray-600">
+            <div className="relative w-full sm:w-80 flex-col rounded-xl bg-clip-border text-gray-700 overflow-hidden">
+              <div className="relative h-96 sm:h-100 overflow-hidden rounded-xl bg-clip-border text-gray-700 group">
+                <div className="object-cover w-full transform scale-100 group-hover:scale-105 transition-transform bg-gray-600">
                   <img className="object-cover w-full opacity-70" src={category?.image.url} alt="profile-picture" />
                   <Link to={`/products/${category._id}`}>
-                    <p className="absolute text-white top-[40%]  left-[35%] text-[25px] font-medium text-center">{category?.title}</p>
-                    <p className="text-white pt-20 font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <p className="absolute text-white top-[170px] left-[30%] text-[25px] font-semibold text-center">{category?.title}</p>
+                    <p className="text-white pt-[100px] font-[Noto Sans] text-[20px] font-bold absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       <i className="fas fa-chevron-circle-right fa-2x"></i>
                     </p>
                   </Link>
                 </div>
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -129,14 +127,9 @@ const HomePage = () => {
 
       {/* sản phẩm mới */}
 
-      <div className="flex flex-wrap space-x-5 ml-[120px]">
+      <div className="grid grid-cols-3 space-x-5 ml-[100px]">
         {productList?.products?.map((product: any) => {
-
-
           return (
-
-
-
             <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
 
               <button onClick={() => handleGetProductDetail(product._id)} className="" key={product._id}>
@@ -202,7 +195,7 @@ const HomePage = () => {
 
       {/* sản phẩm bán chạy */}
 
-      <div className="flex flex-wrap">
+      <div className="grid grid-cols-3">
         {productsold?.productsSoldOverTwenty?.map((product: any) => {
           return (
             <Link to={`/home/product-detail/${product._id}`} key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">
@@ -248,7 +241,7 @@ const HomePage = () => {
 
       <div className="grid grid-cols-3 ">
         <div>
-          <h1 className="text-[44px] leading-[48px]  font-[Noto sans]  text-[#23314B] font-semibold  md:pt-[50px] lg:pt-[40px] md:[40px] lg:[60px] ml-[80px] mb-[50px]">Sản Phẩm giảm giá</h1>
+          <h1 className="text-[44px] leading-[48px]  font-[Noto sans]  text-[#23314B] font-semibold  md:pt-[50px] lg:pt-[40px] md:[40px] lg:[60px] ml-[80px] mb-[50px]">Sản Phẩm Giảm Giá</h1>
         </div>
         <div>
 
@@ -267,7 +260,7 @@ const HomePage = () => {
 
       {/* sản phẩm giảm giá*/}
 
-      <div className="flex flex-wrap">
+      <div className="grid grid-cols-3">
         {productDiscont?.productsWithDiscount?.map((product: any) => {
           return (
             <Link to={`/home/product-detail/${product._id}`} key={product._id} className="flex flex-row sm:flex-row mx-auto justify-center mt-10 mb-10 space-y-6 sm:space-y-0 sm:space-x-6 max-w-screen-xl">

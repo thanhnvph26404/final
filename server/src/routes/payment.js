@@ -1,4 +1,4 @@
-const express = require('express');
+import express, { Router } from "express"
 
 
 import { config } from 'dotenv';
@@ -126,6 +126,6 @@ router.get( '/vnpay_return', function ( req, res, next )
     {
         res.render( 'success', { code: '97' } )
     }
-});
+} );
 
 export default router
