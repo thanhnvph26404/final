@@ -18,7 +18,7 @@ const HomePage = () => {
   const [voucherss] = useSaveVoucherMutation()
   const [isVoucherSaved, setIsVoucherSaved] = useState(false);
   console.log(vouchers);
-  const { data: productList, isLoading, isError } = useGetProductsQuery({
+  const { data: productList } = useGetProductsQuery({
     gte: 0, // Assuming value[0] contains the minimum price
     lte: 10000000, // Assuming value[1] contains the maximum price
   }); console.log(productList);

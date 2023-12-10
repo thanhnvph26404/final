@@ -61,10 +61,10 @@ const Listcomment = () => {
         }]
 
     return (
-        <div style={{ marginTop: 100, paddingRight: 50 }}>
-            <h1 className="text-2xl">Quản Lý Bình Luận</h1>
+        <div>
+            <h1 className="text-[30px] font-semibold">Quản Lý Bình Luận</h1>
             <Table
-                style={{ backgroundColor: "white", marginTop: 50, }}
+                className="bg-white"
                 columns={columns}
                 dataSource={data1}
                 pagination={{ pageSize: 6 }}

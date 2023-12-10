@@ -150,7 +150,7 @@ const ListOrder = () =>
             key: "createdAt",
             render: (update) => {
                 const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
 
 
                 return (
