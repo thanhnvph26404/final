@@ -52,10 +52,8 @@ import WishList from "./pages/website/WishList";
 import Myvoucher from "./pages/website/Profile/Myvoucher";
 import Listcomment from "./pages/admin/comment/listcomment";
 import CreateComment from "./pages/website/CreateComment";
-
-import Contact from "./pages/website/Contact";
-=======
 import CollectionPage from "./pages/website/CollectionPage";
+import Contact from "./pages/website/Policy/Contact";
 
 
 
