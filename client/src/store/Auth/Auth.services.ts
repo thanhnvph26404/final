@@ -188,6 +188,40 @@ const authApi = createApi( {
             },
             invalidatesTags: [ 'Auth' ],
         } ),
+        editUserAdmin: builder.mutation<any[], any>( {
+            query: ( user ) =>
+            {
+                console.log( user );
+
+                // Lấy token từ localStorage
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `/auth/updateUserAdmin/${ user._id }`,
+                    method: 'PUT',
+                    body: user,
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ 'Auth' ],
+        } ),
+        getUser: builder.query( {
+            query: ( _id: any ) => 
+            {
+                const token = localStorage.getItem( "token" );
+                return {
+                    url: `/auth/getOneUser/${ _id }`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                }
+
+            },
+            providesTags: [ "Auth" ],
+        }
+        ),
         addToCart: builder.mutation( {
             query: ( data: { productId: string | null, size: string | null, color: string | null, quantity: number | null } ) =>
             {
@@ -535,10 +569,10 @@ const authApi = createApi( {
             }
         } ),
         getOrdersByStatus: builder.mutation( {
-            query: ( { status, startDate, endDate } ) =>
+            query: ( { status, startDates, endDates } ) =>
             {
                 // Xử lý request query tại đây để gửi yêu cầu đúng đắn
-                const body = { status, startDate, endDate };
+                const body = { status, startDates, endDates };
                 const token = localStorage.getItem( "token" )
 
                 return {
@@ -554,6 +588,24 @@ const authApi = createApi( {
         } ),
 
 
+        getphoneOrder: builder.mutation( {
+            query: ( { phone } ) =>
+            {
+                // Xử lý request query tại đây để gửi yêu cầu đúng đắn
+                const body = { phone };
+                const token = localStorage.getItem( "token" )
+
+                return {
+                    url: '/auth/getphoneOrder', // Địa chỉ endpoint API của bạn
+                    method: 'POST',
+                    body,
+                    headers: {
+                        Authorization: "Bearer " + token,
+
+                    }
+                };
+            },
+        } ),
         getOrdersById: builder.mutation( {
             query: ( { orderId } ) =>
             {
@@ -578,7 +630,7 @@ const authApi = createApi( {
     } )
 } )
 export const {
-    useLoginMutation, useGetOrdersByIdMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useGetUserQuery, useEditUserAdminMutation, useGetOrdersByIdMutation, useGetphoneOrderMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi
