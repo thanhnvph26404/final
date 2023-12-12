@@ -27,6 +27,7 @@ import { brandApi } from './Brand/brand.services'
 import { commentApi } from './Comment/comment.services'
 
 import { productDiscountApi } from './productDiscount/productDiscont'
+import { orderApi } from './Order/Ordersevice'
 
 
 // import { PersistGate } from 'redux-persist/integration/react'
@@ -45,7 +46,6 @@ const rootReducer = combineReducers( {
     [ authApi.reducerPath ]: authReducer,
     users: AuthSlice,
     vouchers: voucherSlice,
-
     [ voucherApi.reducerPath ]: voucherApi.reducer,
     [ productApi.reducerPath ]: productApi.reducer,
     [ productVariantApi.reducerPath ]: productVariantApi.reducer,
@@ -53,7 +53,9 @@ const rootReducer = combineReducers( {
     [ sizeApi.reducerPath ]: sizeApi.reducer,
     [ brandApi.reducerPath ]: brandApi.reducer,
     [ commentApi.reducerPath ]: commentApi.reducer,
-    [ productDiscountApi.reducerPath ]: productDiscountApi.reducer
+    [ productDiscountApi.reducerPath ]: productDiscountApi.reducer,
+    [ orderApi.reducerPath ]: orderApi.reducer
+
 } )
 
 
@@ -68,7 +70,8 @@ const middleware = [
     brandApi.middleware,
     sizeApi.middleware,
     commentApi.middleware,
-    productDiscountApi.middleware
+    productDiscountApi.middleware,
+    orderApi.middleware
 ]
 
 const persistedReducer = persistReducer( persistConfig, rootReducer )

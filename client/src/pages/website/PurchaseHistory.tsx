@@ -84,7 +84,7 @@ const PurchaseHistory = () =>
     {
         setShowModal( false );
     };
-    console.log( order?.Order[ 0 ]._id );
+    console.log( order?.Order[ 0 ]?._id );
 
     return (
         <Container>

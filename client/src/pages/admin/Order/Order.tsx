@@ -1,9 +1,10 @@
 import { Space, Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { DatePicker, Select } from "antd";
+import dayjs from 'dayjs';
 
 import { Link } from "react-router-dom";
-import { useGetAllOrderQuery, useGetOrdersByIdMutation, useGetOrdersByStatusMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
+import { useGetAllOrderQuery, useGetOrdersByIdMutation, useGetOrdersByStatusMutation, useGetphoneOrderMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
 import { IOrder, StatusOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
@@ -17,18 +18,44 @@ const ListOrder = () =>
     const [ updateOrderStatus ] = useUpdateOrderStatusMutation();
     const [ editingRowId, setEditingRowId ] = useState( null );
     const [ editedStatus, setEditedStatus ] = useState( "" );
-    const [ filteredOrders, setFilteredOrders ] = useState( [] );
+    const [ filteredOrders, setFilteredOrders ] = useState<any>( [] );
     const [ allOrders, setAllOrders ] = useState( [] );
     const [ orderId, setOrderId ] = useState( "" );
     const [ selectedOrder, setSelectedOrder ] = useState<any>( [] );
-    console.log( selectedOrder );
-
+    const [ phone, setphone ] = useState<any>( "" );
+    const [ selectedOrderphone, setSelectedOrderphone ] = useState<any>( [] );
     const [ status, setStatus ] = useState( "" );
-    const [ startDate, setStartDate ] = useState( null );
-    const [ endDate, setEndDate ] = useState( null );
+    const [ startDates, setStartDate ] = useState( null );
+    const [ endDates, setEndDate ] = useState( null );
     const [ statusOrder ] = useGetOrdersByStatusMutation()
     const { data } = useGetAllOrderQuery( [] )
     const [ byorderId ] = useGetOrdersByIdMutation()
+    const [ byphone ] = useGetphoneOrderMutation()
+    const hanldePhoneOrder = async () =>
+    {
+        if ( !phone )
+        {
+            setFilteredOrders( allOrders );
+            setSelectedOrderphone( [] ); // Set selectedOrder thành một mảng rỗng
+            return;
+        }
+
+        console.log( phone );
+
+        byphone( { phone } )
+            .unwrap()
+            .then( ( response ) =>
+            {
+                // Kiểm tra nếu response không phải là một mảng
+                const updatedSelectedOrder = Array.isArray( response ) ? response : [ response ];
+                setSelectedOrderphone( updatedSelectedOrder );
+                toastSuccess( "lấy thành công " )
+            } )
+            .catch( ( error ) =>
+            {
+                toastError( error.data.message );
+            } );
+    }
     const handleFindOrderById = async () =>
     {
         if ( !orderId )
@@ -47,6 +74,8 @@ const ListOrder = () =>
                 // Kiểm tra nếu response không phải là một mảng
                 const updatedSelectedOrder = Array.isArray( response ) ? response : [ response ];
                 setSelectedOrder( updatedSelectedOrder );
+                setSelectedOrderphone( [] )
+
             } )
             .catch( ( error ) =>
             {
@@ -55,18 +84,26 @@ const ListOrder = () =>
     };
     const handleFilter = () =>
     {
-        const statusoder = {
+        let statusoder: any = {
             status,
-            startDate,
-            endDate,
         };
 
+        // Thêm điều kiện lọc theo thời gian nếu có giá trị trong RangePicker
+        if ( startDates && endDates )
+        {
+            statusoder = {
+                ...statusoder,
+                startDates: dayjs( startDates ).startOf( 'day' ).toISOString(),
+                endDates: dayjs( endDates ).endOf( 'day' ).toISOString(),
+            };
+        }
         // Nếu không có bất kỳ điều kiện nào được áp dụng, hiển thị tất cả đơn hàng
-        if ( !status && !startDate && !endDate )
+        if ( !status && !startDates && !endDates )
         {
             setFilteredOrders( allOrders );
             return;
         }
+        console.log( statusoder );
 
         // Xử lý lọc dữ liệu dựa trên điều kiện đã chọn
         statusOrder( statusoder )
@@ -75,8 +112,9 @@ const ListOrder = () =>
             {
                 toastSuccess( "Lọc thành công" );
                 setFilteredOrders( res );
-                setSelectedOrder( [] ); // Cập nhật selectedOrder thành một mảng rỗng
 
+                setSelectedOrder( [] ); // Cập nhật selectedOrder thành một mảng rỗng
+                setSelectedOrderphone( [] )
                 // Lưu dữ liệu đơn hàng đã lọc vào state
             } );
     };
@@ -131,9 +169,9 @@ const ListOrder = () =>
         },
         {
             title: "SDT",
-            dataIndex: "userId",
-            key: "userId",
-            render: ( userId ) => <p>{ userId?.phone }</p>,
+            dataIndex: "phone",
+            key: "phone",
+            render: ( phone ) => <p>{ phone }</p>,
 
         },
         {
@@ -148,14 +186,15 @@ const ListOrder = () =>
             title: "Ngày mua hàng ",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (update) => {
-                const dateObject = new Date(update);
-                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
+            render: ( update ) =>
+            {
+                const dateObject = new Date( update );
+                const formattedDate = dateObject.toLocaleDateString().slice( 0, 10 );
 
 
                 return (
                     <div className="text-sm text-gray-66 flex flex-col" >
-                        <div className="">{formattedDate}</div>
+                        <div className="">{ formattedDate }</div>
                     </div >
                 );
             },
@@ -224,7 +263,7 @@ const ListOrder = () =>
         },
     ];
 
-    const displayOrders = selectedOrder.length > 0 ? selectedOrder : filteredOrders.length > 0 ? filteredOrders : allOrders;
+    const displayOrders = selectedOrderphone.length > 0 ? selectedOrderphone : selectedOrder.length > 0 ? selectedOrder : filteredOrders?.orders?.length > 0 ? filteredOrders?.orders : allOrders;
 
     console.log( selectedOrder );
 
@@ -243,8 +282,7 @@ const ListOrder = () =>
 
                 <RangePicker
                     onChange={ ( dates: any ) =>
-
-                    {
+{
                         if ( dates && dates.length === 2 )
                         {
                             setStartDate( dates[ 0 ] );
@@ -271,6 +309,17 @@ const ListOrder = () =>
                 />
 
                 <Button onClick={ handleFindOrderById } className="bg-blue-500 text-white">
+                    Tìm đơn hàng
+                </Button>
+                <input
+                    type="text"
+                    placeholder="Nhập số điện thoại đơn hàng"
+                    value={ phone }
+                    onChange={ ( e ) => setphone( e.target.value ) }
+                    className="border border-gray-300 p-1 rounded"
+                />
+
+                <Button onClick={ hanldePhoneOrder } className="bg-blue-500 text-white">
                     Tìm đơn hàng
                 </Button>
             </div>

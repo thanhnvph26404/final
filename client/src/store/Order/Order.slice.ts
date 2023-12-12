@@ -25,13 +25,7 @@ const orderSlice = createSlice( {
             }
         },
     },
-    // extraReducers ( builder )
-    // {
-    //     builder.addCase( fetchOder.fulfilled, ( state, action ) =>
-    //     {
-    //         state.orders = action.payload;
-    //     } );
-    // },
+
 } );
 
 export const { addOrder, updateOrderStatus } = orderSlice.actions;

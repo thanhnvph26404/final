@@ -105,7 +105,7 @@ const orderSchema = new mongoose.Schema( {
         default: false // Mặc định là false, khi không có yêu cầu hủy
     },
     paymentIntent: {},
-    Phone: {
+    phone: {
         type: String,
     },
     Address: {
