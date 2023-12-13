@@ -1,9 +1,10 @@
 import { Space, Table, Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { DatePicker, Select } from "antd";
+import dayjs from 'dayjs';
 
 import { Link } from "react-router-dom";
-import { useGetAllOrderQuery, useGetOrdersByStatusMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
+import { useGetAllOrderQuery, useGetOrdersByIdMutation, useGetOrdersByStatusMutation, useGetphoneOrderMutation, useUpdateOrderStatusMutation } from "../../../store/Auth/Auth.services";
 import { IOrder, StatusOrder, enumStatus } from "../../../store/Auth/Auth.interface";
 import { useEffect, useState } from "react";
 import { AiFillEdit } from "react-icons/ai"
@@ -17,30 +18,92 @@ const ListOrder = () =>
     const [ updateOrderStatus ] = useUpdateOrderStatusMutation();
     const [ editingRowId, setEditingRowId ] = useState( null );
     const [ editedStatus, setEditedStatus ] = useState( "" );
-    const [ filteredOrders, setFilteredOrders ] = useState( [] );
+    const [ filteredOrders, setFilteredOrders ] = useState<any>( [] );
     const [ allOrders, setAllOrders ] = useState( [] );
-
+    const [ orderId, setOrderId ] = useState( "" );
+    const [ selectedOrder, setSelectedOrder ] = useState<any>( [] );
+    const [ phone, setphone ] = useState<any>( "" );
+    const [ selectedOrderphone, setSelectedOrderphone ] = useState<any>( [] );
     const [ status, setStatus ] = useState( "" );
-    const [ startDate, setStartDate ] = useState( null );
-    const [ endDate, setEndDate ] = useState( null );
+    const [ startDates, setStartDate ] = useState( null );
+    const [ endDates, setEndDate ] = useState( null );
     const [ statusOrder ] = useGetOrdersByStatusMutation()
     const { data } = useGetAllOrderQuery( [] )
+    const [ byorderId ] = useGetOrdersByIdMutation()
+    const [ byphone ] = useGetphoneOrderMutation()
+    const hanldePhoneOrder = async () =>
+    {
+        if ( !phone )
+        {
+            setFilteredOrders( allOrders );
+            setSelectedOrderphone( [] ); // Set selectedOrder thành một mảng rỗng
+            return;
+        }
 
-    console.log( statusOrder );
+        console.log( phone );
+
+        byphone( { phone } )
+            .unwrap()
+            .then( ( response ) =>
+            {
+                // Kiểm tra nếu response không phải là một mảng
+                const updatedSelectedOrder = Array.isArray( response ) ? response : [ response ];
+                setSelectedOrderphone( updatedSelectedOrder );
+                toastSuccess( "lấy thành công " )
+            } )
+            .catch( ( error ) =>
+            {
+                toastError( error.data.message );
+            } );
+    }
+    const handleFindOrderById = async () =>
+    {
+        if ( !orderId )
+        {
+            setFilteredOrders( allOrders );
+            setSelectedOrder( [] ); // Set selectedOrder thành một mảng rỗng
+            return;
+        }
+
+        console.log( orderId );
+
+        byorderId( { orderId } )
+            .unwrap()
+            .then( ( response ) =>
+            {
+                // Kiểm tra nếu response không phải là một mảng
+                const updatedSelectedOrder = Array.isArray( response ) ? response : [ response ];
+                setSelectedOrder( updatedSelectedOrder );
+                setSelectedOrderphone( [] )
+
+            } )
+            .catch( ( error ) =>
+            {
+                toastError( error.data.message );
+            } );
+    };
     const handleFilter = () =>
     {
-        const statusoder = {
+        let statusoder: any = {
             status,
-            startDate,
-            endDate,
         };
 
+        // Thêm điều kiện lọc theo thời gian nếu có giá trị trong RangePicker
+        if ( startDates && endDates )
+        {
+            statusoder = {
+                ...statusoder,
+                startDates: dayjs( startDates ).startOf( 'day' ).toISOString(),
+                endDates: dayjs( endDates ).endOf( 'day' ).toISOString(),
+            };
+        }
         // Nếu không có bất kỳ điều kiện nào được áp dụng, hiển thị tất cả đơn hàng
-        if ( !status && !startDate && !endDate )
+        if ( !status && !startDates && !endDates )
         {
             setFilteredOrders( allOrders );
             return;
         }
+        console.log( statusoder );
 
         // Xử lý lọc dữ liệu dựa trên điều kiện đã chọn
         statusOrder( statusoder )
@@ -49,7 +112,9 @@ const ListOrder = () =>
             {
                 toastSuccess( "Lọc thành công" );
                 setFilteredOrders( res );
-                console.log( res );
+
+                setSelectedOrder( [] ); // Cập nhật selectedOrder thành một mảng rỗng
+                setSelectedOrderphone( [] )
                 // Lưu dữ liệu đơn hàng đã lọc vào state
             } );
     };
@@ -104,9 +169,9 @@ const ListOrder = () =>
         },
         {
             title: "SDT",
-            dataIndex: "userId",
-            key: "userId",
-            render: ( userId ) => <p>{ userId?.phone }</p>,
+            dataIndex: "phone",
+            key: "phone",
+            render: ( phone ) => <p>{ phone }</p>,
 
         },
         {
@@ -121,14 +186,15 @@ const ListOrder = () =>
             title: "Ngày mua hàng ",
             dataIndex: "createdAt",
             key: "createdAt",
-            render: (update) => {
-                const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+            render: ( update ) =>
+            {
+                const dateObject = new Date( update );
+                const formattedDate = dateObject.toLocaleDateString().slice( 0, 10 );
 
 
                 return (
                     <div className="text-sm text-gray-66 flex flex-col" >
-                        <div className="">{formattedDate}</div>
+                        <div className="">{ formattedDate }</div>
                     </div >
                 );
             },
@@ -197,45 +263,74 @@ const ListOrder = () =>
         },
     ];
 
-    const displayOrders = filteredOrders.length >= 0 ? filteredOrders : allOrders;
+    const displayOrders = selectedOrderphone.length > 0 ? selectedOrderphone : selectedOrder.length > 0 ? selectedOrder : filteredOrders?.orders?.length > 0 ? filteredOrders?.orders : allOrders;
 
+    console.log( selectedOrder );
 
     return (
-        <div style={ { marginTop: 100, paddingRight: 50 } }>
-            <Select value={ status } onChange={ ( value ) => setStatus( value ) }>
-                <Option value="">Tất cả trạng thái</Option>
-                {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
-                { StatusOrder.map( ( statusItem ) => (
-                    <Option key={ statusItem } value={ statusItem }>
-                        { statusItem }
-                    </Option>
-                ) ) }
-            </Select>
+        <div className="mt-8 px-10"> {/* Sử dụng classes của Tailwind để thiết lập margin-top và padding-right */ }
+            <div className="flex gap-4 items-center mb-4">
+                <Select value={ status } onChange={ ( value ) => setStatus( value ) } className="w-48">
+                    <Option value="">Tất cả trạng thái</Option>
+                    {/* Thêm các Option cho các trạng thái từ mảng enumStatus */ }
+                    { StatusOrder.map( ( statusItem ) => (
+                        <Option key={ statusItem } value={ statusItem }>
+                            { statusItem }
+                        </Option>
+                    ) ) }
+                </Select>
 
-            <RangePicker
-                onChange={ ( dates: any ) =>
-                {
-                    if ( dates && dates.length === 2 )
-                    {
-                        setStartDate( dates[ 0 ] );
-                        setEndDate( dates[ 1 ] );
-                    } else
-                    {
-                        setStartDate( null );
-                        setEndDate( null );
-                    }
-                } }
-            />
+                <RangePicker
+                    onChange={ ( dates: any ) =>
+{
+                        if ( dates && dates.length === 2 )
+                        {
+                            setStartDate( dates[ 0 ] );
+                            setEndDate( dates[ 1 ] );
+                        } else
+                        {
+                            setStartDate( null );
+                            setEndDate( null );
+                        }
+                    } }
+                    className="w-64"
+                />
 
-            <Button onClick={ handleFilter }>Lọc</Button>
+                <Button onClick={ handleFilter } className="bg-blue-500 text-white">
+                    Lọc
+                </Button>
+
+                <input
+                    type="text"
+                    placeholder="Nhập mã ID đơn hàng"
+                    value={ orderId }
+                    onChange={ ( e ) => setOrderId( e.target.value ) }
+                    className="border border-gray-300 p-1 rounded"
+                />
+
+                <Button onClick={ handleFindOrderById } className="bg-blue-500 text-white">
+                    Tìm đơn hàng
+                </Button>
+                <input
+                    type="text"
+                    placeholder="Nhập số điện thoại đơn hàng"
+                    value={ phone }
+                    onChange={ ( e ) => setphone( e.target.value ) }
+                    className="border border-gray-300 p-1 rounded"
+                />
+
+                <Button onClick={ hanldePhoneOrder } className="bg-blue-500 text-white">
+                    Tìm đơn hàng
+                </Button>
+            </div>
 
             <Table
-                style={ { backgroundColor: "white", marginTop: 100, } }
+                className="bg-white"
                 columns={ columns }
                 dataSource={ displayOrders || [] }
                 pagination={ { pageSize: 6 } }
                 rowClassName={ ( record ) =>
-                    record.status === "Đã hủy" || record.status === "đang chờ được xử lý" ? "cancelled-row" : ""
+                    record.status === 'Đã hủy' || record.status === 'đang chờ được xử lý' ? 'cancelled-row' : ''
                 }
             />
         </div>

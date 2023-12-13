@@ -45,3 +45,33 @@ export const findProductsSoldOverTwenty = async ( req, res ) =>
         } );
     }
 };
+export const productSold = async ( req, res ) =>
+{
+    try
+    {
+        const mostSoldProducts = await Product.find()
+            .sort( { sold: -1 } )
+            .limit( 10 );
+
+        res.status( 200 ).json( { mostSoldProducts } );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: "Failed to fetch most sold products" } );
+    }
+}
+export const productsbysalesrange = async ( req, res ) =>
+{
+    const { lowerBound, upperBound } = req.body
+    try
+    {
+        const productsInSalesRange = await Product.find( {
+            sold: { $gte: lowerBound, $lte: upperBound }
+        } );
+
+        res.status( 200 ).json( { productsInSalesRange } );
+
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: "Failed to fetch most sold products" } );
+    }
+}

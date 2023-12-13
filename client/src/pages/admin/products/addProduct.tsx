@@ -19,6 +19,7 @@ const AddProduct = () => {
     const { data: brands } = useGetBrandListQuery([]);
     const { data: size } = useGetsizeListQuery([])
     const { data: color } = useGetcolorListQuery([])
+    const [duplicateVariantError, setDuplicateVariantError] = useState(false);
 
 
     const [addProductMutation] = useAddProductMutation();
@@ -47,11 +48,10 @@ const AddProduct = () => {
 
     const onSubmit = async (data: any) => {
         setLoadings(true);
-        let newurls = [];
+        let newUrls = [];
 
-        // Check if data.images exists and has a fileList property
         if (data.imgUrl && data.imgUrl.fileList) {
-            newurls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
+            newUrls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
                 const formData = new FormData();
                 formData.append("image", item.originFileObj);
                 const API_key = "42d2b4a414af48bbc306d6456dd1f943";
@@ -60,13 +60,40 @@ const AddProduct = () => {
                     formData
                 );
                 return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
-            }))
-            console.log(newurls);
+            }));
+            console.log(newUrls);
         }
-        // console.log( newurls );
         console.log(data.imgUrl.fileList);
 
+        const productVariants = data.ProductVariants || [];
+        const existingVariants = new Set<string>();
 
+        let hasDuplicate = false;
+        let duplicateIndexes: number[] = [];
+
+        productVariants.forEach((variant: any, index: number) => {
+            const { color, size } = variant;
+            const variantKey = `${color}-${size}`;
+
+            if (existingVariants.has(variantKey)) {
+                hasDuplicate = true;
+                duplicateIndexes.push(index);
+            } else {
+                existingVariants.add(variantKey);
+            }
+        });
+
+        if (hasDuplicate) {
+            const errorFields = duplicateIndexes.map((index) => ({
+                name: ['ProductVariants', index, 'color'],
+                errors: ['Biến thể đã tồn tại'],
+            }));
+
+            form.setFields(errorFields);
+            setLoadings(false);
+            setDuplicateVariantError(true);
+            return;
+        }
 
         const newProduct: any = {
             name: data.name,
@@ -74,25 +101,25 @@ const AddProduct = () => {
             original_price: data.original_price,
             description: data.description,
             brand: data.brand,
-            images: newurls,
+            images: newUrls,
             category: data.category,
-            ProductVariants: data.ProductVariants
+            ProductVariants: data.ProductVariants,
         };
         console.log(newProduct);
 
         try {
             await addProductMutation(newProduct).unwrap().then(() => {
                 toastSuccess('Thêm sản phẩm thành công!');
-            }).then(() => {
                 navigate('/admin/products');
             });
         } catch (error: any) {
             toastError(error.data.message);
         } finally {
             setLoadings(false);
-
         }
-    }
+    };
+
+
     const [form] = Form.useForm()
     const validateDiscount = (rule: any, value: any) => {
         const price = parseFloat(value);
@@ -106,11 +133,12 @@ const AddProduct = () => {
 
     return (
         <div>
-            <div className='mb-[20px]'>
-                <h1 className='text-[25px] font-semibold text-[#23314B]'>Thêm Sản Phẩm</h1>
+            <div>
+                <h3 className='text-[25px] font-semibold'>
+                    Thêm Sản Phẩm
+                </h3>
             </div>
-            <div className="w-100 bg-white pt-[30px]">
-
+            <div className="bg-white pt-[30px] pb-[40px] mt-[20px]" >
                 <Form
                     name="Form"
                     form={form}
@@ -137,7 +165,7 @@ const AddProduct = () => {
                         <Input />
                     </Form.Item>
                     <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                        <Col className="gutter-row " span={14}>
+                        <Col className="gutter-row" span={14}>
                             <Form.Item
                                 label="Tên sản Phẩm"
                                 name="name"
@@ -153,25 +181,26 @@ const AddProduct = () => {
                             <Form.Item
                                 label="Giá gốc"
                                 name="price"
-                                className='pr-[150px] '
+                                className='pr-[150px]'
                                 rules={[
                                     { required: true, message: 'Vui lòng nhập giá gốc' },
                                     { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                                 ]}
                             >
-                                <InputNumber />
+                                <InputNumber className='ml-[37px]'/>
                             </Form.Item>
                             <Form.Item
                                 label="Giá giảm"
                                 name="original_price"
                                 className='pr-[130px]'
+
                                 rules={[
 
                                     { type: 'number', min: 1, max: 100000000, message: 'Giá giảm không hợp lệ' },
                                     { validator: validateDiscount },
                                 ]}
                             >
-                                <InputNumber />
+                                <InputNumber className='ml-[34px]' />
                             </Form.Item>
                         </Col>
                         <Col className="gutter-row" span={8}>
@@ -184,7 +213,7 @@ const AddProduct = () => {
                                 ]}
                                 hasFeedback
                             >
-                                <Select id="" className="mx-2">
+                                <Select id="" className="mx-2 pl-[12px]">
                                     {categories?.data?.map((Category: any) => (
                                         <Select.Option key={Category?._id} value={Category?._id}>
                                             {Category?.title}
@@ -195,7 +224,7 @@ const AddProduct = () => {
                             <Form.Item
                                 label="Thương hiệu"
                                 name="brand"
-                                className='pl-[25px]'
+                                className='pl-[20px]'
                                 labelCol={{ span: 8 }}
                                 rules={[
                                     { required: true },
@@ -215,18 +244,18 @@ const AddProduct = () => {
 
                             <Form.Item
                                 labelCol={{ span: 3 }}
+                                className='pr-[150px]'
                                 label="Chi tiết"
                                 name="description"
-                                className='pr-[160px]'
                                 rules={[{ required: true }]}
                                 hasFeedback
                             >
-                                <ReactQuill />
+                                <ReactQuill className='pl-[40px]'/>
                             </Form.Item>
                             <Form.Item
                                 label="Ảnh sản phẩm"
+                                className='pr-[500px]'
                                 name="imgUrl"
-                                className='pr-[450px]'
                                 wrapperCol={{ offset: 3, span: 16 }}
                                 rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
                             >
@@ -241,79 +270,74 @@ const AddProduct = () => {
                     </Row>
 
 
-                    <div>
-                        <h1 className="pl-[70px] text-[20px] text-[#23314B] font-medium mb-[30px]" >Biến thể sản phẩm</h1>
-                    </div>
-                    
+                    <h1 className="mt-[10px] pl-[80px] text-[20px] text-[#23314B] font-medium " >Biến thể sản phẩm</h1>
+                    <hr className="py-3  " />
                     <Form.List name="ProductVariants">
                         {(fields, { add, remove }) => (
-                            <div className="flex flex-col gap-3 pl-[70px] ">
-                                {fields?.map(({ key, name, fieldKey, ...restField }) => (
-                                    <Space key={key} className="flex justify-start items-center"
-                                    >
+                            <div className="flex flex-col gap-3 gap-x-10">
+                                {fields.map((field, index) => (
+                                    <Space key={field.key} className="flex justify-start items-center pl-[80px]">
                                         <Form.Item
-                                            {...restField}
+                                            validateStatus={duplicateVariantError ? 'error' : ''}
                                             labelCol={{ span: 8 }}
-                                            wrapperCol={{ span: 18 }}
-                                            className="my-auto "
-
-                                            name={[name, 'color']}  // Đặt tên cho trường "size"
-                                            label="Color"
-                                            rules={[{ required: true, message: 'Color is required' }]}
+                                            wrapperCol={{ span: 18 }} help={duplicateVariantError ? 'Biến thể đã tồn tại' : ''}
+                                            label="Màu"
+                                            name={[field.name, 'color']}
+                                            className="my-auto pb-[20px]" 
+                                            rules={[{ required: true, message: 'Vui lòng chọn màu' }]}
                                         >
-                                            <Select id="" className="w-8 mx-4" >
-                                                {color?.data?.map((color: any, index: any) => (
-                                                    <Select.Option key={index} value={color.color}>
-                                                        {color.color}
+                                            <Select placeholder="Chọn màu" className="w-8 mx-3">
+                                                {color?.data?.map((colorItem: any) => (
+                                                    <Select.Option key={colorItem._id} value={colorItem.color}>
+                                                        {colorItem.color}
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
-                                        <Form.Item
-                                            className="my-auto ml-3"
 
-                                            labelCol={{ span: 8 }}
-                                            wrapperCol={{ span: 18 }}
-                                            {...restField}
-                                            name={[name, 'size']}  // Đặt tên cho trường "color"
+                                        <Form.Item
+                                            validateStatus={duplicateVariantError ? 'error' : ''}
+                                            help={duplicateVariantError ? 'Biến thể đã tồn tại' : ''}
                                             label="Size"
-                                            rules={[{ required: true, message: 'Size is required' }]}
+                                            labelCol={{ span: 8 }}
+                                            wrapperCol={{ span: 18 }}
+                                            className="my-auto ml-3 pb-[20px] "
+                                            name={[field.name, 'size']}
+                                            rules={[{ required: true, message: 'Vui lòng chọn kích cỡ' }]}
                                         >
-                                            <Select id="" className=" mx-3">
-                                                {size?.data?.map((size: any) => (
-                                                    <Select.Option value={size.size}>
-                                                        {size.size}
+                                            <Select placeholder="Chọn kích cỡ" className=" mx-3">
+                                                {size?.data?.map((sizeItem: any) => (
+                                                    <Select.Option key={sizeItem._id} value={sizeItem.size}>
+                                                        {sizeItem.size}
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
+
                                         <Form.Item
-                                            className="my-auto"
+                                            label="Số lượng"
                                             labelCol={{ span: 8 }}
                                             wrapperCol={{ span: 18 }}
-                                            {...restField}
-                                            name={[name, 'quantity']}  // Đặt tên cho trường "quantity"
-                                            label="Số lượng"
-                                            rules={[{ required: true, message: 'Quantity is required' }]}
+                                            className="my-auto pb-[20px]"
+                                            name={[field.name, 'quantity']}
+                                            rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
                                         >
-                                            <Input />
+                                            <Input placeholder="Nhập số lượng" type="number" />
                                         </Form.Item>
-                                        <MinusCircleOutlined onClick={() => { remove(name); }} />
 
+                                        <MinusCircleOutlined className='pb-[25px] pl-[8px]' onClick={() => remove(field.name)} />
                                     </Space>
                                 ))}
-                                <Form.Item>
-                                    <Button
-                                        type="dashed"
-                                        onClick={() => { add(); }}
-                                        icon={<PlusOutlined />}
-                                    >
+
+                                <Form.Item className='pl-[80px]'> 
+                                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
                                         Thêm biến thể sản phẩm
                                     </Button>
                                 </Form.Item>
                             </div>
                         )}
                     </Form.List>
+
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" loading={loadings} className="bg-blue-500" htmlType="submit">
                             Thêm sản phẩm mới

@@ -23,7 +23,7 @@ const WishList = () =>
                 toastSuccess( "Xoá sản phẩm yêu thích thành công" );
                 refetch(); // Gọi lại hàm refetch để cập nhật danh sách yêu thích sau khi xóa sản phẩm
             } )
-            .catch( ( error ) =>
+            .catch( ( error: any ) =>
             {
                 toastError( error.data.message );
             } );

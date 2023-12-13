@@ -88,51 +88,73 @@ const UpdateProduct = () => {
 
 
     const onSubmit = async (data: any) => {
-        // setLoadings(true);
-        let newurls = [];
+        setLoadings(true);
+        let newUrls = [];
 
-        // Check if data.images exists and has a fileList property
         if (data.imgUrl && data.imgUrl.fileList) {
-            console.log(data.imgUrl.fileList)
-            newurls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
+            newUrls = await Promise.all(data.imgUrl.fileList.map(async (item: any) => {
                 if (item.originFileObj) {
                     const formData = new FormData();
                     formData.append("image", item.originFileObj);
-                    const API_key = "42d2b4a414af48bbc306d6456dd1f943"
+                    const API_key = "42d2b4a414af48bbc306d6456dd1f943";
                     const apiResponse: any = await axios.post(
                         `https://api.imgbb.com/1/upload?key=${API_key}`,
                         formData
-                    )
+                    );
 
                     return { uid: apiResponse.data.data.id, url: apiResponse.data.data.url };
+                } else {
+                    return item;
                 }
-                else {
-                    return item
-                }
-            }))
-
+            }));
         } else {
-            newurls = data.imgUrl
+            newUrls = data.imgUrl;
         }
 
+        const productVariants = data.ProductVariants || [];
+        const existingVariants = new Set<string>();
 
-        const newProduct = {
+        let hasDuplicate = false;
+        let duplicateIndexes: number[] = [];
+
+        productVariants.forEach((variant: any, index: number) => {
+            const { color, size } = variant;
+            const variantKey = `${color}-${size}`;
+
+            if (existingVariants.has(variantKey)) {
+                hasDuplicate = true;
+                duplicateIndexes.push(index);
+            } else {
+                existingVariants.add(variantKey);
+            }
+        });
+
+        if (hasDuplicate) {
+            const errorFields = duplicateIndexes.map((index) => ({
+                name: ['ProductVariants', index, 'color'],
+                errors: ['Biến thể đã tồn tại'],
+            }));
+
+            form.setFields(errorFields);
+            setLoadings(false);
+            return;
+        }
+
+        const updatedProduct = {
             _id: data._id,
             name: data.name,
             price: data.price,
             original_price: data.original_price,
             description: data.description,
             brand: data.brand,
-            images: newurls,
+            images: newUrls,
             category: data.category,
-            ProductVariants: data.ProductVariants
+            ProductVariants: data.ProductVariants,
         };
-        console.log(newProduct);
 
         try {
-            await EditProductMutation(newProduct).unwrap().then(() => {
-                toastSuccess('sửa sản phẩm thành công!');
-            }).then(() => {
+            await EditProductMutation(updatedProduct).unwrap().then(() => {
+                toastSuccess('Sửa sản phẩm thành công!');
                 navigate('/admin/products');
             });
         } catch (error: any) {
@@ -140,20 +162,20 @@ const UpdateProduct = () => {
         } finally {
             setLoadings(false);
         }
-    }
+    };
 
 
     return (
         <div>
             <div>
-                <div className='mb-[20px]'>
-                    <h1 className='text-[25px] font-semibold text-[#23314B]'>Sửa Sản Phẩm</h1>
-                </div>
+                <h3 className='text-[25px] font-semibold'>
+                    Sửa Sản Phẩm
+                </h3>
             </div>
-            <div className="w-100 bg-white" >
+            <div className='bg-white mt-[20px] pt-[20px] pb-[30px]'>
                 <Form
                     name="Form"
-                    className='pt-[40px]'
+
                     form={form}
                     labelCol={{ span: 8 }}
                     wrapperCol={{ span: 16 }}
@@ -193,13 +215,13 @@ const UpdateProduct = () => {
                     <Form.Item
                         label="Danh mục"
                         name="category"
-                        className='pr-[60px]'
+                        className='pr-[70px]'
                         rules={[
                             { required: true },
                         ]}
                         hasFeedback
                     >
-                        <Select id="">
+                        <Select className='pl-[22px]' id="">
                             {categories?.data?.map((Category: any) => (
                                 <Select.Option key={Category?._id} value={Category?._id}>
                                     {Category?.title}
@@ -210,13 +232,13 @@ const UpdateProduct = () => {
                     <Form.Item
                         label="Thương hiệu"
                         name="brand"
-                        className='pr-[10px]'
+                        className='pr-[30px]'
                         rules={[
                             { required: true },
                         ]}
                         hasFeedback
                     >
-                        <Select id="">
+                        <Select id="" className='ml-[10px]'>
                             {brands?.brand?.map((brand: any) => (
                                 <Select.Option key={brand._id} value={brand._id}>
                                     {brand.title}
@@ -227,17 +249,17 @@ const UpdateProduct = () => {
                     <Form.Item
                         label="Giá gốc"
                         name="price"
-                        className='pr-[100px]'
+                        className='pr-[120px]'
                         rules={[
                             { required: true, message: 'Vui lòng nhập giá gốc' },
                             { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber className='ml-[40px]'/>
                     </Form.Item>
                     <Form.Item
                         label="Giá giảm"
-                        className='pr-[90px]'
+                        className='pr-[100px]'
                         name="original_price"
                         rules={[
 
@@ -245,12 +267,12 @@ const UpdateProduct = () => {
                             { validator: validateDiscount },
                         ]}
                     >
-                        <InputNumber />
+                        <InputNumber className='ml-[35px]'/>
                     </Form.Item>
                     <Form.Item
                         labelCol={{ span: 3 }}
                         label="Chi tiết"
-                        className='pl-[150px]'
+                        className='pl-[140px]'
                         name="description"
                         rules={[{ required: true }]}
                         hasFeedback
@@ -260,7 +282,7 @@ const UpdateProduct = () => {
                     <Form.Item
                         label="Ảnh sản phẩm"
                         name="imgUrl"
-                        className='pl-[10px]'
+
                         wrapperCol={{ offset: 3, span: 16 }}
                         rules={[{ required: true, message: "Vui lòng chọn ảnh sản phẩm" }]}
                     >
@@ -271,66 +293,67 @@ const UpdateProduct = () => {
                             </Button>
                         </Upload>
                     </Form.Item>
-                    <Form.List name="ProductVariants">
+
+                    <h1 className="mt-[10px] pl-[150px] text-[20px] text-[#23314B] font-medium " >Biến thể sản phẩm</h1>
+                    <hr className="py-3  " />
+                    <Form.List name="ProductVariants"  >
                         {(fields, { add, remove }) => (
-                            <div>
-                                {fields?.map(({ key, name, fieldKey, ...restField }) => (
-                                    <Space key={key} >
-                                        <Form.Item className='pl-[160px] '
-                                            {...restField}
-                                            name={[name, 'color']}  // Đặt tên cho trường "size"
+                            <div className='pl-[120px]'>
+                                {fields.map((field: any, index) => (
+                                    <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="start">
+                                        <Form.Item
+                                            {...field}
+                                            name={[field.name, 'color']}
+                                            fieldKey={[field.fieldKey, 'color']}
                                             label="Color"
+                                            className='pl-[20px] '
                                             rules={[{ required: true, message: 'Color is required' }]}
                                         >
-
-                                            <Select className='pl-[20px]'  id="">
-                                                {color?.data?.map((color: any, index: any) => (
-                                                    <Select.Option key={index} value={color.color}>
+                                            <Select placeholder="Select color" className='pl-[20px]'>
+                                                {color?.data?.map((color: any) => (
+                                                    <Select.Option key={color._id} value={color.color}>
                                                         {color.color}
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
                                         <Form.Item
-                                            {...restField}
-                                            name={[name, 'size']}  // Đặt tên cho trường "color"
+                                            {...field}
+                                            name={[field.name, 'size']}
+                                            fieldKey={[field.fieldKey, 'size']}
                                             label="Size"
                                             rules={[{ required: true, message: 'Size is required' }]}
                                         >
-
-                                            <Select className='pl-[20px]' id="">
+                                            <Select placeholder="Select size" className='pl-[20px]' >
                                                 {size?.data?.map((size: any) => (
-                                                    <Select.Option value={size.size}>
+                                                    <Select.Option key={size._id} value={size.size}>
                                                         {size.size}
                                                     </Select.Option>
                                                 ))}
                                             </Select>
                                         </Form.Item>
                                         <Form.Item
-
-                                            {...restField}
-                                            name={[name, 'quantity']}  // Đặt tên cho trường "quantity"
+                                            {...field}
+                                            name={[field.name, 'quantity']}
+                                            fieldKey={[field.fieldKey, 'quantity']}
                                             label="Số lượng"
+                                            className='pl-[20px]'
                                             rules={[{ required: true, message: 'Quantity is required' }]}
                                         >
-                                            <Input />
+                                            <InputNumber placeholder="Quantity" min={0} className='ml-[30px]'/>
                                         </Form.Item>
-
-                                        <MinusCircleOutlined className='pl-[10px] pb-[30px]' onClick={() => { remove(name); }} />
+                                        <MinusCircleOutlined onClick={() => remove(field.name)} />
                                     </Space>
                                 ))}
-                                <Form.Item>
-                                    <Button
-                                        type="dashed"
-                                        onClick={() => { add(); }}
-                                        icon={<PlusOutlined />}
-                                    >
+                                <Form.Item className='pl-[80px]'>
+                                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
                                         Thêm biến thể sản phẩm
                                     </Button>
                                 </Form.Item>
                             </div>
                         )}
                     </Form.List>
+
                     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                         <Button type="primary" loading={loadings} className="bg-blue-500" htmlType="submit">
                             Cập nhập sản phẩm

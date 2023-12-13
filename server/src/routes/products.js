@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
 
-import { create, getAll, getOne, remove, updateProduct } from "../controllers/products";
+import { create, getAll, getOne, locproduct, remove, updateProduct } from "../controllers/products";
 const router = express.Router();
 
 router.get( "/", getAll );

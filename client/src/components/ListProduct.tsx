@@ -185,19 +185,20 @@ const ListProduct = ( props: Props ) =>
                                     <div className="flex items-center gap-5">
                                         <label
                                             htmlFor="min"
-                                            className="border rounded-lg w-[83px] px-3 py-2.5  flex gap-1"
+                                            className="border rounded-lg w-[83px] px-3 py-2.5 flex gap-1"
                                         >
-                                            <span className="text-base  text-[#23314bb3] font-thin ">
+                                            <span className="text-base text-[#23314bb3] font-thin">
                                                 ₫
                                             </span>
                                             <input
                                                 id="min"
-                                                type="text"
+                                                type="number"
                                                 placeholder="0"
                                                 className="placeholder:text-sm placeholder:font-thin placeholder:text-[#23314b] w-full text-end outline-none font-thin"
                                                 min={ 0 }
                                                 step={ 10000 }
                                                 value={ value[ 0 ] }
+                                                onChange={ ( e ) => setValue( [ parseInt( e.target.value ), value[ 1 ] ] ) }
                                             />
                                         </label>
                                         <span className="text-base text-[#23314bb3] font-thin">
@@ -205,19 +206,20 @@ const ListProduct = ( props: Props ) =>
                                         </span>
                                         <label
                                             htmlFor="max"
-                                            className="border rounded-lg w-[83px] px-3  py-2.5  flex gap-1"
+                                            className="border rounded-lg w-[83px] px-3 py-2.5 flex gap-1"
                                         >
-                                            <span className="text-base  text-[#23314bb3] font-thin ">
+                                            <span className="text-base text-[#23314bb3] font-thin">
                                                 ₫
                                             </span>
                                             <input
                                                 id="max"
-                                                type="text"
-                                                placeholder="50000"
+                                                type="number"
+                                                placeholder="0"
                                                 className="placeholder:text-sm placeholder:font-thin placeholder:text-[#23314b] w-full text-end outline-none font-thin"
                                                 min={ 0 }
                                                 step={ 10000 }
                                                 value={ value[ 1 ] }
+                                                onChange={ ( e ) => setValue( [ value[ 0 ], parseInt( e.target.value ) ] ) }
                                             />
                                         </label>
                                     </div>

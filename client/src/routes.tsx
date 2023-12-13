@@ -52,9 +52,14 @@ import WishList from "./pages/website/WishList";
 import Myvoucher from "./pages/website/Profile/Myvoucher";
 import Listcomment from "./pages/admin/comment/listcomment";
 import CreateComment from "./pages/website/CreateComment";
+
 import AddBrand from "./pages/admin/brand/AddBrand";
 import UpdateBrand from "./pages/admin/brand/UpdateBrand";
 import ListBrand from "./pages/admin/brand/ListBrand";
+import CollectionPage from "./pages/website/CollectionPage";
+import Contact from "./pages/website/Policy/Contact";
+import EditUser from "./pages/admin/EditUser";
+
 
 
 
@@ -111,6 +116,7 @@ export const router = createBrowserRouter([
             { path: 'cart', element: <CartPage /> },
             { path: 'payment', element: <CheckoutPage /> },
             { path: 'payments', element: <Payment /> },
+            { path: 'contact', element: <Contact /> },
             { path: 'ordersuccess', element: <OrderSuccess /> },
             { path: 'products/:id', element: <ProductByCategoryPage /> },
             { path: 'products', element: <ProductPage /> },
@@ -120,6 +126,7 @@ export const router = createBrowserRouter([
             { path: 'privacy', element: <Privacy /> },
             { path: 'rules', element: <Rules /> },
             { path: 'WishList', element: <WishList /> },
+            { path: 'collection', element: <CollectionPage /> },
 
 
 
@@ -214,10 +221,12 @@ export const router = createBrowserRouter([
                     { path: 'dashboard', element: <ChartPage /> },
                     { path: 'category', element: <CategoryList /> },
                     { path: 'products', element: <ProductList /> },
-
                     { path: 'category/add', element: <AddCategory /> },
                     { path: 'category/edit/:id', element: <EditCategory /> },
                     { path: 'customers', element: <UserList /> },
+                    { path: 'customers/edit/:id', element: <EditUser /> },
+
+
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },

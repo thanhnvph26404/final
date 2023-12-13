@@ -99,7 +99,7 @@ const VouCherList = () => {
             key: 'startDate',
             render: (update) => {
                 const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
 
 
                 return (
@@ -115,7 +115,7 @@ const VouCherList = () => {
             key: 'endDate',
             render: (update) => {
                 const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
 
 
                 return (

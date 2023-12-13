@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Line, Doughnut } from "react-chartjs-2";
-import { useGetProductsQuery } from "../../../store/products/product.services"
-import { useGetAllOrderQuery, useGetOrderQuery } from "../../../store/Auth/Auth.services";
+import { useTotalOrderadayMutation, useTotalOrderamonthMutation } from "../../../store/Order/Ordersevice";
+import { Bar } from "react-chartjs-2";
+import { DatePicker, } from "antd";
 
 
 defaults.maintainAspectRatio = false;
@@ -12,107 +12,243 @@ defaults.plugins.title.display = true;
 defaults.plugins.title.align = "start";
 // defaults.plugins.title.text = "20px"
 defaults.plugins.title.color = "black";
-
-interface MonthlySales {
-    [key: string]: number;
-}
-
-const ChartPage2 = () => {
+const { RangePicker } = DatePicker;
 
 
-    const { data: productChart } = useGetProductsQuery({
-        gte: 0,
-        lte: 1000000
-    })
-    // console.log(productChart);
+const ChartPage2 = () =>
+{
+    const [ startDate, setStartDate ] = useState( null );
+    const [ endDate, setEndDate ] = useState( null );
+    const [ totalamountaday, settotalamountaday ] = useState<any>( [] )
+    const [ totalamountayear, settotalamountayear ] = useState<any>( [] )
+    const [ totalAmountaday ] = useTotalOrderadayMutation()
+    const [ totalAmountInRange, setTotalAmountInRange ] = useState( 0 );
+    const [ totalAmountAllMonths, settotalAmountAllMonths ] = useState( 0 )
+    const [ chartTitle, setChartTitle ] = useState( "" );
+    const [ total, setTotal ] = useState( 0 );
+    console.log( totalAmountInRange );
+
+    const [ startYear, setStartYear ] = useState( '' );
+    const [ endYear, setEndYear ] = useState( '' );
+    const [ totalAmountamonth ] = useTotalOrderamonthMutation()
+    console.log( totalamountayear );
+
+
+    const [ chartData, setChartData ] = useState( {
+        labels: [],
+        datasets: [
+            {
+                label: "Tổng số tiền",
+                data: [],
+                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                borderColor: "rgba(75, 192, 192, 1)",
+                borderWidth: 1,
+            },
+        ],
+    } );
 
 
 
-    const [uniqueMonths, setUniqueMonths] = useState(new Set());
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
-    const [filteredData, setFilteredData] = useState(productChart?.products);
-    const [isFilterApplied, setIsFilterApplied] = useState(false);
 
 
-    const handleFilter = () => {
-        const filteredData = productChart?.products?.filter((data: any) => {
-            const date = new Date(data?.createdAt);
-            return date >= new Date(startDate) && date <= new Date(endDate);
-        });
+    useEffect( () =>
+    {
+        if ( totalamountaday?.dailyTotals?.length > 0 )
+        {
+            // Gọi API để lấy dữ liệu từ backend
+            const fetchData = async () =>
+            {
+                try
+                {
+                    const totals = {
+                        startDate,
+                        endDate
+                    };
 
-        setFilteredData(filteredData);
-        setIsFilterApplied(true);
+                    const response = await totalAmountaday( totals ).unwrap();
+                    console.log( response );
 
-    };
+                    // Lấy dữ liệu từ backend và cập nhật biểu đồ
+                    const { dailyTotals, totalAmountInRange } = response;
 
-    const monthlySales: MonthlySales = {};
-    filteredData?.forEach((product: any) => {
-        const date = new Date(product?.createdAt);
-        const monthYear = `${date.getMonth() + 1}-${date.getFullYear()}`;
+                    const dates = dailyTotals.map( ( item: any ) => item._id );
+                    const amounts = dailyTotals.map( ( item: any ) => item.totalAmount );
 
-        if (!monthlySales[monthYear]) {
-            monthlySales[monthYear] = 0;
+                    setChartData( {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: "Tổng số tiền",
+                                data: amounts,
+                                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                borderWidth: 1,
+                            },
+                        ],
+                    } );
+                    setTotalAmountInRange( totalAmountInRange ); // Cập nhật state với giá trị tổng tổng tiền
+                    setTotal( totalAmountInRange )
+                    setChartTitle( "Thống kê số lượng tiền trong khoảng" );
+
+
+
+                } catch ( error )
+                {
+                    console.log( error );
+                }
+            };
+
+            fetchData();
+        } else if ( totalamountayear?.result?.length > 0 )
+        {
+            // Gọi API để lấy dữ liệu từ backend
+            const fetchData = async () =>
+            {
+                try
+                {
+                    const totals = {
+                        startYear,
+                        endYear
+                    }
+
+                    const response = await totalAmountamonth( totals ).unwrap();
+
+                    const { result, totalAmountAllMonths } = response;
+                    console.log( result );
+
+                    const dates = result?.map( ( item: any ) => item.month );
+                    const amounts = result?.map( ( item: any ) => item.totalAmount );
+
+                    setChartData( {
+                        labels: dates,
+                        datasets: [
+                            {
+                                label: "Tổng số tiền",
+                                data: amounts,
+                                backgroundColor: "rgba(75, 192, 192, 0.2)",
+                                borderColor: "rgba(75, 192, 192, 1)",
+                                borderWidth: 1,
+                            },
+                        ],
+                    } );
+                    settotalAmountAllMonths( totalAmountAllMonths )
+                    setTotal( totalAmountAllMonths )
+                    setChartTitle( "Thống kê số lượng tiền tháng/năm" );
+
+                } catch ( error )
+                {
+                    console.log( error );
+                }
+            };
+
+            fetchData();
+        }
+    }, [ totalamountaday, totalamountayear ] );
+
+
+    const hanldeamountTotalyear = async () =>
+    {
+        const totals = {
+            startYear,
+            endYear
+        }
+        try
+        {
+            totalAmountamonth( totals ).unwrap().then( ( res ) =>
+            {
+                settotalamountayear( res )
+                settotalamountaday( [] )
+            } )
+        } catch ( error )
+        {
+            console.log( error );
+
         }
 
-        monthlySales[monthYear] += product.sold * product.price;
-    });
+    }
+    const handleFilter = () =>
+    {
+        const totals = {
+            startDate,
+            endDate
+        }
+        try
+        {
+            totalAmountaday( totals ).unwrap().then( ( res ) =>
+            {
+                console.log( res );
+                settotalamountaday( res )
+                settotalamountayear( [] )
 
-    const monthlySalesArray = Object.entries(monthlySales);
+            } )
+        } catch ( error )
+        {
+            console.log( error );
 
+        }
 
-    const handleReset = () => {
-        setStartDate("");
-        setEndDate("");
-        setFilteredData(productChart?.products);
-        setIsFilterApplied(false);
     };
-
 
 
     return (
         <div>
             <div>
-                <div className="flex space-x-6">
-                    <input
-                        type="date"
-                        onChange={(e) => setStartDate(e.target.value)}
-                    />
-                    <input
-                        type="date"
-                        onChange={(e) => setEndDate(e.target.value)}
-                    />
-                    <div className="flex space-x-2">
-                        <i className="fa-solid fa-filter text-[#a8a8a8] pt-1"></i>
-                        <button onClick={handleFilter}>Filter</button>
-                        <button onClick={handleReset}>Tất cả</button>
+                <div className=" space-x-6 py-3" >
+                    <h1>Thống kê tiền theo khoảng thời gian hoặc ngày tháng cụ thể </h1>
+                    <div className=" flex">
+                        <RangePicker
+                            onChange={ ( dates: any ) =>
+                            {
+                                if ( dates && dates.length === 2 )
+                                {
+                                    setStartDate( dates[ 0 ] );
+                                    setEndDate( dates[ 1 ] );
+                                } else
+                                {
+                                    setStartDate( null );
+                                    setEndDate( null );
+                                }
+                            } }
+                            className="w-64"
+                        />
+                        <div className="flex ml-4 space-x-2">
+                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-1"></i>
+                            <button onClick={ handleFilter }>Filter</button>
+
+                        </div>
                     </div>
                 </div>
-                <Line className=" "
-                    data={{
-                        labels: monthlySalesArray.map(([monthYear]) => monthYear),
-                        datasets: [
-                            {
-                                label: "Tổng số tiền ",
-                                data: monthlySalesArray.map(([, total]) => total),
-                                backgroundColor: [
-                                    "rgba(43, 63, 229, 0.8)",
+                <div className="py-4" >
+                    <h1>Thống kê tiền theo tháng theo năm </h1>
+                    <div className=" flex">
+                        <DatePicker
+                            picker="month"
+                            onChange={ ( date, dateString ) => setStartYear( dateString ) }
+                        />
+                        <DatePicker picker="month" onChange={ ( date, dateString ) => setEndYear( dateString ) } />
+                        <div className="flex space-x-2 ml-5">
+                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-1"></i>
+                            <button onClick={ hanldeamountTotalyear }>Filter</button>
+                        </div>
+                    </div>
 
-                                ],
-                                // borderRadius: 5,
-                            },
-
-                        ],
-                    }}
-                    options={{
-                        plugins: {
-                            title: {
-                                text: isFilterApplied ? "Thống kê doanh số/tháng (Đã Lọc)" : "Thống kê doanh số/tháng",
-
-                            },
+                </div>
+                <div className="mb-[40px] w-[250px] text-left h-[120px] bg-gray-200 rounded-xl">
+                    <div className="pt-[30px] pl-[15px]">
+                        <p className="text-[25px] text-[#23314B] font-semibold">{ total.toLocaleString() }</p>
+                        <h1 className="text-[25px] text-[#23314B] font-semibold">Tổng tiền  </h1>
+                    </div>
+                </div>
+                <Bar data={ chartData } options={ {
+                    plugins: {
+                        title: {
+                            text: chartTitle,
                         },
-                    }}
-                />
+                    },
+                } } />
+
+
+
             </div>
 
         </div>
