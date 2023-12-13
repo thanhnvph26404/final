@@ -120,7 +120,7 @@ const CartPage = () =>
                                         ) }
                                         <div>
                                             <Link to={ `/home/product-detail/${ item.product._id }` }>{ item.productInfo.name } </Link>
-                                            <p className="text-gray-400">{ item.productInfo.price }đ</p>
+                                            <p className="text-gray-400">{ item.productInfo?.price?.toLocaleString() }đ</p>
                                             <p className="text-gray-600 font-semibold">{ item.productVariant.size }</p>
                                             <p className="text-gray-600 font-semibold">{ item.productVariant.color }</p>
 
@@ -165,7 +165,7 @@ const CartPage = () =>
 
                             <div className="flex justify-between text-lg sm:text-xl text-[#23314B] py-4 font-semibold">
                                 <p>Tổng cộng</p>
-                                <p>{ cart?.total } VND</p>
+                                <p>{ cart?.total?.toLocaleString() } VND</p>
                             </div>
                             <p>Phí vận chuyển (nếu có) sẽ được tính toán trong trang thanh toán.</p>
                             <textarea placeholder="Ghi chú đơn hàng" className="w-[282px] sm:w-[220px] h-[115px] sm:h-[60px] border my-4 border-gray-300 rounded-md" name="" id="" />
