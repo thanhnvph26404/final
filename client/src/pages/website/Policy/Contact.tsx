@@ -11,7 +11,7 @@ const Contact = () => {
     const sendEmail = (e) => {
         e.preventDefault();
 
-        emailjs.sendForm('service_j56la3k', 'template_0ho9c2k', form.current, 'rdf9wXwwFEzt3dUdZ')
+        emailjs.sendForm('service_rlpm9rm', 'template_0ho9c2k', form.current, 'rdf9wXwwFEzt3dUdZ')
             .then((result) => {
                 console.log(result.text);
                 setShowSuccessMessage(true);
