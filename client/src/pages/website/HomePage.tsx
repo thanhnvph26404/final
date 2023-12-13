@@ -23,29 +23,26 @@ const HomePage = () =>
   const { data: productList, isLoading, isError, refetch } = useGetProductsQuery( {
     gte: 0, // Assuming value[0] contains the minimum price
     lte: 10000000, // Assuming value[1] contains the maximum price
-  } ); console.log( productList );
-
-  const { data: productsold } = useGetproductDiscountApiSoldQuery( null )
-  const { data: productDiscont } = useGetproductDiscountApiQuery( null )
-  const { data: categories } = useGetCategoryListQuery( null )
+  } );
   useEffect( () =>
   {
     const fetchData = async () =>
     {
       try
       {
-        // Gọi hàm refetch để tải lại dữ liệu giỏ hàng
         await refetch();
-        // Dữ liệu giỏ hàng đã được cập nhật
       } catch ( error: any )
       {
         toastError( error.data.error )   // Xử lý lỗi nếu có
       }
     };
 
-    fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
+    fetchData(); // Kích hoạt fetch data khi location.pathname thay đổi
   }, [ location.pathname, refetch ] );
-  // Hàm thêm sản phẩm vào danh sách yêu thích
+
+  const { data: productsold } = useGetproductDiscountApiSoldQuery( null )
+  const { data: productDiscont } = useGetproductDiscountApiQuery( null )
+  const { data: categories } = useGetCategoryListQuery( null )
 
   const saveVoucher = ( voucherId: any ) =>
   {

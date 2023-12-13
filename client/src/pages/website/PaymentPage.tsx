@@ -4,11 +4,11 @@ import { toastError, toastSuccess } from '../../hook/toastify';
 import Popup from 'reactjs-popup';
 
 import
-    {
-        PayPalScriptProvider,
-        PayPalButtons,
-        usePayPalScriptReducer
-    } from "@paypal/react-paypal-js";
+{
+    PayPalScriptProvider,
+    PayPalButtons,
+    usePayPalScriptReducer
+} from "@paypal/react-paypal-js";
 import { Input, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useGetVoucherListQuery } from '../../store/voucher/voucher.service';
@@ -478,7 +478,30 @@ const CheckoutPage = () =>
     const endDateWithoutTimezone = endDate.toLocaleDateString();
 
 
+    const isVoucherValid = ( voucher: any ) =>
+    {
+        const currentDate = new Date();
+        const endDate = new Date( voucher.endDate );
 
+        // Check if the current date is beyond the endDate
+        if ( currentDate > endDate )
+        {
+            return false;
+        }
+
+        // Check if the voucher has reached its limit
+        if ( voucher?.limit !== 0 && voucher?.limit <= voucher?.orders?.length )
+        {
+            return false;
+        }
+
+        return true;
+    };
+    const handleUseVoucher = ( selectedVoucher: any ) =>
+    {
+        setSelectedVoucher( selectedVoucher );
+        setDiscountCode( selectedVoucher?.code );
+    };
 
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
@@ -759,21 +782,33 @@ const CheckoutPage = () =>
                     </div>
 
                     <div className='mt-[50px]'>
-                        <p>CÁC MÃ VOUCHER CỦA TÔI</p>
-                        { getvoucher?.vouchers?.length === 0 ? (
-                            <p>Bạn chưa có mã voucher nào.</p>
-                        ) : (
-                            <div className="flex space-x-2 flex-wrap">
+                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[100px]">
+                            <h2 className="font-semibold text-lg ml-2 mb-2">Voucher:</h2>
+                            { getvoucher?.vouchers?.length === 0 ? (
+                                <p>Bạn chưa có mã voucher nào.</p>
+                            ) : (
                                 <div className="flex flex-col space-y-4 ">
                                     { getvoucher?.vouchers?.map( ( voucher: any ) => (
-                                        <button key={ voucher?._id } onClick={ () => handleVoucherClick( voucher ) } className="bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px]">
-                                            <p>{ voucher.name }</p>
-                                            <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
-                                        </button>
+                                        <div className='flex'>
+                                            <div>
+                                                <button
+                                                    onClick={ () => handleVoucherClick( voucher ) } // Handle the usage of the voucher
+                                                    key={ voucher?._id }
+                                                    className={ `bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
+                                                >
+                                                    <p>{ voucher.name }</p>
+                                                    <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
+                                                    { !isVoucherValid( voucher ) && <p>Mã voucher hết hiệu lực</p> }
+                                                </button>
+                                            </div>
+
+                                            <button className="border rounded-md border-gray-400 sm:ml-4 h-[48px] max-sm:mr-3 sm:w-[85px] bg-[#EDEDED]" onClick={ () => handleUseVoucher( voucher ) }>Sử dụng</button>
+                                        </div>
+
                                     ) ) }
                                 </div>
-                            </div>
-                        ) }
+                            ) }
+                        </div>
                         <Popup open={ selectedVoucher !== null } onClose={ handleCloseModal }>
                             {/* Content inside the Popup */ }
                             { selectedVoucher && (
