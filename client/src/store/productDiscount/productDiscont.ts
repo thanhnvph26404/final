@@ -19,12 +19,24 @@ export const productDiscountApi = createApi( {
             } ),
             providesTags: [ 'productDiscount' ]
         } ),
+        getproductSold: builder.query( {
+            query: ( { lowerBound, upperBound } ) => 
+            {
+                const body = { lowerBound, upperBound }
+                return {
+                    url: `products-by-sales-range`,
+                    method: 'GET',
+                    body: body
+                }
+            },
+            providesTags: [ 'productDiscount' ]
+        } ),
 
     } )
 
 } )
 
-export const { useGetproductDiscountApiQuery, useGetproductDiscountApiSoldQuery } = productDiscountApi
+export const { useGetproductDiscountApiQuery, useGetproductSoldQuery, useGetproductDiscountApiSoldQuery } = productDiscountApi
 
 
 

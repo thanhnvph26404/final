@@ -53,9 +53,13 @@ import Myvoucher from "./pages/website/Profile/Myvoucher";
 import Listcomment from "./pages/admin/comment/listcomment";
 import CreateComment from "./pages/website/CreateComment";
 
-import Contact from "./pages/website/Contact";
 
+import AddBrand from "./pages/admin/brand/AddBrand";
+import UpdateBrand from "./pages/admin/brand/UpdateBrand";
+import ListBrand from "./pages/admin/brand/ListBrand";
 import CollectionPage from "./pages/website/CollectionPage";
+import Contact from "./pages/website/Policy/Contact";
+import EditUser from "./pages/admin/EditUser";
 
 
 
@@ -218,10 +222,12 @@ export const router = createBrowserRouter([
                     { path: 'dashboard', element: <ChartPage /> },
                     { path: 'category', element: <CategoryList /> },
                     { path: 'products', element: <ProductList /> },
-
                     { path: 'category/add', element: <AddCategory /> },
                     { path: 'category/edit/:id', element: <EditCategory /> },
                     { path: 'customers', element: <UserList /> },
+                    { path: 'customers/edit/:id', element: <EditUser /> },
+
+
                     { path: 'vouchers', element: <VouCherList /> },
                     { path: 'vouchers/createVoucher', element: <AddVoucher /> },
                     { path: 'vouchers/editVoucher/:id', element: <EditVoucher /> },
@@ -244,6 +250,9 @@ export const router = createBrowserRouter([
                     { path: 'orders', element: <ListOrder /> },
                     { path: 'chart', element: <ChartPage /> },
                     { path: 'comments', element: <Listcomment /> },
+                    { path: 'brand', element: <ListBrand /> },
+                    { path: 'brand/add', element: <AddBrand /> },
+                    { path: 'brand/update/:_id', element: <UpdateBrand /> },
 
 
                 ]

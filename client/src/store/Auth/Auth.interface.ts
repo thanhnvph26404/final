@@ -35,9 +35,9 @@ export interface IUser
     favorites?: string[];
     comments?: ICommentUser[];
     role?: string;
-    isBlocked: boolean;
-    wishList: Iproductdata[],
-    vouchers: IVoucher[],
+    isBlocked?: boolean;
+    wishList?: Iproductdata[],
+    vouchers?: IVoucher[],
     country?: string,
     Address?: string
 
