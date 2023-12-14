@@ -65,6 +65,9 @@ const HomePage = () => {
             <div key={voucher?._id} className="bg-gray-200 space-x-5  rounded-full p-2 text-sm font-medium flex items-center">
               <p>{voucher.name}</p>
               <div> Mã code: {voucher.code}  (Giảm {voucher.discount}%)</div>
+              <div>
+                {/* <p>Thời gian hiệu lực</p> */}
+              </div>
               <button
                 onClick={() => saveVoucher(voucher?._id)}
                 disabled={isVoucherSaved} // Check if the voucher ID exists in the user's list
@@ -130,11 +133,9 @@ const HomePage = () => {
       <div className="grid grid-cols-3 space-x-5 ml-[100px]">
         {productList?.products?.map((product: any) => {
           return (
-            <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
-
+            <div className="relative w-full sm:w-96 rounded-xl bg-white bg-clip-border text-gray-700 group">
               <button onClick={() => handleGetProductDetail(product._id)} className="" key={product._id}>
-                <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
-
+                <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
                   {product.original_price && (
                     <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
                       Tiết kiệm {(product.price - product.original_price).toLocaleString()} đ
@@ -142,16 +143,18 @@ const HomePage = () => {
                   )}
                   <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
                   <p className="text-center text-[20px] font-semibold mt-2">{product.name}</p>
-                  <div className="flex space-x-4 ml-[120px]  mb-4 text-center">
+                  <div className="flex space-x-4 ml-[120px] mb-4 text-center">
                     <p className="flex space-x-4 mt-2">
-                      {/* Conditional rendering based on the existence of original_price */}
+                      {/* Hiển thị điều kiện dựa trên sự tồn tại của original_price */}
                       {product.original_price ? (
                         <>
-                          <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{product.original_price.toLocaleString()}₫</span>
+                          <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.original_price.toLocaleString()}₫</span>
                           <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
                         </>
                       ) : (
-                        <span className=" text-sm md:text-base font-extralight text-align-center text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
+                        <span className="text-sm md:text-base font-extralight text-[#23314bb3] pl-[30px]"> {/* Can giữa giá */}
+                          {product.price.toLocaleString()}₫
+                        </span>
                       )}
                     </p>
                   </div>
@@ -161,10 +164,10 @@ const HomePage = () => {
                 </div>
               </button>
             </div>
-
           );
         })}
       </div>
+
 
 
 

@@ -54,7 +54,7 @@ import Listcomment from "./pages/admin/comment/listcomment";
 import CreateComment from "./pages/website/CreateComment";
 
 import Contact from "./pages/website/Contact";
-=======
+
 import CollectionPage from "./pages/website/CollectionPage";
 
 

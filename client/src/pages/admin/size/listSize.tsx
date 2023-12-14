@@ -2,6 +2,9 @@ import { Space, Table, Button, message, Popconfirm } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router-dom";
 import { useDeleteSizeMutation, useGetsizeListQuery } from "../../../store/valueAttribute/Sizesevice";
+import { IoPencilSharp } from "react-icons/io5";
+import { FaTrashCan } from "react-icons/fa6";
+
 interface DataType {
     key?: string | number;
     _id?: string;
@@ -37,7 +40,7 @@ const ListSize = () => {
             key: "action",
             render: (record) => (
                 <Space size="middle">
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Delete the task"
                         description="Are you sure to delete this task?"
                         onConfirm={() => removeSize(record._id)}
@@ -49,7 +52,20 @@ const ListSize = () => {
 
                     <Button type="primary" className="bg-blue-500">
                         <Link to={`/admin/size/update/${record._id}`}>Cập Nhật</Link>
-                    </Button>
+                    </Button> */}
+                    <Link to={`/admin/size/update/${record._id}`}>
+                        <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Link>
+
+                    <Popconfirm
+                        title="Xóa kích cỡ"
+                        description="Bạn có chắc muốn xóa kích cỡ này?"
+                        onConfirm={() => removeSize(record._id)}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                    >
+                        <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Popconfirm>
                 </Space>
             ),
         },

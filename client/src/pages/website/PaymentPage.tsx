@@ -702,8 +702,9 @@ const CheckoutPage = () => {
                             {/* Content inside the Popup */}
                             {selectedVoucher && (
                                 <div className="modal">
-                                    <div className="modal-content h-[400px] text-left pl-[60px] pt-[30px] ">
-                                        <button className="close pb-[10px] text-[40px]" onClick={handleCloseModal}>&times;</button>
+                                    <div className="modal-content h-[450px] text-left pl-[50px] pt-[30px] ">
+                                        <button className="close  text-[40px]" onClick={handleCloseModal}>&times;</button>
+                                        <h1 className='pl-[150px] text-[35px] pb-[30px] text-[#23314B] font-semibold'>Thông Tin Mã Giảm Giá</h1>
                                         <h2 className='text-[20px] font-medium text-[#23314B]'>Tên voucher : {selectedVoucher.name} </h2>
                                         <p className='text-[20px] font-medium text-[#23314B]'>Code: {selectedVoucher?.code}</p>
                                         <p className='text-[20px] font-medium text-[#23314B]'>Discount: {selectedVoucher?.discount}%</p>
