@@ -155,6 +155,8 @@ const ChartPage = () =>
         label: "Số Lượng Đơn ",
         data: [],
         backgroundColor: [ "rgba(255, 0, 90, 1)" ],
+        barPercentage: 0.3, // Điều chỉnh chiều rộng của cột
+        categoryPercentage: 0.5, // Chiều rộng của các nhóm cột
         borderRadius: 5,
         borderWidth: 1,
 

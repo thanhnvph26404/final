@@ -213,12 +213,12 @@ const ListOrder = () =>
             dataIndex: "status",
             key: "status",
             render: ( status, record ) => (
-                <div className="grid grid-cols-2">
+                <div className="grid grid-cols-2 gap-4">
                     <div>
                         <span className="" style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>
                         </span>
                         { editingRowId === record._id ? (
-                            <select
+                            <select className="w-[160px]"
                                 value={ editedStatus }
                                 onChange={ ( e ) => setEditedStatus( e.target.value ) }
                             >

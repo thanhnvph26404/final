@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 import { useGetCategoryListQuery } from "../../../store/categoies/category.services";
 import { useGetBrandListQuery } from "../../../store/Brand/brand.services";
+import { IoPencilSharp } from "react-icons/io5";
+import { FaTrashCan } from "react-icons/fa6";
 
 
 const { Option } = Select;
@@ -177,12 +179,14 @@ const ListProduct = () =>
         {
             title: 'Hành động',
             key: 'action',
-            render: ( record ) => (
-                <Space size="small" className="w-10">
-                    <Link to={ `productDetailAdmin/${ record._id }` }>
-                        <EyeFilled className="text-[20px]" />
+
+            render: (record) => (
+                <Space size="middle" className="w-10">
+                    <Link to={`productDetailAdmin/${record._id}`}>
+                        <EyeFilled className="text-[20px] pt-[5px]" />
+
                     </Link>
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Xóa tác vụ"
                         description="Bạn có chắc chắn muốn xóa tác vụ này không?"
                         onConfirm={ () => removeProduct( record._id ) }
@@ -197,7 +201,20 @@ const ListProduct = () =>
                         <Link to={ `/admin/product/${ record._id }` }>
                             <MdEdit />
                         </Link>
-                    </Button>
+                    </Button> */}
+                    <Link to={`/admin/product/${record._id}`}>
+                        <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Link>
+
+                    <Popconfirm
+                        title="Xóa sản phẩm"
+                        description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
+                        onConfirm={() => removeProduct(record._id)}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                    >
+                        <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Popconfirm>
                 </Space>
             ),
         },

@@ -80,6 +80,7 @@ const HomePage = () =>
       </div>
       <Marquee className='  text-center text-sm font-medium py-3'>
         <div className="flex space-x-4">
+
           {
             vouchers?.data?.map( ( voucher: any ) => (
               <div key={ voucher?._id } className="bg-gray-200 space-x-5  rounded-full p-2 text-sm font-medium flex items-center">
@@ -94,6 +95,7 @@ const HomePage = () =>
                   { isVoucherSaved ? 'Voucher Đã Lưu' : 'Nhận' }
                 </button>
               </div>
+
 
             ) ) }
 
@@ -153,29 +155,32 @@ const HomePage = () =>
         { productList?.products?.map( ( product: any ) =>
         {
           return (
-            <div className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
 
-              <button onClick={ () => handleGetProductDetail( product._id ) } className="" key={ product._id }>
-                <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700  overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+            <div className="relative w-full sm:w-96 rounded-xl bg-white bg-clip-border text-gray-700 group">
+              <button onClick={() => handleGetProductDetail(product._id)} className="" key={product._id}>
+                <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
+                  {product.original_price && (
 
-                  { product.original_price && (
                     <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
                       Tiết kiệm { ( product.price - product.original_price ).toLocaleString() } đ
                     </p>
-                  ) }
-                  <img className="object-cover w-full" src={ product?.images[ 0 ]?.url } alt="profile-picture" />
-                  <p className="text-center text-[20px] font-semibold mt-2">{ product.name }</p>
-                  <div className="flex space-x-4 ml-[120px]  mb-4 text-center">
+
+                  )}
+                  <img className="object-cover w-full" src={product?.images[0]?.url} alt="profile-picture" />
+                  <p className="text-center text-[20px] font-semibold mt-2">{product.name}</p>
+                  <div className="flex space-x-4 ml-[120px] mb-4 text-center">
                     <p className="flex space-x-4 mt-2">
-                      {/* Conditional rendering based on the existence of original_price */ }
-                      { product.original_price ? (
+                      {/* Hiển thị điều kiện dựa trên sự tồn tại của original_price */}
+                      {product.original_price ? (
                         <>
-                          <span className="text-[#f83a3a] text-sm md:text-base font-extralight text-center">{ product.original_price.toLocaleString() }₫</span>
-                          <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{ product.price.toLocaleString() }₫</span>
+                          <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.original_price.toLocaleString()}₫</span>
+                          <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
                         </>
                       ) : (
-                        <span className=" text-sm md:text-base font-extralight text-align-center text-[#23314bb3]">{ product.price.toLocaleString() }₫</span>
-                      ) }
+                        <span className="text-sm md:text-base font-extralight text-[#23314bb3] pl-[30px]"> {/* Căn giữa giá */}
+                          {product.price.toLocaleString()}₫
+                        </span>
+                      )}
                     </p>
                   </div>
                   <button onClick={ () => handleGetProductDetail( product._id ) } className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
@@ -184,7 +189,6 @@ const HomePage = () =>
                 </div>
               </button>
             </div>
-
           );
         } ) }
       </div>
@@ -194,7 +198,10 @@ const HomePage = () =>
 
 
 
-      {/*sản phẩm bán chạy*/ }
+
+
+      {/*sản phẩm bán chạy*/}
+
 
       <div className="grid grid-cols-3 ">
         <div>
