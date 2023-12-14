@@ -212,7 +212,7 @@ const ChartPage2 = () =>
                             className="w-64"
                         />
                         <div className="flex ml-4 space-x-2">
-                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-1"></i>
+                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]"></i>
                             <button onClick={ handleFilter }>Filter</button>
 
                         </div>
@@ -227,7 +227,7 @@ const ChartPage2 = () =>
                         />
                         <DatePicker picker="month" onChange={ ( date, dateString ) => setEndYear( dateString ) } />
                         <div className="flex space-x-2 ml-5">
-                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-1"></i>
+                            <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]"></i>
                             <button onClick={ hanldeamountTotalyear }>Filter</button>
                         </div>
                     </div>

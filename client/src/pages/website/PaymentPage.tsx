@@ -506,7 +506,7 @@ const CheckoutPage = () =>
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
             <div className="sm:w-[50%]">
-                <div className="sm:ml-[160px]">
+                <div className="sm:ml-[100px]">
                     <h1 className="text-3xl my-4 font-semibold max-sm:text-center">Giao hàng</h1>
                     <Select
                         className='sm:w-[566px] sm:h-[50px] max-sm:w-[360px]'
@@ -761,40 +761,40 @@ const CheckoutPage = () =>
                 </div>
 
                 <div className="mt-6 w-[72.5%] max-sm:m-auto max-sm:mt-6">
-                    <div className="flex justify-between">
+                    <div className="flex w-[1000px]">
                         <p>Tổng tiền </p>
-                        <p>{ cart?.total.toLocaleString() } đ</p>
+                        <p className=' pl-[570px]'>{ cart?.total.toLocaleString() } đ</p>
                     </div>
                     <p>+</p>
-                    <div className="flex justify-between">
+                    <div className="flex w-[1000px]">
                         <p>Vận chuyển</p>
-                        <p>{ shippingFee.toLocaleString() } đ</p>
+                        <p className=' pl-[555px]'>{ shippingFee.toLocaleString() } đ</p>
                     </div>
-                    <hr />
+                    <hr className='w-[1000px]' />
                     <p>-</p>
-                    <div className="flex justify-between">
+                    <div className="flex w-[1000px]">
                         <p>Giảm giá</p>
-                        <p>{ apppdiscoutn.toLocaleString() } đ</p>
+                        <p className=' pl-[575px]'>{ apppdiscoutn.toLocaleString() } đ</p>
                     </div>
-                    <div className="flex justify-between">
-                        <p className="font-mono text-xl">Tổng</p>
-                        <p className="font-semibold">{ totalAmount.toLocaleString() } đ</p>
+                    <div className="flex w-[1000px]">
+                        <p className="font-mono text-[25px]">Tổng</p>
+                        <p className="font-semibold pl-[585px] pt-[10px]">{ totalAmount.toLocaleString() } đ</p>
                     </div>
 
                     <div className='mt-[50px]'>
-                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[100px]">
+                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[40px]">
                             <h2 className="font-semibold text-lg ml-2 mb-2">Voucher:</h2>
                             { getvoucher?.vouchers?.length === 0 ? (
                                 <p>Bạn chưa có mã voucher nào.</p>
                             ) : (
                                 <div className="flex flex-col space-y-4 ">
                                     { getvoucher?.vouchers?.map( ( voucher: any ) => (
-                                        <div className='flex'>
+                                        <div className='grid grid-cols-2 gap-[550px]'>
                                             <div>
                                                 <button
                                                     onClick={ () => handleVoucherClick( voucher ) } // Handle the usage of the voucher
                                                     key={ voucher?._id }
-                                                    className={ `bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
+                                                    className={ `bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[550px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
                                                 >
                                                     <p>{ voucher.name }</p>
                                                     <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
@@ -813,8 +813,9 @@ const CheckoutPage = () =>
                             {/* Content inside the Popup */ }
                             { selectedVoucher && (
                                 <div className="modal">
+                                        <button className="close pl-[20px] text-[40px]" onClick={ handleCloseModal }>&times;</button>
+                                        <h2 className='text-[40px] text-center font-medium text-[#23314B]' >Thông Tin Mã Giảm Giá</h2>
                                     <div className="modal-content h-[400px] text-left pl-[60px] pt-[30px] ">
-                                        <button className="close pb-[10px] text-[40px]" onClick={ handleCloseModal }>&times;</button>
                                         <h2 className='text-[20px] font-medium text-[#23314B]'>Tên voucher : { selectedVoucher.name } </h2>
                                         <p className='text-[20px] font-medium text-[#23314B]'>Code: { selectedVoucher?.code }</p>
                                         <p className='text-[20px] font-medium text-[#23314B]'>Discount: { selectedVoucher?.discount }%</p>
