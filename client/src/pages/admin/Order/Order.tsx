@@ -178,7 +178,7 @@ const ListOrder = () =>
             title: "Tổng tiền ",
             dataIndex: "paymentIntent",
             key: "paymentIntent",
-            render: ( paymentIntent ) => <p>{ paymentIntent?.amount }</p>,
+            render: ( paymentIntent ) => <p>{ paymentIntent?.amount.toLocaleString() }</p>,
 
         }
         ,
@@ -282,7 +282,7 @@ const ListOrder = () =>
 
                 <RangePicker
                     onChange={ ( dates: any ) =>
-{
+                    {
                         if ( dates && dates.length === 2 )
                         {
                             setStartDate( dates[ 0 ] );
