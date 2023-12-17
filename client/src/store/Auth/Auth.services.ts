@@ -5,7 +5,6 @@ import { Order, OrderItem } from "../Order/order";
 
 import { IVoucher } from "../voucher/voucher.interface";
 import { Iproductdata } from "../products/product.interface";
-import { boolean } from "yup";
 const authApi = createApi( {
     reducerPath: "auth",
     tagTypes: [ "Auth" ],
@@ -29,6 +28,14 @@ const authApi = createApi( {
             } ),
             invalidatesTags: [ "Auth" ]
         } ),
+        loginAdmin: builder.mutation<Login, Login>( {
+            query: ( auth ) => ( {
+                url: `auth/loginAdmin`,
+                method: "POST",
+                body: auth
+            } ),
+            invalidatesTags: [ "Auth" ]
+        } ),
         getUserList: builder.query( {
             query: () => `auth/getAllUser`,
             providesTags: [ 'Auth' ]
@@ -37,7 +44,7 @@ const authApi = createApi( {
             query ( id )
             {
                 // Lấy token từ localStorage
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `/auth/block-user/${ id }`,
                     method: 'PUT',
@@ -53,7 +60,7 @@ const authApi = createApi( {
             query ( id )
             {
                 // Lấy token từ localStorage
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `/auth/unblock-user/${ id }`,
                     method: 'PUT',
@@ -194,7 +201,7 @@ const authApi = createApi( {
                 console.log( user );
 
                 // Lấy token từ localStorage
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `/auth/updateUserAdmin/${ user._id }`,
                     method: 'PUT',
@@ -209,7 +216,7 @@ const authApi = createApi( {
         getUser: builder.query( {
             query: ( _id: any ) => 
             {
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `/auth/getOneUser/${ _id }`,
                     method: 'GET',
@@ -269,7 +276,7 @@ const authApi = createApi( {
         getAllOrder: builder.query( {
             query: () =>
             {
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `auth/getAllOrder`,
                     method: "GET",
@@ -284,7 +291,7 @@ const authApi = createApi( {
         updateOrderStatus: builder.mutation<IOrder, { id: string; status: string }>( {
             query: ( { id, status } ) =>
             {
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `auth/update-order/${ id }`, // Thay đổi đường dẫn tùy thuộc vào API của bạn
                     method: 'PUT',
@@ -380,12 +387,42 @@ const authApi = createApi( {
             },
             providesTags: [ 'Auth' ]
         } ),
+        getOneOrderAdmin: builder.query<Order, string>( {
+            query: ( id ) =>  
+            {
+                const token = localStorage.getItem( "checktoken" );
+
+                return {
+                    url: `auth/getoneOrderadmin/${ id }`,
+                    method: 'GET',
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    }
+                }
+            },
+            providesTags: [ 'Auth' ]
+        } ),
         updateOrdersStatus: builder.mutation<IOrder, { id: string; status: string }>( {
+            query: ( { id, status } ) =>
+            {
+                const token = localStorage.getItem( "checktoken" );
+                return {
+                    url: `auth/update-order/${ id }`,
+                    method: "PUT",
+                    body: { status },
+                    headers: {
+                        Authorization: "Bearer " + token,
+                    },
+                };
+            },
+            invalidatesTags: [ "Auth" ],
+        } ),
+        updateOrdersStatususer: builder.mutation<IOrder, { id: string; status: string }>( {
             query: ( { id, status } ) =>
             {
                 const token = localStorage.getItem( "token" );
                 return {
-                    url: `auth/update-order/${ id }`,
+                    url: `auth/update-orderuser/${ id }`,
                     method: "PUT",
                     body: { status },
                     headers: {
@@ -399,7 +436,7 @@ const authApi = createApi( {
         confirmCancelOrder: builder.mutation<void, { id: string; isConfirmed: boolean }>( {
             query: ( { id, isConfirmed } ) =>
             {
-                const token = localStorage.getItem( "token" );
+                const token = localStorage.getItem( "checktoken" );
                 return {
                     url: `auth/confirm-cancel-order/${ id }`,
                     method: "PUT",
@@ -527,7 +564,7 @@ const authApi = createApi( {
         cancleOrders: builder.mutation<void, { id: string, cancelReason: string }>( {
             query: ( { id, cancelReason } ) =>
             {
-                const token = localStorage.getItem( "token" )
+                const token = localStorage.getItem( "checktoken" )
                 return {
                     url: `/auth/cancelOrder/${ id }`,
                     method: "PUT",
@@ -573,7 +610,7 @@ const authApi = createApi( {
             {
                 // Xử lý request query tại đây để gửi yêu cầu đúng đắn
                 const body = { status, startDates, endDates };
-                const token = localStorage.getItem( "token" )
+                const token = localStorage.getItem( "checktoken" )
 
                 return {
                     url: '/auth/getStatusOrder', // Địa chỉ endpoint API của bạn
@@ -593,7 +630,7 @@ const authApi = createApi( {
             {
                 // Xử lý request query tại đây để gửi yêu cầu đúng đắn
                 const body = { phone };
-                const token = localStorage.getItem( "token" )
+                const token = localStorage.getItem( "checktoken" )
 
                 return {
                     url: '/auth/getphoneOrder', // Địa chỉ endpoint API của bạn
@@ -611,7 +648,7 @@ const authApi = createApi( {
             {
                 // Xử lý request query tại đây để gửi yêu cầu đúng đắn
                 const body = { orderId };
-                const token = localStorage.getItem( "token" )
+                const token = localStorage.getItem( "checktoken" )
 
                 return {
                     url: '/auth/getIdOrder', // Địa chỉ endpoint API của bạn
@@ -630,7 +667,7 @@ const authApi = createApi( {
     } )
 } )
 export const {
-    useLoginMutation, useGetUserQuery, useEditUserAdminMutation, useGetOrdersByIdMutation, useGetphoneOrderMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
+    useLoginMutation, useLoginAdminMutation, useUpdateOrdersStatususerMutation, useGetOneOrderAdminQuery, useGetUserQuery, useEditUserAdminMutation, useGetOrdersByIdMutation, useGetphoneOrderMutation, useCancleOrdersMutation, useGetOrdersByStatusMutation, useGetVoucherQuery, useSaveVoucherMutation, useChaneStatusOrderMutation, useGetVnpayreturnQuery, useAddToCartMutation, useCreatePaymentUrlMutation, useDeleteoneWishListMutation, useAdddTowishListMutation, useGetWishListQuery, useDecreaseQuantityMutation, useIncreaseQuantityMutation, useCancelOrderMutation, useConfirmCancelOrderMutation, useUpdateOrdersStatusMutation, useGetOneOrderQuery, useApplycouponMutation, useDeleteoneProductMutation, useCreateOrderMutation, useGetCartQuery, useUpdateOrderStatusMutation, useGetAllOrderQuery, useGetOrderQuery, useEditUserMutation, useSignupMutation, useUnblockUserMutation, useGetUserByTokenMutation, useChangePasswordAuthMutation, useResetPasswordAuthMutation, useForgotPasswordAuthMutation, useGetUserListQuery, useBlockUserMutation, useSendCodeAuthMutation, useCheckCodeAuthMutation, useEditUserByTokenMutation
 } = authApi
 export const authReducer = authApi.reducer
 export default authApi

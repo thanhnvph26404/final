@@ -60,6 +60,7 @@ import ListBrand from "./pages/admin/brand/ListBrand";
 import CollectionPage from "./pages/website/CollectionPage";
 import Contact from "./pages/website/Policy/Contact";
 import EditUser from "./pages/admin/EditUser";
+import LoginAdmin from "./pages/admin/LoginAdmin";
 
 
 
@@ -69,48 +70,55 @@ import EditUser from "./pages/admin/EditUser";
 
 
 
-const PriviteRouter = ({ isAuth }: any) => {
+const PriviteRouter = ( { isAuth }: any ) =>
+{
     const navigate = useNavigate()
-    const [getUser] = useGetUserByTokenMutation();
+    const [ getUser ] = useGetUserByTokenMutation();
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem( "checktoken" )
 
-    useEffect(() => {
-        if (token) {
-            getUser(token)
+    useEffect( () =>
+    {
+        if ( token )
+        {
+            getUser( token )
                 .unwrap()
-                .then((response) => {
-                    console.log(response);
+                .then( ( response ) =>
+                {
+                    console.log( response );
 
-                    if (response.data.role === "Admin") {
-                        navigate("/admin/dashboard")
-                    } else {
+                    if ( response.data.role === "Admin" )
+                    {
+                        navigate( "/admin/dashboard" )
+                    } else
+                    {
 
-                        navigate("*")
+                        navigate( "*" )
                     }
 
-                })
-                .catch((error) => {
-                    console.log(error);
+                } )
+                .catch( ( error ) =>
+                {
+                    console.log( error );
 
-                    toastError("lỗi thao tác")
-                });
+                    toastError( "lỗi thao tác" )
+                } );
         }
-    }, [getUser, token]);
+    }, [ getUser, token ] );
 
-    return token ? <Outlet /> : <Navigate to={"/login"} />
+    return token ? <Outlet /> : <Navigate to={ "/loginAdmin" } />
 
 }
 
 
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter( [
     {
         element: <LayoutWebsite />,
         children: [
 
 
-            { path: "", element: <Navigate to={'home'} /> },
+            { path: "", element: <Navigate to={ 'home' } /> },
             { path: 'home', element: <HomePage /> },
             { path: '/home/product-detail/:id', element: <ProductDetail /> },
 
@@ -139,11 +147,11 @@ export const router = createBrowserRouter([
                 path: "profile",
                 element: (
                     <YourComponent>
-                        {(currentUser) => (
+                        { ( currentUser ) => (
                             <>
-                                <Profiles imageUser={undefined} profiles={[]} />
+                                <Profiles imageUser={ undefined } profiles={ [] } />
                             </>
-                        )}
+                        ) }
                     </YourComponent>
                 ),
                 children: [
@@ -152,9 +160,9 @@ export const router = createBrowserRouter([
                         path: "account",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
+                                { ( currentUser ) => (
                                     <Account />
-                                )}
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -165,9 +173,9 @@ export const router = createBrowserRouter([
                         path: "information",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <Information currentUser={currentUser} />
-                                )}
+                                { ( currentUser ) => (
+                                    <Information currentUser={ currentUser } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -175,9 +183,9 @@ export const router = createBrowserRouter([
                         path: "order-address",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <OrderAddress currentUser={currentUser} />
-                                )}
+                                { ( currentUser ) => (
+                                    <OrderAddress currentUser={ currentUser } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -189,9 +197,9 @@ export const router = createBrowserRouter([
                         path: "change-password",
                         element: (
                             <YourComponent>
-                                {(currentUser) => (
-                                    <Changepassword emailUser={currentUser?.email} />
-                                )}
+                                { ( currentUser ) => (
+                                    <Changepassword emailUser={ currentUser?.email } />
+                                ) }
                             </YourComponent>
                         ),
                     },
@@ -208,18 +216,21 @@ export const router = createBrowserRouter([
 
     },
 
+    { path: 'LoginAdmin', element: <LoginAdmin /> },
 
 
 
     {
         path: '/admin',
-        element: <PriviteRouter token={false} />,
+        element: <PriviteRouter token={ false } />,
         children: [
             {
                 element: <LayoutAdmin />,
                 children: [
-                    { index: true, element: <Navigate to={'dashboard'} /> },
+                    { index: true, element: <Navigate to={ 'dashboard' } /> },
                     { path: 'dashboard', element: <ChartPage /> },
+
+                    { path: 'LoginAdmin', element: <LoginAdmin /> },
                     { path: 'category', element: <CategoryList /> },
                     { path: 'products', element: <ProductList /> },
                     { path: 'category/add', element: <AddCategory /> },
@@ -263,4 +274,4 @@ export const router = createBrowserRouter([
         path: '*',
         element: <NotfoundPage />
     }
-])
+] )
