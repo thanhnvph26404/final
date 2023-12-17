@@ -5,7 +5,7 @@ import Popup from "reactjs-popup"
 import 'reactjs-popup/dist/index.css';
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGetProductQuery } from "../../store/products/product.services";
-import { useAddToCartMutation, useAdddTowishListMutation, useGetWishListQuery } from "../../store/Auth/Auth.services";
+import { useAddToCartMutation, useAdddTowishListMutation, useGetCartQuery } from "../../store/Auth/Auth.services";
 import { useGetCommentbyidprouctQuery } from "../../store/Comment/comment.services";
 import { toastError, toastSuccess } from "../../hook/toastify";
 import { useGetCategoryProductQuery } from "../../store/categoies/category.services";
@@ -19,13 +19,15 @@ const ProductDetail = () =>
 
     const location = useLocation();
     const { id } = useParams();
-    const { data: product, error, isLoading } = useGetProductQuery( id! );
+    const { data: product, error, isLoading, refetch } = useGetProductQuery( id! );
+    const { data: carts } = useGetCartQuery( [] );
+    console.log( carts );
+
     const _id = product?.data.category._id
     const { data: categoryProduct } = useGetCategoryProductQuery( _id! )
-    const { data: wistListProduct, refetch } = useGetWishListQuery( [] )
-
     const [ wishList ] = useAdddTowishListMutation()
     const [ AddToCartMutation ] = useAddToCartMutation()
+    const [ tabVisited, setTabVisited ] = useState( false );
 
     const [ mauSac, setmauSac ] = useState();
     const [ quantity, setQuantity ] = useState( 0 );
@@ -56,17 +58,29 @@ const ProductDetail = () =>
 
         fetchData(); // Gọi hàm fetchData khi location.pathname thay đổi
     }, [ location.pathname, refetch ] );
-    const addtowishList = ( prodId: any ) =>
+    const addtowishList = async ( prodId: any ) =>
     {
-        wishList( prodId ).unwrap().then( () =>
+        try
         {
-            toastSuccess( "Đã thêm sản phẩm vào danh sách yêu thích" );
+            wishList( prodId ).unwrap().then( () =>
+            {
 
-            refetch();
-        } ).catch( ( error ) =>
+                toastSuccess( "Đã thêm sản phẩm vào danh sách yêu thích" )
+
+
+
+
+
+            } ).catch( ( error ) =>
+            {
+                toastError( error.data.message );
+            } );
+            await refetch();
+        } catch ( error )
         {
-            toastError( error.data.message );
-        } );
+            console.log( error );
+
+        };
 
     };
     const ProductVariants = product?.data?.ProductVariants
@@ -86,7 +100,7 @@ const ProductDetail = () =>
             return item.color === newColor
         } )
         const newsizes = sizes.sort(
-            ( a, b ) =>
+            ( a: any, b: any ) =>
             {
                 const asize = a.size.toUpperCase()
                 const bsize = b.size.toUpperCase()
@@ -146,7 +160,11 @@ const ProductDetail = () =>
 
 
 
-
+    useEffect( () =>
+    {
+        // Set tabVisited to true when the component mounts or when location.pathname changes
+        setTabVisited( true );
+    }, [ location.pathname ] );
 
     //  lấy danh sách màu
     if ( ProductVariants )
@@ -169,36 +187,46 @@ const ProductDetail = () =>
     useEffect( () =>
     {
         // auto select mau lúc đầu
-        if ( ProductVariants )
+        if ( tabVisited && ProductVariants )
         {
             handleChangeMauSac( ProductVariants[ 0 ]?.color )
         }
-    }, [ isLoading ] )
+    }, [ isLoading, tabVisited ] )
 
 
 
     function addtocard ()
     {
-        if ( mauSac && kichCo && count )
+        try
         {
-            const cart: any = {
-                productId: id,
-                size: kichCo,
-                color: mauSac,
-                quantity: count
+
+
+            if ( mauSac && kichCo && count )
+            {
+                const cart: any = {
+                    productId: id,
+                    size: kichCo,
+                    color: mauSac,
+                    quantity: count
+                }
+                navigate( '/cart' )
+                AddToCartMutation( cart ).unwrap().then( ( res ) =>
+                {
+                    console.log( res );
+
+                } ).catch( ( error ) =>
+                {
+                    toastError( error.data.message )
+                } )
+            } else
+            {
+                toastError( "Bạn chưa chọn số lượng sản phẩm " )
             }
-
-
-            navigate( '/cart' )
-            AddToCartMutation( cart )
-        } else
+        } catch ( error: any )
         {
-            toastError( "Bạn chưa chọn số lượng sản phẩm " )
-
-
+            toastError( error.message )
 
         }
-
 
     }
 
