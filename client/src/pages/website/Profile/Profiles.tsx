@@ -11,6 +11,7 @@ import MenuItem from "../../../hook/MenuItems";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import Avatar from "../../../hook/Avatar";
 import { IProfile } from "../../../store/Profile/Profiles";
+import { toastError } from "../../../hook/toastify";
 
 
 type ProfilePageProps = {
@@ -19,35 +20,41 @@ type ProfilePageProps = {
     path?: string;
 };
 
-const ProfilePage = ({ imageUser, path }: ProfilePageProps) => {
+const ProfilePage = ( { imageUser, path }: ProfilePageProps ) =>
+{
     const location = useLocation();
 
     const paths = location.pathname.substring(
-        location.pathname.lastIndexOf("/") + 1
+        location.pathname.lastIndexOf( "/" ) + 1
     );
-    const [getUserByToken] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
-    const token = localStorage.getItem("token");
+    const [ getUserByToken ] = useGetUserByTokenMutation(); // Sử dụng mutation để lấy thông tin người dùng sau khi cập nhật
+    const token = localStorage.getItem( "token" );
 
-    const [currentUser, setCurrentUser] = useState<IUser | null>(null);
+    const [ currentUser, setCurrentUser ] = useState<IUser | null>( null );
 
-    useEffect(() => {
-        if (token) {
-            getUserByToken(token)
+    useEffect( () =>
+    {
+        if ( token )
+        {
+            getUserByToken( token )
                 .unwrap()
-                .then((response) => {
-                    setCurrentUser(response.data);
-                })
-                .catch((error) => {
-                    message.error(error.data.message);
-                });
+                .then( ( response ) =>
+                {
+                    setCurrentUser( response.data );
+                } )
+                .catch( ( error ) =>
+                {
+                    toastError( error.data.message );
+                } );
         }
-    }, [getUserByToken, token, location]);
+    }, [ getUserByToken, token, location ] );
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState(false);
+    const [ isOpen, setIsOpen ] = useState( false );
 
-    const toggleOpen = useCallback(() => {
-        setIsOpen((value) => !value);
-    }, []);
+    const toggleOpen = useCallback( () =>
+    {
+        setIsOpen( ( value ) => !value );
+    }, [] );
     return (
         <>
             <Container>
@@ -57,68 +64,68 @@ const ProfilePage = ({ imageUser, path }: ProfilePageProps) => {
                         <div className="md:col-span-3 p-3">
                             <div className="px-4 py-3 shadow flex items-center justify-between flex-row gap-4 bg-white rounded-xl">
                                 <div className="flex-shrink-0">
-                                    <Avatar src={imageUser} />
+                                    <Avatar src={ imageUser } />
                                 </div>
 
                                 <div className="flex-grow hidden md:block">
                                     <p className="text-gray-600">Xin chào </p>
 
-                                    <h4 className="text-gray-800 font-medium">{currentUser?.name}</h4>
+                                    <h4 className="text-gray-800 font-medium">{ currentUser?.name }</h4>
                                 </div>
 
-                                <div className="md:hidden block" onClick={toggleOpen}>
-                                    <MdOutlineAccountCircle size={30} />
+                                <div className="md:hidden block" onClick={ toggleOpen }>
+                                    <MdOutlineAccountCircle size={ 30 } />
                                 </div>
 
-                                {isOpen && (
+                                { isOpen && (
                                     <div className="z-10 absolute md:hidden top-56 right-10 rounded-xl shadow-md w-[40vw] md:w-3/4 bg-white overflow-hidden text-sm">
                                         <div className="flex flex-col cursor-pointer">
-                                            {profile.map((item) => (
+                                            { profile.map( ( item ) => (
                                                 <MenuItem
-                                                    key={item.title}
-                                                    label={item.title}
-                                                    icon={item.Icon}
-                                                    active={paths === item.url}
-                                                    onClick={() => navigate(`/profile/${item.url}`)}
-                                                    menuDrop={item.list}
+                                                    key={ item.title }
+                                                    label={ item.title }
+                                                    icon={ item.Icon }
+                                                    active={ paths === item.url }
+                                                    onClick={ () => navigate( `/profile/${ item.url }` ) }
+                                                    menuDrop={ item.list }
                                                 />
-                                            ))}
+                                            ) ) }
                                         </div>
                                     </div>
-                                )}
+                                ) }
                             </div>
 
                             <div className="hidden md:block mt-6 bg-white shadow p-4 divide-y divide-gray-200 space-y-4 text-gray-500 rounded-xl">
-                                {profile.map(({ title, Icon, list, url }) => (
-                                    <div key={title} className="space-y-1 pl-8 py-4">
+                                { profile.map( ( { title, Icon, list, url } ) => (
+                                    <div key={ title } className="space-y-1 pl-8 py-4">
                                         <div className="relative block font-medium capitalize transition">
                                             <span className="absolute -left-8 top-0 text-base text-rose-500">
-                                                <Icon size={25} />
+                                                <Icon size={ 25 } />
                                             </span>
 
                                             <Link
-                                                to={`/profile/${url}`}
-                                                className={`font-bold
-              ${path === url ? "text-rose-500" : ""}
+                                                to={ `/profile/${ url }` }
+                                                className={ `font-bold
+              ${ path === url ? "text-rose-500" : "" }
               `}
                                             >
-                                                {title}
+                                                { title }
                                             </Link>
                                         </div>
-                                        {list?.map(({ name, url }) => (
+                                        { list?.map( ( { name, url } ) => (
                                             <Link
-                                                key={name}
-                                                to={`/profile/${url}`}
-                                                className={`relative hover:text-rose-500 block capitalize transition
-                ${path === url ? "text-rose-500" : ""}
+                                                key={ name }
+                                                to={ `/profile/${ url }` }
+                                                className={ `relative hover:text-rose-500 block capitalize transition
+                ${ path === url ? "text-rose-500" : "" }
                 `}
                                             >
-                                                {name}
+                                                { name }
                                             </Link>
-                                        ))}
+                                        ) ) }
 
                                     </div>
-                                ))}
+                                ) ) }
                             </div>
                         </div>
 

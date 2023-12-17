@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { useTotalOrderadayMutation, useTotalOrderamonthMutation } from "../../../store/Order/Ordersevice";
+import { useTotalOrderadayMutation, useTotalOrderamonthMutation, useTotaladayQuery } from "../../../store/Order/Ordersevice";
 import { Bar } from "react-chartjs-2";
-import { DatePicker, } from "antd";
+import { Button, DatePicker, } from "antd";
 
 
 defaults.maintainAspectRatio = false;
@@ -10,7 +10,6 @@ defaults.responsive = true;
 
 defaults.plugins.title.display = true;
 defaults.plugins.title.align = "start";
-// defaults.plugins.title.text = "20px"
 defaults.plugins.title.color = "black";
 const { RangePicker } = DatePicker;
 
@@ -18,6 +17,8 @@ const { RangePicker } = DatePicker;
 const ChartPage2 = () =>
 {
     const [ startDate, setStartDate ] = useState( null );
+    const { data: totaladay } = useTotaladayQuery( null )
+    console.log( totaladay );
     const [ endDate, setEndDate ] = useState( null );
     const [ totalamountaday, settotalamountaday ] = useState<any>( [] )
     const [ totalamountayear, settotalamountayear ] = useState<any>( [] )
@@ -142,8 +143,28 @@ const ChartPage2 = () =>
             };
 
             fetchData();
+        } else if ( totaladay )
+        {
+            const total = totaladay.today ?? "";
+            const totalss = totaladay.totalAmount;
+            // Nếu không có totalamountaday hoặc totalamountayear,
+            // và có dữ liệu từ totaladay, sử dụng dữ liệu từ totaladay
+            setChartData( {
+                labels: [ total ],
+                datasets: [
+                    {
+                        label: "Tổng số tiền",
+                        data: [ totalss ],
+                        backgroundColor: "rgba(75, 192, 192, 0.2)",
+                        borderColor: "rgba(75, 192, 192, 1)",
+                        borderWidth: 1,
+                    },
+                ],
+            } );
+            setTotal( totaladay.totalAmount )
         }
-    }, [ totalamountaday, totalamountayear ] );
+
+    }, [ totalamountaday, totalamountayear, totaladay ] );
 
 
     const hanldeamountTotalyear = async () =>
@@ -165,6 +186,11 @@ const ChartPage2 = () =>
 
         }
 
+    }
+    const hanldeaday = () =>
+    {
+        settotalamountayear( [] )
+        settotalamountaday( [] )
     }
     const handleFilter = () =>
     {
@@ -216,6 +242,7 @@ const ChartPage2 = () =>
                             <button onClick={ handleFilter }>Filter</button>
 
                         </div>
+                        <Button className="ml-3 bg-blue-500 text-white" type="primary" onClick={ hanldeaday }>Lấy ra ngày hiện tại</Button>
                     </div>
                 </div>
                 <div className="py-4" >
@@ -246,9 +273,6 @@ const ChartPage2 = () =>
                         },
                     },
                 } } />
-
-
-
             </div>
 
         </div>
