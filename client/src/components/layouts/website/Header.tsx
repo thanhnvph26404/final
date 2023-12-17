@@ -171,17 +171,13 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                           <li>
 
                             <Link to="/collection" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
-                            </Link>
-                            <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
-
-                              Bộ sưu tập
-                              <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
-                            </Link>
+                              Bộ sưu tập                                               
+                            </Link>                            
                           </li>
                           <li className="mt-2">
                             <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                               Tất cả sản phẩm
-                              <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
+                             
                             </Link>
                           </li>
                         </div>
