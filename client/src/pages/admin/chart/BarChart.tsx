@@ -141,7 +141,7 @@ const ChartPage = () => {
     labels: [],
     datasets: [
       {
-        label: "Số Lượng Đơn ",
+        label: "Số lượng sản phẩm ",
         data: [],
         backgroundColor: ["rgba(255, 0, 90, 1)"],
         barPercentage: 0.3, // Điều chỉnh chiều rộng của cột
@@ -175,7 +175,7 @@ const ChartPage = () => {
             labels: dates,
             datasets: [
               {
-                label: "số lượng sản phẩm",
+                label: "Số lượng sản phẩm",
                 data: amounts,
                 backgroundColor: ["rgba(255, 0, 90, 1)"],
                 borderRadius: 5,
