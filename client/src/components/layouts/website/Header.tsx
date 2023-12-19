@@ -154,7 +154,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                 <ul className="flex items-center gap-5 ">
                   <li>
                     <Link to={ "" } className="p-3 inline-block hover:text-gray-500 relative">
-                      New In
+                      Trang chủ
                     </Link>
                   </li>
 
@@ -169,15 +169,15 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                         {/* Các mục menu dropdown */ }
                         <div className="flex flex-col px-8">
                           <li>
-                            <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
-                              Bộ sưu tập
-                              <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
-                            </Link>
+
+                            <Link to="/collection" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
+                              Bộ sưu tập                                               
+                            </Link>                            
                           </li>
                           <li className="mt-2">
                             <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                               Tất cả sản phẩm
-                              <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
+                             
                             </Link>
                           </li>
                         </div>
@@ -220,6 +220,12 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                           <li className="mt-2">
                             <Link to="rules" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdowns }>
                               Điều khoản sử dụng
+                              <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
+                            </Link>
+                          </li>
+                          <li className="mt-2">
+                            <Link to="contact" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdowns }>
+                              Liên hệ
                               <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
                             </Link>
                           </li>
@@ -270,7 +276,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                             </Link>
                           </li>
                           <li>
-                            <Link to="admin" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
+                            <Link to="LoginAdmin" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
                               <CiSettings className="w-5 h-5 mr-2" />
                               Cài đặt
                             </Link>

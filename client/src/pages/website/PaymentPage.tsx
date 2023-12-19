@@ -135,9 +135,11 @@ const CheckoutPage = () =>
                 };
 
                 const calculatedTotalAmount = couponApplied ? cart?.totalAfterDiscount + shippingFee : cart?.total + shippingFee;
-                navigate( "/ordersuccess" )
 
                 const response = await createOrder( { ...paymentData, calculatedTotalAmount } );
+                console.log( response );
+
+                navigate( "/ordersuccess" )
 
             } catch ( error )
             {
@@ -202,7 +204,7 @@ const CheckoutPage = () =>
     }, [ paymentMethod ] );
 
     const totalAmount = couponApplied ? cart?.totalAfterDiscount + shippingFee : cart?.total + shippingFee;
-
+    const apppdiscoutn = cart?.totalAfterDiscount ? cart?.total - cart?.totalAfterDiscount : 0;
 
     const handlePaymentMethodChange = ( method: any ) =>
     {
@@ -287,6 +289,8 @@ const CheckoutPage = () =>
         // Continue with applying the coupon
         await voucher( { voucher: discountCode } ).unwrap().then( response =>
         {
+            console.log( response );
+
             toastSuccess( 'Áp mã thành công' );
             setCouponApplied( true );
         } ).catch( ( error ) =>
@@ -418,7 +422,7 @@ const CheckoutPage = () =>
                 discountCode: couponApplied ? discountCode : '',
             };
 
-            createPaymentUrl( paymentData ).unwrap().then( ( response ) =>
+            createPaymentUrl( paymentData ).unwrap().then( ( response: any ) =>
             {
                 redirectToVNPAY( response?.url );
 
@@ -462,10 +466,47 @@ const CheckoutPage = () =>
 
     };
 
+    const startDateString = selectedVoucher?.startDate;
+    const endDateString = selectedVoucher?.endDate;
+
+    // Chuyển đổi ngày từ chuỗi sang đối tượng Date
+    const startDate = new Date( startDateString );
+    const endDate = new Date( endDateString );
+
+    // Lấy thông tin ngày/tháng/năm không tính timezone
+    const startDateWithoutTimezone = startDate.toLocaleDateString();
+    const endDateWithoutTimezone = endDate.toLocaleDateString();
+
+
+    const isVoucherValid = ( voucher: any ) =>
+    {
+        const currentDate = new Date();
+        const endDate = new Date( voucher.endDate );
+
+        // Check if the current date is beyond the endDate
+        if ( currentDate > endDate )
+        {
+            return false;
+        }
+
+        // Check if the voucher has reached its limit
+        if ( voucher?.limit !== 0 && voucher?.limit <= voucher?.orders?.length )
+        {
+            return false;
+        }
+
+        return true;
+    };
+    const handleUseVoucher = ( selectedVoucher: any ) =>
+    {
+        setSelectedVoucher( selectedVoucher );
+        setDiscountCode( selectedVoucher?.code );
+    };
+
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
-            <div className="sm:w-[50%]">
-                <div className="sm:ml-[160px]">
+            <div className="sm:w-[45%]">
+                <div className="sm:ml-[60px]">
                     <h1 className="text-3xl my-4 font-semibold max-sm:text-center">Giao hàng</h1>
                     <Select
                         className='sm:w-[566px] sm:h-[50px] max-sm:w-[360px]'
@@ -676,11 +717,11 @@ const CheckoutPage = () =>
                 </div>
 
             </div>
-            <div className="border-l-2 border-gray-200 sm:ml-4 pl-4 sm:w-[50%] bg-[#F5F5F5] ">
+            <div className="border-l-2 border-gray-200 sm:ml-2 pl-4 sm:w-[55%] bg-[#F5F5F5] ">
                 <div className="mt-4">
                     { cart?.items?.map( ( item: any, index: any ) => (
                         <div key={ index } className="flex items-center p-2">
-                            <img className="w-[64px] h-[64px] border rounded-md border-gray-300" src={ item.productInfo.images[ 0 ].url } alt="" />
+                            <img className="w-[60px] h-[80px] border rounded-md border-gray-300" src={ item.productInfo.images[ 0 ].url } alt="" />
                             <div className="ml-4 mr-4 w-[50%]">
                                 <p>{ item.productInfo.name }</p>
                                 <p>{ item.productVariant.size }</p>
@@ -693,7 +734,7 @@ const CheckoutPage = () =>
 
                                 </div>
                             </div>
-                            <p className='max-sm:mr-2'>{ item.productInfo.price.toLocaleString() }₫</p>
+                            <p className='max-sm:mr-6'>{ item.productInfo.price.toLocaleString() }₫</p>
 
 
                         </div>
@@ -720,51 +761,68 @@ const CheckoutPage = () =>
                 </div>
 
                 <div className="mt-6 w-[72.5%] max-sm:m-auto max-sm:mt-6">
-
-
-                    <div className="flex justify-between">
-                        <p>Vận chuyển</p>
-                        <p>{ shippingFee } đ</p>
+                    <div className="flex w-[780px]">
+                        <p>Tổng tiền </p>
+                        <p className=' pl-[620px]'>{ cart?.total.toLocaleString() } đ</p>
                     </div>
-                    <div className="flex justify-between">
-                        <p className="font-mono text-xl">Tổng</p>
-                        <p className="font-semibold">{ totalAmount.toLocaleString() } đ</p>
+                    <p>+</p>
+                    <div className="flex w-[780px]">
+                        <p>Vận chuyển</p>
+                        <p className=' pl-[605px]'>{ shippingFee.toLocaleString() } đ</p>
+                    </div>
+                    <hr className='w-[780px]' />
+                    <p>-</p>
+                    <div className="flex w-[780px]">
+                        <p>Giảm giá</p>
+                        <p className=' pl-[626px]'>{ apppdiscoutn.toLocaleString() } đ</p>
+                    </div>
+                    <div className="flex w-[780px]">
+                        <p className="font-mono text-[25px]">Tổng</p>
+                        <p className="font-semibold pl-[636px] pt-[10px]">{ totalAmount.toLocaleString() } đ</p>
                     </div>
 
                     <div className='mt-[50px]'>
-                        <p>CÁC MÃ VOUCHER CỦA TÔI</p>
-                        { getvoucher?.vouchers?.length === 0 ? (
-                            <p>Bạn chưa có mã voucher nào.</p>
-                        ) : (
-                            <div className="flex space-x-2 flex-wrap">
+                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[20px]">
+                            <h2 className="font-semibold text-lg ml-2 mb-2">Mã giảm giá:</h2>
+                            { getvoucher?.vouchers?.length === 0 ? (
+                                <p>Bạn chưa có mã voucher nào.</p>
+                            ) : (
                                 <div className="flex flex-col space-y-4 ">
                                     { getvoucher?.vouchers?.map( ( voucher: any ) => (
-                                        <button key={ voucher?._id } onClick={ () => handleVoucherClick( voucher ) } className="bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px]">
-                                            <p>{ voucher.name }</p>
-                                            <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
-                                        </button>
+                                        <div className='grid grid-cols-2 gap-[550px]'>
+                                            <div>
+                                                <button
+                                                    onClick={ () => handleVoucherClick( voucher ) } // Handle the usage of the voucher
+                                                    key={ voucher?._id }
+                                                    className={ `bg-gray-200 space-x-6 rounded-full pl-[15px] text-[15px] font-medium flex w-[550px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
+                                                >
+                                                    <p>{ voucher.name }</p>
+                                                    <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
+                                                    { !isVoucherValid( voucher ) && <p>Mã voucher hết hiệu lực</p> }
+                                                </button>
+                                            </div>
+
+                                            <button className="border rounded-md border-gray-400 sm:ml-4 h-[48px] max-sm:mr-3 sm:w-[85px] bg-[#EDEDED]" onClick={ () => handleUseVoucher( voucher ) }>Sử dụng</button>
+                                        </div>
+
                                     ) ) }
                                 </div>
-                            </div>
-                        ) }
+                            ) }
+                        </div>
                         <Popup open={ selectedVoucher !== null } onClose={ handleCloseModal }>
                             {/* Content inside the Popup */ }
-
                             { selectedVoucher && (
-
                                 <div className="modal">
-                                    <div className="modal-content">
-                                        <button className="close" onClick={ handleCloseModal }>&times;</button>
-                                        <h2>Tên voucher : { selectedVoucher.name } </h2>
-                                        <p>Code: { selectedVoucher?.code }</p>
-                                        <p>Discount: { selectedVoucher?.discount }%</p>
-                                        <p>Điều kiện : { selectedVoucher?.detailVoucher }</p>
-                                        <p>Số lượng  : { selectedVoucher?.limit }</p>
-                                        <p> Ngày bắt đầu voucher : { selectedVoucher?.startDate }</p>
-                                        <p> Ngày hết hạn voucher : { selectedVoucher?.endDate }</p>
-
-
-
+                                        <button className="close pl-[20px] text-[40px]" onClick={ handleCloseModal }>&times;</button>
+                                        <h2 className='text-[40px] text-center font-medium text-[#23314B]' >Thông Tin Mã Giảm Giá</h2>
+                                    <div className="modal-content h-[400px] text-left pl-[60px] pt-[30px] ">
+                                        <h2 className='text-[20px] font-medium text-[#23314B]'>Tên voucher : { selectedVoucher.name } </h2>
+                                        <p className='text-[20px] font-medium text-[#23314B]'>Code: { selectedVoucher?.code }</p>
+                                        <p className='text-[20px] font-medium text-[#23314B]'>Discount: { selectedVoucher?.discount }%</p>
+                                        <p className='text-[20px] font-medium text-[#23314B]'>Điều kiện : { selectedVoucher?.detailVoucher }</p>
+                                        <p className='text-[20px] font-medium text-[#23314B]'>Số lượng  : { selectedVoucher?.limit }</p>
+                                        <p className='text-[20px] font-medium text-[#23314B]'> Ngày bắt đầu voucher : { startDateWithoutTimezone }</p>
+                                        <p className='text-[20px] font-medium text-[#23314B]'> Ngày hết hạn voucher : { endDateWithoutTimezone }</p>
                                         {/* Add other voucher details you want to display */ }
                                     </div>
                                 </div>

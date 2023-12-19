@@ -24,7 +24,7 @@ export const profile = [
     },
 
     {
-        title: "Mã voucher của tôi ",
+        title: "Mã giảm giá của tôi ",
         url: "myVoucher",
         Icon: BiSolidDiscount,
     },

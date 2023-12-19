@@ -73,7 +73,7 @@ const ForgotPage = () =>
 
                                 <Form.Item>
                                     <button onClick={ forgotPassword } type="submit" className="bg-[#0F172A] rounded-2xl px-5 text-white py-2 hover:scale-105 duration-300">
-                                        Submit
+                                        Khôi phục
                                     </button>
                                 </Form.Item>
                             </Form>

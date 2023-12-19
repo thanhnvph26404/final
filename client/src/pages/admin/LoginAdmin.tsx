@@ -1,50 +1,43 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../../store/Auth/Auth.services";
+import React from 'react'
 import { toastSuccess, toastError } from "../../hook/toastify";
 import { Form, Input } from 'antd';
-import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from "react-router-dom";
 
-const LoginPage = () =>
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
+import { useLoginAdminMutation } from '../../store/Auth/Auth.services';
+const LoginAdmin = () =>
 {
     const navigate = useNavigate();
-    const [ login ] = useLoginMutation();
-
+    const [ LoginAdmin ] = useLoginAdminMutation()
     const onFinish = async ( values: any ) =>
     {
         try
         {
-            const response = await login( values ).unwrap();
+            const response = await LoginAdmin( values ).unwrap();
             toastSuccess( "Đăng nhập thành công" );
             console.log( response );
+            localStorage.setItem( "checktoken", response.checktoken );
+            navigate( "/admin" );
 
-            localStorage.setItem( "token", response.token );
-
-            navigate( "/" );
-        } catch ( error )
+        } catch ( error: any )
         {
-            console.log( "Registration failed with error:", error );
-            toastError( "Đăng nhập thất bại" );
+            console.log( error );
+            toastError( error.data.message );
         }
-    };
 
-    const onFinishFailed = ( errorInfo: any ) =>
-    {
-        console.log( 'Failed:', errorInfo );
-    };
-
+    }
     return (
         <div>
             <section className="bg-gray-50 min-h-screen flex items-center justify-center">
                 <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
                     <div className="md:w-1/2 px-16">
-                        <h2 className="font-bold text-2xl text-black">Đăng nhập</h2>
+                        <h2 className="font-bold text-[21px] text-black">Đăng nhập quản trị viên</h2>
 
                         <Form
                             name="basic"
                             className="mt-2"
                             layout="vertical"
                             onFinish={ onFinish }
-                            onFinishFailed={ onFinishFailed }
                             autoComplete="off"
                         >
 
@@ -79,19 +72,8 @@ const LoginPage = () =>
                             </Form.Item>
                         </Form>
 
-                        <hr className="border-gray-400" />
-                        <Link to={ "/forgot-password" } className="  mt-5 text-xs border-b border-gray-400 py-4">
-                            Quên mật khẩu?
-                        </Link>
-                        <div className="mt-5  text-xs flex justify-between py-3 items-center">
-                            <p>Nếu bạn không có tài khoản</p>
-                            <Link to={ "/signup" }
-                                className="py-2 px-3 bg-[#0F172A] text-white
-                  border rounded-xl hover:scale-105 duration-300"
-                            >
-                                Đăng ký
-                            </Link>
-                        </div>
+
+
                     </div>
                     <div className="md:block hidden w-1/2">
                         <img className="rounded-2xl" src="./images/polotron.png" alt="" />
@@ -99,7 +81,7 @@ const LoginPage = () =>
                 </div>
             </section>
         </div>
-    );
+    )
 }
 
-export default LoginPage;
+export default LoginAdmin

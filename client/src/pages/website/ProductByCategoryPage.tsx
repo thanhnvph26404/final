@@ -13,7 +13,7 @@ const ProductByCategoryPage = () =>
 
   const [ arrange, setArrange ] = useState( false );
   const [ filter, setFilter ] = useState( false );
-  const [ value, setValue ] = useState( [ 0, 500000 ] );
+  const [ value, setValue ] = useState<any>( [ 0, 500000 ] );
   const [ sortOption, setSortOption ] = useState( "lowest" );
   const handleSortChange = ( event: React.ChangeEvent<HTMLSelectElement> ) =>
   {

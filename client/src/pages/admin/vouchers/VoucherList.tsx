@@ -14,11 +14,9 @@ import { FaTrashCan } from "react-icons/fa6";
 
 
 
-const VouCherList = () =>
-{
+const VouCherList = () => {
 
-    interface DataType
-    {
+    interface DataType {
 
         key: string,
         name: string,
@@ -31,41 +29,36 @@ const VouCherList = () =>
         status: string,
         detailVoucher: string
 
+
     }
 
     const dispatch = useAppDispatch();
     const voucherState = useAppSelector(
-        ( state ) => state.vouchers.vouchers
+        (state) => state.vouchers.vouchers
     )
 
-    const { data: voucher, isLoading: isVoucherListLoading, isSuccess: isVoucherListSuccess } = useGetVoucherListQuery( [] );
-    const [ deleteVoucherApi, { isError: isDeleteVoucherError } ] = useDeleteVoucherMutation();
+    const { data: voucher, isLoading: isVoucherListLoading, isSuccess: isVoucherListSuccess } = useGetVoucherListQuery([]);
+    const [deleteVoucherApi, { isError: isDeleteVoucherError }] = useDeleteVoucherMutation();
 
-    const confirm = async ( id: string ) =>
-    {
-        try
-        {
-            await deleteVoucherApi( id )
+    const confirm = async (id: string) => {
+        try {
+            await deleteVoucherApi(id)
                 .unwrap()
-                .then( () =>
-                {
-                    dispatch( deleteVoucher( id ) );
-                } )
-                .then( () =>
-                {
-                    toastSuccess( "Xóa thành công" );
-                } );
-        } catch ( error )
-        {
-            if ( isDeleteVoucherError )
-            {
-                toastError( "Xoá thất bại!" );
+                .then(() => {
+                    dispatch(deleteVoucher(id));
+                })
+                .then(() => {
+                    toastSuccess("Xóa thành công");
+                });
+        } catch (error) {
+            if (isDeleteVoucherError) {
+                toastError("Xoá thất bại!");
             }
         }
     };
 
     const dataSource = voucherState?.map(
-        ( { _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status, detailVoucher }: IVoucher ) => ( {
+        ({ _id, name, code, discount, limit, startDate, endDate, minimumOrderAmount, status, detailVoucher }: IVoucher) => ({
             key: _id || "", // Thêm kiểm tra null hoặc undefined
             name,
             code,
@@ -76,7 +69,7 @@ const VouCherList = () =>
             minimumOrderAmount,
             status,
             detailVoucher
-        } )
+        })
     );
 
     const columns: ColumnsType<DataType> = [
@@ -106,7 +99,7 @@ const VouCherList = () =>
             key: 'startDate',
             render: (update) => {
                 const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
 
 
                 return (
@@ -122,7 +115,7 @@ const VouCherList = () =>
             key: 'endDate',
             render: (update) => {
                 const dateObject = new Date(update);
-                const formattedDate = dateObject.toISOString().slice(0, 10);
+                const formattedDate = dateObject.toLocaleDateString().slice(0, 10);
 
 
                 return (
@@ -143,14 +136,14 @@ const VouCherList = () =>
             key: 'status',
         },
         {
-            title: 'Chi tiết voucher ',
+            title: 'Mô tả chi tiết ',
             dataIndex: 'detailVoucher',
             key: 'detailVoucher',
         },
         {
-            title: 'Action',
+            title: 'Hành Động',
             key: 'action',
-            render: ( _, record ) => (
+            render: (_, record) => (
                 <Space size="middle">
                     {/* <Link to={ `editVoucher/${ record.key }` }>
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
@@ -159,7 +152,7 @@ const VouCherList = () =>
                     <Popconfirm
                         title="Xóa danh mục"
                         description="Bạn có chắc muốn xóa danh mục này?"
-                        onConfirm={ () => confirm( record.key ) }
+                        onConfirm={() => confirm(record.key)}
                         okText="Xóa"
                         cancelText="Hủy"
                     >
@@ -171,10 +164,9 @@ const VouCherList = () =>
     ];
 
     // <Table dataSource={dataSource} columns={columns} />;
-    useEffect( () =>
-    {
-        dispatch( loadVoucherList( voucher?.data || [] ) );
-    }, [ isVoucherListSuccess ] );
+    useEffect(() => {
+        dispatch(loadVoucherList(voucher?.data || []));
+    }, [isVoucherListSuccess]);
 
     return (
         <div>
@@ -183,20 +175,20 @@ const VouCherList = () =>
                     Danh sách mã giảm giá
                 </h1>
                 <Link
-                    to={ "createVoucher" }
+                    to={"createVoucher"}
                     className="flex items-center bg-[#1D1F2C] px-3.5 py-2.5 rounded-lg"
                 >
                     <AiOutlinePlus className="text-base font-semibold text-white mr-1" />
                     <p className="text-sm font-semibold text-white">
-                        Thêm voucher
+                        Thêm mã giảm giá
                     </p>
                 </Link>
             </div>
-            { isVoucherListLoading ? (
-                <Skeleton active paragraph={ { rows: 7 } } />
+            {isVoucherListLoading ? (
+                <Skeleton active paragraph={{ rows: 7 }} />
             ) : (
-                <Table columns={ columns } dataSource={ dataSource || [] } />
-            ) }
+                <Table columns={columns} dataSource={dataSource || []} />
+            )}
         </div>
     )
 }

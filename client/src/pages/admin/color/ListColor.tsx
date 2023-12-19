@@ -1,7 +1,10 @@
-import { Space, Table, Button, message } from "antd";
+import { Space, Table, Button, message, Popconfirm } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { Link } from "react-router-dom";
 import { useDeleteColorMutation, useGetcolorListQuery } from "../../../store/valueAttribute/colorsevice";
+import { IoPencilSharp } from "react-icons/io5";
+import { FaTrashCan } from "react-icons/fa6";
+
 interface DataType {
     key?: string | number;
     _id?: string;
@@ -39,7 +42,7 @@ const ListColor = () => {
             key: "action",
             render: (record) => (
                 <Space size="middle">
-                    <Button
+                    {/* <Button
                         type="primary"
                         style={{ backgroundColor: "red" }}
                         onClick={() => {
@@ -56,7 +59,20 @@ const ListColor = () => {
 
                         <Link to={ `/admin/color/update/${ record._id }` }>Cập Nhật</Link>
                       
-                    </Button>
+                    </Button> */}
+                    <Link to={`/admin/color/update/${ record._id }`}>
+                        <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Link>
+
+                    <Popconfirm
+                        title="Xóa danh mục"
+                        description="Bạn có chắc muốn xóa danh mục này?"
+                        onConfirm={() => removecolor(record._id)}
+                        okText="Xóa"
+                        cancelText="Hủy"
+                    >
+                        <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
+                    </Popconfirm>
                 </Space>
             ),
         },

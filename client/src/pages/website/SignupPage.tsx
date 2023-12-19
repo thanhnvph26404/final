@@ -33,7 +33,7 @@ const SignupPage = () =>
             <section className="bg-gray-50 min-h-screen flex items-center justify-center">
                 <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
                     <div className="md:w-1/2 px-16">
-                        <h2 className="font-bold text-2xl text-black">Signup</h2>
+                        <h2 className="font-bold text-2xl text-black">Đăng ký</h2>
 
                         <Form
                             name="basic"
@@ -94,16 +94,16 @@ const SignupPage = () =>
 
                             <Form.Item>
                                 <button type="submit" className="bg-[#0F172A] rounded-2xl px-5 text-white py-2 hover:scale-105 duration-300">
-                                    Signup
+                                    Đăng ký
                                 </button>
                             </Form.Item>
                         </Form>
 
                         <hr className="border-gray-400" />
                         <div className="mt-3 text-xs flex justify-between items-center">
-                            <p>Do you already have an account</p>
+                            <p>Bạn đã có tài khoản</p>
                             <Link to="/login" className="py-2 px-5 bg-[#0F172A] border rounded-xl hover:scale-105 text-white duration-300">
-                                Login
+                                Đăng nhập
                             </Link>
                         </div>
                     </div>

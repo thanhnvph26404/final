@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { useGetOneOrderQuery } from "../../store/Auth/Auth.services";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toastError } from "../../hook/toastify";
 import { message } from "antd";
 import { useAddCommentMutation } from "../../store/Comment/comment.services";
@@ -8,11 +8,12 @@ import { useAddCommentMutation } from "../../store/Comment/comment.services";
 const CreateComment = () => {
 
     const { id } = useParams()
-    const { data: order, isLoading } = useGetOneOrderQuery(id)
+    const { data: order, isFetching } = useGetOneOrderQuery(id)
     const [AddCommentMutation] = useAddCommentMutation()
     const [ratings, setRatings] = useState([
         5, 5, 5, 5, 5, 5, 5, 5, 5
     ]);
+    const [products, setproducts] = useState([])
     const navigate = useNavigate()
     const handleStarClick = (value: any) => {
 
@@ -24,9 +25,36 @@ const CreateComment = () => {
         setRatings(newArray);
 
     };
+    // lọc các sản phẩm trùng nhau
+    useEffect(() => {
+
+        if (order) {
+            const productids = [order?.products[0].product._id]
+
+            const newproduct = order?.products.filter((product, index) => {
+                if (index == 0) {
+                    return true
+                }
+                for (let i = 0; i < productids.length; i++) {
+                    const elementid = productids[i];
+                    if (elementid !== product.product._id) {
+                        console.log(elementid, product.product._id);
+                        productids.push(product.product._id)
+                        return true
+                    }
+                }
+
+                return false
+
+            })
+            setproducts(newproduct)
+        }
 
 
-    const handleAddComment = (e: any) => {
+    }, [isFetching])
+    console.log(products);
+
+    const handleAddComment = async (e: any) => {
         e.preventDefault();
         var valid = true
         const comments = document.getElementsByName('comment')
@@ -36,8 +64,10 @@ const CreateComment = () => {
                 valid = false
             }
         })
+        let newcmt = [];
+
         if (order && valid) {
-            order.products.map((item, index) => {
+            newcmt = await Promise.all(products.map(async (item, index) => {
                 const commentProduct: any = {
                     product: item.product?._id,
                     name: order?.userId.name,
@@ -45,23 +75,18 @@ const CreateComment = () => {
                     email: order?.userId.email,
                     feedback: ratings[index]
                 }
-
-                console.log(commentProduct);
-
-                AddCommentMutation(commentProduct)
+                await AddCommentMutation(commentProduct)
                     .unwrap()
                     .then((response) => {
                         message.info("bình luận thành công")
+
                     })
-                    .catch((error) => {
-                        message.error(error.data.message);
-                    });
-            })
+
+            }))
+
+            console.log("list new cmt", newcmt);
+
             navigate('/home/product-detail/' + order.products[0].product?._id)
-
-
-
-
         }
     }
 
@@ -69,7 +94,7 @@ const CreateComment = () => {
         <div className="mx-12">
             <h1 className="text-2xl  mb-5">Đánh giá sản phẩm</h1>
             <div className="flex flex-col mx-auto  gap-y-5  w-[500px] md:w-[700px] lg:w-[900px]">
-                {order?.products?.map((product: any, index) => {
+                {products.map((product: any, index) => {
                     return (
                         <div className="">
                             <div className="flex">
