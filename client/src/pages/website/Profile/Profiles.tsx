@@ -6,7 +6,6 @@ import Container from "../../../components/layouts/website/Container";
 import { useGetUserByTokenMutation } from "../../../store/Auth/Auth.services";
 import { useCallback, useEffect, useState } from "react";
 import { IUser } from "../../../store/Auth/Auth.interface";
-import { message } from "antd";
 import MenuItem from "../../../hook/MenuItems";
 import { MdOutlineAccountCircle } from "react-icons/md";
 import Avatar from "../../../hook/Avatar";
@@ -38,7 +37,7 @@ const ProfilePage = ( { imageUser, path }: ProfilePageProps ) =>
         {
             getUserByToken( token )
                 .unwrap()
-                .then( ( response ) =>
+                .then( ( response: any ) =>
                 {
                     setCurrentUser( response.data );
                 } )

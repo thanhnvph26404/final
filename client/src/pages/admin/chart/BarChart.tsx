@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 
 import LineChart from "../../admin/chart/LineChart";
-import PieChart from "../../admin/chart/Doughnut";
 import { defaults } from "chart.js/auto";
 import { useGetAllOrderQuery, useGetOrdersByStatusMutation } from "../../../store/Auth/Auth.services";
 import { Button, DatePicker, Select } from "antd";
@@ -10,6 +9,10 @@ import { StatusOrder } from "../../../store/Auth/Auth.interface";
 import { toastError, toastSuccess } from "../../../hook/toastify";
 import dayjs from 'dayjs';
 import { useProductsoldadayQuery, useTotalProductadayMutation, useTotalproductamonthMutation } from "../../../store/Order/Ordersevice";
+import { useLocation } from "react-router-dom";
+import Barchart1 from "./Barchartmonth";
+import Topbuyer from "./Topbuyer";
+import TopProduct from "./TopProduct";
 
 defaults.maintainAspectRatio = true;
 defaults.responsive = true;
@@ -25,9 +28,12 @@ const { Option } = Select;
 
 const ChartPage = () =>
 {
+  const currentMonthStart = dayjs().startOf( "month" ); // Ngày đầu tiên của tháng hiện tại
+  const currentMonthEnd = dayjs().endOf( 'month' );
+  const location = useLocation();
   const { data: OrderData } = useGetAllOrderQuery( null )
-  const [ startDate, setStartDate ] = useState( null );
-  const [ endDate, setEndDate ] = useState( null );
+  const [ startDate, setStartDate ] = useState<any>( dayjs() );
+  const [ endDate, setEndDate ] = useState<any>( dayjs() );
   const [ startYear, setstartYear ] = useState( "" );
   const [ endYear, setendYear ] = useState( "" );
   const [ successOrder, setSuccessOrders ] = useState( 0 );
@@ -35,8 +41,8 @@ const ChartPage = () =>
   const [ cancelOrder, setCancelOrders ] = useState( 0 );
   const [ dangxlOrder, setdangxlOrder ] = useState( 0 );
   const [ status, setStatus ] = useState( "" );
-  const [ startDates, setStartDates ] = useState( null );
-  const [ endDates, setEndDates ] = useState( null );
+  const [ startDates, setStartDates ] = useState<any>( currentMonthStart );
+  const [ endDates, setEndDates ] = useState<any>( currentMonthEnd );
   const [ statusOrder ] = useGetOrdersByStatusMutation()
   const [ filteredOrders, setFilteredOrders ] = useState<any>( [] );
   const [ totalproductaday, settotalproductaday ] = useState<any>( [] )
@@ -46,6 +52,11 @@ const ChartPage = () =>
 
   const [ totalProduct ] = useTotalProductadayMutation()
   const [ totalmonthProduct ] = useTotalproductamonthMutation()
+  useEffect( () =>
+  {
+    handleFilters();
+  }, [ startDates, endDates ] );
+
   useEffect( () =>
   {
     if ( Array.isArray( filteredOrders?.orders ) && filteredOrders?.orders?.length > 0 )
@@ -94,7 +105,7 @@ const ChartPage = () =>
       setCancelOrders( cancelOrderCount );
       setdangxlOrder( dangxlOrderCount );
     }
-  }, [ OrderData, filteredOrders ] );
+  }, [ location, OrderData, filteredOrders ] );
   const hanld = () =>
   {
     settotalproductaday( [] )
@@ -168,6 +179,7 @@ const ChartPage = () =>
       },
     ],
   } );
+
   useEffect( () =>
   {
     if ( totalproductaday?.productsSoldPerDay?.length > 0 )
@@ -274,7 +286,7 @@ const ChartPage = () =>
         ],
       } );
     }
-  }, [ totalproductaday, totalproductmonth, productsold ] );
+  }, [ location, totalproductaday, totalproductmonth, productsold ] );
   const handleFilter = () =>
   {
 
@@ -341,7 +353,7 @@ const ChartPage = () =>
         </Select>
 
         <RangePicker
-          placeholder={ [ "Ngày bắt đầu", "Ngày kết thúc" ] }
+          value={ [ startDates, endDates ] }
           onChange={ ( dates: any ) =>
           {
             if ( dates && dates.length === 2 )
@@ -393,13 +405,22 @@ const ChartPage = () =>
           </div>
         </div>
       </div>
+      <div className="h-[400px] w-[1000px] mb-[150px]">
+        <h1 className="text-[25px] text-[#23314B] font-semibold">Thống kê tổng tiền theo ngày và tháng   </h1>
+        <LineChart />
+      </div>
+      <div className="h-[400px] w-[1000px] mt-[500px] mb-[150px]">
+        <h1 className="text-[25px] text-[#23314B] font-semibold">Thống kê tổng tiền theo tháng và năm </h1>
+        <Barchart1 />
+      </div>
 
-      <div className="">
-        <h1 className="text-[25px] text-[#23314B] font-semibold">Thống kê sản phẩm </h1>
-        <div className="h-[500px] w-[1000px] mt-[50px] mb-[50px]">
+      <div className="mt-[500px]">
+        <h1 className="text-[25px] text-[#23314B] font-semibold">Thống kê số lượng sản phẩm theo ngày tháng năm</h1>
+        <div className="h-[500px] w-[1000px]  mb-[50px]">
           <div className="flex space-x-6">
             <RangePicker
-              placeholder={ [ "Ngày bắt đầu", "Ngày kết thúc" ] }
+              value={ [ startDate, endDate ] }
+
               onChange={ ( dates: any ) =>
               {
                 if ( dates && dates.length === 2 )
@@ -431,21 +452,24 @@ const ChartPage = () =>
                     Lọc</button>
                   {/* <button onClick={ handleReset }>Tất cả</button> */ }
                 </div>
-              </div>            </div>
+              </div>
+            </div>
           </div>
           <Bar data={ chartData } />
         </div>
-        <div className="h-[400px] w-[1000px] mb-[150px]">
-          <h1 className="text-[25px] text-[#23314B] font-semibold">Thống kê tổng tiền  </h1>
 
-          {/* Hiển thị biểu đồ LineChart */ }
-          <LineChart />
+      </div>
+
+      <div>
+        <div className=" py-30">
+          {/* Hiển thị biểu đồ Doughnut */ }
+          <Topbuyer />
         </div>
       </div>
       <div>
-        <div className="w-[400px] py-80">
+        <div className=" py-30">
           {/* Hiển thị biểu đồ Doughnut */ }
-          {/* <PieChart /> */ }
+          <TopProduct />
         </div>
       </div>
     </div>

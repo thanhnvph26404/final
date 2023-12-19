@@ -26,7 +26,6 @@ export const createOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const updateOrder = async ( req, res ) =>
 {
     try
@@ -55,7 +54,6 @@ export const updateOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const deleteOrder = async ( req, res ) =>
 {
     try
@@ -71,7 +69,6 @@ export const deleteOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const getAllOrders = async ( req, res ) =>
 {
     try
@@ -86,7 +83,6 @@ export const getAllOrders = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const getOneOrder = async ( req, res ) =>
 {
     try
@@ -109,17 +105,18 @@ export const adaytotal = async ( req, res ) =>
 {
     try
     {
-        const today = new Date( new Date().toLocaleString( "en-US", { timeZone: "Asia/Ho_Chi_Minh" } ) );
-        today.setUTCHours( 0, 0, 0, 0 ); // Đặt giờ về 00:00:00.000 UTC
-        const endOfDay = new Date( today ); // Tạo ngày cuối cùng trong ngày (23:59:59.999)
-        endOfDay.setHours( 23, 59, 59, 999 );
+        const today = new Date(); // Lấy ngày hiện tại
+
+        // Đặt thời gian từ 00:00:00.000 đến 23:59:59.999 của ngày hiện tại
+        const startOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0 );
+        const endOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999 );
 
         const totalAmount = await Order.aggregate( [
             {
                 $match: {
                     createdAt: {
-                        $gte: today, // Lớn hơn hoặc bằng ngày bắt đầu của ngày hiện tại
-                        $lte: endOfDay, // Nhỏ hơn hoặc bằng ngày cuối cùng của ngày hiện tại
+                        $gte: startOfToday, // Lớn hơn hoặc bằng ngày bắt đầu của ngày hiện tại
+                        $lte: endOfToday, // Nhỏ hơn hoặc bằng ngày cuối cùng của ngày hiện tại
                     },
                     status: { $nin: [ "Đã hủy", "Đã hoàn tiền" ] }, // Lọc trạng thái không phải 'đã hủy' hoặc 'đã hoàn tiền'
                 },
@@ -510,5 +507,91 @@ export const calculateTotalProductsSoldToday = async ( req, res ) =>
         res.status( 500 ).json( { error: 'Đã xảy ra lỗi khi tính toán số lượng sản phẩm' } );
     }
 };
+export const topBuys = async ( req, res ) =>
+{
+    try
+    {
+        const { startDate, endDate } = req.body; // Assuming these dates are sent in the request body
+
+        if ( !startDate || !endDate )
+        {
+            return res.status( 400 ).json( { error: 'Start date and end date are required.' } );
+        }
+
+        const topBuyers = await Order.aggregate( [
+            {
+                $match: {
+                    createdAt: { $gte: new Date( startDate ), $lte: new Date( endDate ) },
+                    // Add any other conditions based on your data model
+                },
+            },
+            {
+                $group: {
+                    _id: '$userId',
+                    totalOrders: { $sum: 1 },
+                    totalAmount: { $sum: '$paymentIntent.amount' },
+                },
+            },
+
+            {
+                $sort: { totalOrders: -1 },
+            },
+            {
+                $limit: 5,
+            },
+        ] ).exec();
+
+        const populatedBuyers = await Order.populate( topBuyers, { path: '_id', model: 'User' } );
+
+        res.json( populatedBuyers );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: 'Internal server error' } );
+    }
+};
+export const topSellingProducts = async ( req, res ) =>
+{
+    try
+    {
+        const { startDate, endDate } = req.body; // Assuming these dates are sent in the request body
+
+        if ( !startDate || !endDate )
+        {
+            return res.status( 400 ).json( { error: 'Start date and end date are required.' } );
+        }
+
+        const topProducts = await Order.aggregate( [
+            {
+                $match: {
+                    createdAt: { $gte: new Date( startDate ), $lte: new Date( endDate ) },
+                    status: { $nin: [ "Đã hủy", "Đã hoàn tiền" ] } // Lọc bỏ trạng thái "Đã hủy"
+                }
+            },
+            {
+                $unwind: '$products',
+            },
+            {
+                $group: {
+                    _id: '$products.product', // Group by product ID
+                    totalQuantitySold: { $sum: '$products.quantity' }, // Calculate total quantity sold for each product
+                    productName: { $first: '$products.productInfo.name' }, // Get product name
+                    productInfo: { $first: '$products.productInfo' }, // Get product info
+                },
+            },
+            {
+                $sort: { totalQuantitySold: -1 }, // Sort by total quantity sold
+            },
+            {
+                $limit: 10, // Get the top 5 products
+            },
+        ] ).exec();
+
+        res.json( topProducts );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: 'Internal server error' } );
+    }
+};
+
 
 

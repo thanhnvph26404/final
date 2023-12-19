@@ -11,7 +11,11 @@ const { Option } = Select;
 const PurchaseHistory = () =>
 {
     const { data: order, refetch } = useGetOrderQuery( [] );
+    console.log( order );
+
     const [ selectedOrderId, setSelectedOrderId ] = useState( null );
+    console.log( selectedOrderId );
+
     const [ cancelReason, setCancelReason ] = useState( '' );
     const [ updateStatus ] = useCancelOrderMutation();
     const [ isOrderCancelled, setIsOrderCancelled ] = useState( false );
@@ -84,7 +88,6 @@ const PurchaseHistory = () =>
     {
         setShowModal( false );
     };
-    console.log( order?.Order[ 0 ]?._id );
 
     return (
         <Container>
@@ -123,7 +126,7 @@ const PurchaseHistory = () =>
                                             type="primary"
                                             className="bg-red-400"
                                             onClick={ () => handleOpenModal( order._id ) }
-                                            disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "Đã hoàn tiền" }
+                                            disabled={ isOrderCancelled || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "Đã hoàn tiền" || order.status === 'Đang giao hàng' || order.status === 'Đã hủy' || order.status === "Đơn hàng đang chuẩn bị được giao đến bạn" || order.status === "Đã xác nhận" }
 
                                         >
                                             Hủy đơn hàng
@@ -192,7 +195,7 @@ const PurchaseHistory = () =>
                                     key="name"
                                     render={ ( text, record: any ) => (
                                         <div>
-                                            <p>{ record.product?.name }</p>
+                                            <p>{ record.productInfo?.name }</p>
 
                                         </div>
                                     ) }
@@ -218,15 +221,32 @@ const PurchaseHistory = () =>
                                     title="Hành động"
                                     key="action"
                                     render={ ( text, record: any ) => (
-                                        <Button
-                                            type="primary"
-                                            className="bg-black-400"
-                                            onClick={ () => handleReceivedOrder( order._id ) }
-                                            disabled={ record.status === 'Đã hoàn thành' || isReceived || order.status === 'Đã hủy' || order.status === "Đã hoàn thành" || order.status === "đang chờ được xử lý" || order.status === "Đã hoàn tiền" }
-
-                                        >
-                                            Đã nhận được hàng
-                                        </Button>
+                                        <div className=' flex'>
+                                            <Button
+                                                type="primary"
+                                                className="bg-black-400"
+                                                onClick={ () => handleReceivedOrder( order._id ) }
+                                                disabled={ order.status !== 'Đang giao hàng' } // Chỉ hiển thị khi trạng thái là 'Đang giao hàng'
+                                            >
+                                                Đã nhận được hàng
+                                            </Button>
+                                            <Button
+                                                key="feedback"
+                                                type="primary"
+                                                className="bg-black-400 ml-2"
+                                                disabled={
+                                                    order.status !== 'Đã hoàn thành' || // Nếu trạng thái không phải 'Đã hoàn thành', vô hiệu hóa nút
+                                                    isReceived || // Các điều kiện khác để vô hiệu hóa nút
+                                                    order.status === 'Đã hủy' ||
+                                                    order.status === 'Đang xử lý' ||
+                                                    order.status === 'đang chờ được xử lý' ||
+                                                    order.status === 'Đã hoàn tiền' ||
+                                                    order.status === 'Đang giao hàng'
+                                                }
+                                            >
+                                                <Link to={ `/feedback/${ order._id }` }>Đánh giá</Link>
+                                            </Button>
+                                        </div>
                                     ) }
                                 />
 
@@ -243,7 +263,7 @@ const PurchaseHistory = () =>
                                     Đóng
                                 </Button>,
                                 <Button key="feedback" type="primary">
-                                    <Link to={ `/feedback/${ selectedOrderId }` }>Đến trang feedback</Link>
+                                    <Link to={ `/feedback/${ selectedOrderId }` }>Đến trang Đánh giá</Link>
                                 </Button>,
                             ] }
                         >

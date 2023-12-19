@@ -41,6 +41,8 @@ const OrderDetail = () =>
                 price: product.productInfo.price,
                 quantity: product.quantity,
                 images: product.productInfo.images,
+                productVariant: product.productVariant
+
 
 
                 // Thêm các thông tin khác cần hiển thị từ productInfo
@@ -84,9 +86,19 @@ const OrderDetail = () =>
             render: ( category: any ) => <p>{ category.title }</p>,
         },
         {
-            title: 'Bình Luận',
-            dataIndex: 'status',
-            key: 'status',
+            title: 'Biến thể',
+            dataIndex: 'productVariant',
+            key: 'productVariant',
+            render: ( productvariant: any ) =>
+            {
+
+                return (
+                    <div>
+                        <p>{ productvariant.color }</p>
+                        <p>{ productvariant.size }</p>
+                    </div>
+                )
+            }
         },
         {
             title: 'Số lượng',
