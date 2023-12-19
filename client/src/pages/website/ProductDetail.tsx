@@ -282,7 +282,7 @@ const ProductDetail = () =>
                             </div>
                         ) : (
                             <div className="flex gap-2 text-left mt-[40px]">
-                                <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">
+                                <span className="text-[#23314bb3] text-sm md:text-[21px] font-thin">
                                     { product?.data?.price.toLocaleString() }₫
                                 </span>
                                 <button onClick={ () => addtowishList( product?.data?._id ) }>

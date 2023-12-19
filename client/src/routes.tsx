@@ -94,7 +94,7 @@ const PriviteRouter = ({ isAuth }: any) => {
                 .catch((error) => {
                     console.log(error);
 
-                    toastError("lỗi thao tác")
+                    toastError("Lỗi thao tác")
                 });
         }
     }, [getUser, token]);

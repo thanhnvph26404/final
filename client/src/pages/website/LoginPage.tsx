@@ -37,7 +37,7 @@ const LoginPage = () =>
             <section className="bg-gray-50 min-h-screen flex items-center justify-center">
                 <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
                     <div className="md:w-1/2 px-16">
-                        <h2 className="font-bold text-2xl text-black">Login</h2>
+                        <h2 className="font-bold text-2xl text-black">Đăng nhập</h2>
 
                         <Form
                             name="basic"
@@ -74,7 +74,7 @@ const LoginPage = () =>
 
                             <Form.Item>
                                 <button type="submit" className="bg-[#0F172A] rounded-2xl px-5 text-white py-2 hover:scale-105 duration-300">
-                                    Login
+                                    Đăng nhập
                                 </button>
                             </Form.Item>
                         </Form>
@@ -84,12 +84,12 @@ const LoginPage = () =>
                             Quên mật khẩu?
                         </Link>
                         <div className="mt-5  text-xs flex justify-between py-3 items-center">
-                            <p>If you don't have an account..</p>
+                            <p>Nếu bạn không có tài khoản</p>
                             <Link to={ "/signup" }
-                                className="py-2 px-5 bg-[#0F172A] text-white
+                                className="py-2 px-3 bg-[#0F172A] text-white
                   border rounded-xl hover:scale-105 duration-300"
                             >
-                                Register
+                                Đăng ký
                             </Link>
                         </div>
                     </div>

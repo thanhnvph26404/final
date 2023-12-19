@@ -180,7 +180,7 @@ const VouCherList = () => {
                 >
                     <AiOutlinePlus className="text-base font-semibold text-white mr-1" />
                     <p className="text-sm font-semibold text-white">
-                        Thêm voucher
+                        Thêm mã giảm giá
                     </p>
                 </Link>
             </div>

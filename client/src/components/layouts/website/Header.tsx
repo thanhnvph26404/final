@@ -154,7 +154,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                 <ul className="flex items-center gap-5 ">
                   <li>
                     <Link to={ "" } className="p-3 inline-block hover:text-gray-500 relative">
-                      New In
+                      Trang chủ
                     </Link>
                   </li>
 

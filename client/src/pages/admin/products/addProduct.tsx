@@ -283,7 +283,7 @@ const AddProduct = () => {
                                             wrapperCol={{ span: 18 }} help={duplicateVariantError ? 'Biến thể đã tồn tại' : ''}
                                             label="Màu"
                                             name={[field.name, 'color']}
-                                            className="my-auto pb-[20px]" 
+                                            className="my-auto pb-[20px] w-[180px]" 
                                             rules={[{ required: true, message: 'Vui lòng chọn màu' }]}
                                         >
                                             <Select placeholder="Chọn màu" className="w-8 mx-3">
@@ -301,7 +301,7 @@ const AddProduct = () => {
                                             label="Size"
                                             labelCol={{ span: 8 }}
                                             wrapperCol={{ span: 18 }}
-                                            className="my-auto ml-3 pb-[20px] "
+                                            className="my-auto ml-10 pb-[20px] w-[180px] "
                                             name={[field.name, 'size']}
                                             rules={[{ required: true, message: 'Vui lòng chọn kích cỡ' }]}
                                         >
@@ -318,14 +318,14 @@ const AddProduct = () => {
                                             label="Số lượng"
                                             labelCol={{ span: 8 }}
                                             wrapperCol={{ span: 18 }}
-                                            className="my-auto pb-[20px]"
+                                            className="my-auto pb-[40px]"
                                             name={[field.name, 'quantity']}
                                             rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
                                         >
                                             <Input placeholder="Nhập số lượng" type="number" />
                                         </Form.Item>
 
-                                        <MinusCircleOutlined className='pb-[25px] pl-[8px]' onClick={() => remove(field.name)} />
+                                        <MinusCircleOutlined className='pb-[45px] pl-[8px]' onClick={() => remove(field.name)} />
                                     </Space>
                                 ))}
 

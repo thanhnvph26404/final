@@ -505,8 +505,8 @@ const CheckoutPage = () =>
 
     return (
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4" >
-            <div className="sm:w-[50%]">
-                <div className="sm:ml-[100px]">
+            <div className="sm:w-[45%]">
+                <div className="sm:ml-[60px]">
                     <h1 className="text-3xl my-4 font-semibold max-sm:text-center">Giao hàng</h1>
                     <Select
                         className='sm:w-[566px] sm:h-[50px] max-sm:w-[360px]'
@@ -717,7 +717,7 @@ const CheckoutPage = () =>
                 </div>
 
             </div>
-            <div className="border-l-2 border-gray-200 sm:ml-4 pl-4 sm:w-[50%] bg-[#F5F5F5] ">
+            <div className="border-l-2 border-gray-200 sm:ml-2 pl-4 sm:w-[55%] bg-[#F5F5F5] ">
                 <div className="mt-4">
                     { cart?.items?.map( ( item: any, index: any ) => (
                         <div key={ index } className="flex items-center p-2">
@@ -734,7 +734,7 @@ const CheckoutPage = () =>
 
                                 </div>
                             </div>
-                            <p className='max-sm:mr-2'>{ item.productInfo.price.toLocaleString() }₫</p>
+                            <p className='max-sm:mr-6'>{ item.productInfo.price.toLocaleString() }₫</p>
 
 
                         </div>
@@ -761,29 +761,29 @@ const CheckoutPage = () =>
                 </div>
 
                 <div className="mt-6 w-[72.5%] max-sm:m-auto max-sm:mt-6">
-                    <div className="flex w-[1000px]">
+                    <div className="flex w-[780px]">
                         <p>Tổng tiền </p>
-                        <p className=' pl-[570px]'>{ cart?.total.toLocaleString() } đ</p>
+                        <p className=' pl-[620px]'>{ cart?.total.toLocaleString() } đ</p>
                     </div>
                     <p>+</p>
-                    <div className="flex w-[1000px]">
+                    <div className="flex w-[780px]">
                         <p>Vận chuyển</p>
-                        <p className=' pl-[555px]'>{ shippingFee.toLocaleString() } đ</p>
+                        <p className=' pl-[605px]'>{ shippingFee.toLocaleString() } đ</p>
                     </div>
-                    <hr className='w-[1000px]' />
+                    <hr className='w-[780px]' />
                     <p>-</p>
-                    <div className="flex w-[1000px]">
+                    <div className="flex w-[780px]">
                         <p>Giảm giá</p>
-                        <p className=' pl-[575px]'>{ apppdiscoutn.toLocaleString() } đ</p>
+                        <p className=' pl-[626px]'>{ apppdiscoutn.toLocaleString() } đ</p>
                     </div>
-                    <div className="flex w-[1000px]">
+                    <div className="flex w-[780px]">
                         <p className="font-mono text-[25px]">Tổng</p>
-                        <p className="font-semibold pl-[585px] pt-[10px]">{ totalAmount.toLocaleString() } đ</p>
+                        <p className="font-semibold pl-[636px] pt-[10px]">{ totalAmount.toLocaleString() } đ</p>
                     </div>
 
                     <div className='mt-[50px]'>
-                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[40px]">
-                            <h2 className="font-semibold text-lg ml-2 mb-2">Voucher:</h2>
+                        <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[20px]">
+                            <h2 className="font-semibold text-lg ml-2 mb-2">Mã giảm giá:</h2>
                             { getvoucher?.vouchers?.length === 0 ? (
                                 <p>Bạn chưa có mã voucher nào.</p>
                             ) : (

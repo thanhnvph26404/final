@@ -139,10 +139,19 @@ const ProductDetail = () => {
                         <h1 className="text-[32px] font-semibold text-[#23314B] text-left leading-[1.2] font-[Montserrat]">{product?.data?.name}</h1>
                         <p className="flex gap-2 text-left mt-[40px]">
                             {/* price */}
-                            <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.original_price}₫</span>
-                            <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.price}₫</span>
-                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm {product?.data?.price - product?.data?.original_price}₫</p>
+                            {product?.data?.original_price ? (
+                                <>
+                                    <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.original_price.toLocaleString()}₫</span>
+                                    <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.price.toLocaleString()}₫</span>
+                                    <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
+                                        Tiết kiệm {(product?.data?.price - product?.data?.original_price).toLocaleString()}₫
+                                    </p>
+                                </>
+                            ) : (
+                                <span className="text-[#23314bb3] text-sm md:text-[21px] font-thin">{product?.data?.price.toLocaleString()}₫</span>
+                            )}
                         </p>
+
                         <div className="mt-[30px]">
                             <hr className="w-[600px]" />
                         </div>
