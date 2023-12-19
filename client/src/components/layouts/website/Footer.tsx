@@ -47,13 +47,13 @@ const Footer = () =>
                 <h2 className="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">Về chúng tôi </h2>
                 <nav className="mb-10 list-none">
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Company</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Công ty</a>
                   </li>
-                  <li className="mt-3">
+                  {/* <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">Careers</a>
-                  </li>
+                  </li> */}
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Blog</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Trang Blog</a>
                   </li>
                 </nav>
               </div>
@@ -61,14 +61,14 @@ const Footer = () =>
                 <h2 className="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">Hỗ trợ </h2>
                 <nav className="mb-10 list-none">
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Contact Support</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Liên hệ</a>
                   </li>
-                  <li className="mt-3">
+                  {/* <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">Help Resources</a>
                   </li>
                   <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">Release Updates</a>
-                  </li>
+                  </li> */}
                 </nav>
               </div>
               <div className="w-full px-4 lg:w-1/4 md:w-1/2">
@@ -76,11 +76,11 @@ const Footer = () =>
                 </h2>
                 <nav className="mb-10 list-none">
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Terms &amp; Privacy</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Điều khoản &amp; Chính sách</a>
                   </li>
-                  <li className="mt-3">
+                  {/* <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">Pricing</a>
-                  </li>
+                  </li> */}
                   <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">FAQ</a>
                   </li>
@@ -90,13 +90,13 @@ const Footer = () =>
                 <h2 className="mb-3 text-sm font-medium tracking-widest text-gray-900 uppercase title-font">Về chúng tôi </h2>
                 <nav className="mb-10 list-none">
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Send a Message</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Gửi tin nhắn</a>
                   </li>
-                  <li className="mt-3">
+                  {/* <li className="mt-3">
                     <a className="text-gray-500 cursor-pointer hover:text-gray-900">Request a Quote</a>
-                  </li>
+                  </li> */}
                   <li className="mt-3">
-                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">0343887327</a>
+                    <a className="text-gray-500 cursor-pointer hover:text-gray-900">Số điện thoại: 0343887327</a>
                   </li>
                 </nav>
               </div>
