@@ -316,8 +316,7 @@ const Comment = (props: any) => {
                             <img src="/upload.jpg" alt="Tải lên" className="w-16 h-16 " />
                         </label>
                     </div> */}
-                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Tên (Hiển thị công khai dưới tên
-                        Nguyễn Văn A)</p>
+                    <p className="text-center text-[20.5px] text-[#23314b] mt-8">Họ Tên</p>
                     <div className="text-center text-[20.5px] text-[#23314b] mt-2">
                         <input
                             type="text"

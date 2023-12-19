@@ -307,7 +307,7 @@ const UpdateProduct = () => {
                                             fieldKey={[field.fieldKey, 'color']}
                                             label="Color"
                                             className='pl-[20px] '
-                                            rules={[{ required: true, message: 'Color is required' }]}
+                                            rules={[{ required: true, message: 'Màu bắt buộc chọn' }]}
                                         >
                                             <Select placeholder="Select color" className='pl-[20px]'>
                                                 {color?.data?.map((color: any) => (
@@ -322,7 +322,7 @@ const UpdateProduct = () => {
                                             name={[field.name, 'size']}
                                             fieldKey={[field.fieldKey, 'size']}
                                             label="Size"
-                                            rules={[{ required: true, message: 'Size is required' }]}
+                                            rules={[{ required: true, message: 'Kích cỡ bắt buộc chọn' }]}
                                         >
                                             <Select placeholder="Select size" className='pl-[20px]' >
                                                 {size?.data?.map((size: any) => (
@@ -338,7 +338,7 @@ const UpdateProduct = () => {
                                             fieldKey={[field.fieldKey, 'quantity']}
                                             label="Số lượng"
                                             className='pl-[20px]'
-                                            rules={[{ required: true, message: 'Quantity is required' }]}
+                                            rules={[{ required: true, message: 'Số lượng bắt buộc nhập' }]}
                                         >
                                             <InputNumber placeholder="Quantity" min={0} className='ml-[30px]'/>
                                         </Form.Item>

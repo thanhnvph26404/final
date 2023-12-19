@@ -31,7 +31,7 @@ const LoginAdmin = () =>
             <section className="bg-gray-50 min-h-screen flex items-center justify-center">
                 <div className="bg-gray-100 flex rounded-2xl shadow-lg max-w-3xl p-5 items-center">
                     <div className="md:w-1/2 px-16">
-                        <h2 className="font-bold text-2xl text-black">Login Quản trị</h2>
+                        <h2 className="font-bold text-[21px] text-black">Đăng nhập quản trị viên</h2>
 
                         <Form
                             name="basic"
@@ -67,7 +67,7 @@ const LoginAdmin = () =>
 
                             <Form.Item>
                                 <button type="submit" className="bg-[#0F172A] rounded-2xl px-5 text-white py-2 hover:scale-105 duration-300">
-                                    Login
+                                    Đăng nhập
                                 </button>
                             </Form.Item>
                         </Form>

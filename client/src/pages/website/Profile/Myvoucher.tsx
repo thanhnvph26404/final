@@ -27,7 +27,7 @@ const Myvoucher = () =>
     return (
         <div>
             <div className="flex flex-col space-x-[20px]  mt-[20px] ml-[100px]">
-                <h2 className="font-semibold text-lg ml-2 mb-2">Voucher:</h2>
+                <h2 className="font-semibold text-lg ml-2 mb-2">Mã giảm giá:</h2>
                 { getvoucher?.vouchers?.length === 0 ? (
                     <p>Bạn chưa có mã voucher nào.</p>
                 ) : (
@@ -35,7 +35,7 @@ const Myvoucher = () =>
                         { getvoucher?.vouchers?.map( ( voucher: any ) => (
                             <div
                                 key={ voucher?._id }
-                                className={ `bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[450px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
+                                className={ `bg-gray-200 space-x-6 rounded-full pl-[50px] text-[15px] font-medium flex w-[600px] ${ !isVoucherValid( voucher ) && 'opacity-50' }` }
                             >
                                 <p>{ voucher.name }</p>
                                 <div> Mã code: { voucher.code } ({ voucher.discount }%)</div>
