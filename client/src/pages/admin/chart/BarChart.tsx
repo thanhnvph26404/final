@@ -292,6 +292,7 @@ const ChartPage = () => {
         </Select>
 
         <RangePicker
+          placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
           onChange={(dates: any) => {
             if (dates && dates.length === 2) {
               setStartDates(dates[0]);
@@ -346,6 +347,7 @@ const ChartPage = () => {
         <div className="h-[500px] w-[1000px] mt-[50px] mb-[50px]">
           <div className="flex space-x-6">
             <RangePicker
+              placeholder={["Ngày bắt đầu", "Ngày kết thúc"]}
               onChange={(dates: any) => {
                 if (dates && dates.length === 2) {
                   setStartDate(dates[0]);
@@ -358,17 +360,20 @@ const ChartPage = () => {
               className="w-64"
             />
             <div className="flex space-x-2">
-              <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]"></i>
-              <button onClick={handleFilter}>Filter</button>
+
+              <button onClick={handleFilter}><i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]  pr-[1px]"></i> Lọc</button>
               <div className=" flex">
                 <DatePicker
+                  placeholder="Chọn tháng bắt đầu"
                   picker="month"
                   onChange={(date, dateString) => setstartYear(dateString)}
                 />
-                <DatePicker picker="month" onChange={(date, dateString) => setendYear(dateString)} />
+                <DatePicker picker="month" placeholder="Chọn tháng kết thúc" onChange={(date, dateString) => setendYear(dateString)} />
                 <div className="flex space-x-2">
-                  <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px] pl-[10px]"></i>
-                  <button onClick={hanldeamountTotalyear}>Filter</button>
+
+                  <button onClick={hanldeamountTotalyear}>
+                    <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px] pl-[10px] pr-[1px]"></i>
+                    Lọc</button>
                   {/* <button onClick={ handleReset }>Tất cả</button> */}
                 </div>
               </div>            </div>
