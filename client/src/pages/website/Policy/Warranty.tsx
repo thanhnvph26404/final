@@ -22,7 +22,7 @@ const Warranty = () => {
                 <p className='mt-5 font-semibold text-[#23314B]'>- III. Các trường hợp khác</p>
                 <p className='mt-5 font-semibold text-[#23314B]'>- Mọi thông tin chi tiết khác hoặc các thắc mắc cần giải đáp thêm quý khách hàng vui lòng liên hệ:</p>
                 <p className='mt-5 font-semibold text-[#23314B]'>- Fanpage: Bee Fashion</p>
-                <p className='mt-5 font-semibold text-[#23314B]'>- Hotline: 0999999999</p>
+                <p className='mt-5 font-semibold text-[#23314B]'>- Hotline: 03 43 88 73 27</p>
                 <p className='mt-5 font-semibold text-[#23314B]'>- Mail: beefashion@gmail.com</p>
 
             </div>

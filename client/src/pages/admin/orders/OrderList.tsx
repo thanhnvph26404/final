@@ -166,6 +166,7 @@ const OrderList = () =>
             title: 'Giá sản phẩm',
             dataIndex: 'price',
             key: 'price',
+            render: (number:any) => <p>{number?.toLocaleString()}đ</p>,
         },
 
         {
@@ -192,7 +193,6 @@ const OrderList = () =>
             key: 'productVariant',
             render: ( productvariant: any ) =>
             {
-
                 return (
                     <div>
                         <p>{ productvariant.color }</p>
@@ -212,11 +212,11 @@ const OrderList = () =>
 
     return (
         <div>
-            <h1 className="text-[27px] font-bold">Order</h1>
+            <h1 className="text-[27px] font-bold">Đơn hàng</h1>
             {/* <div></div> */ }
             <div className="flex auto-cols-auto mt-[20px] space-x-[20px]">
                 <div className="">
-                    <h2 className="font-semibold text-[20px]">Product</h2>
+                    <h2 className="font-semibold text-[20px]">Sản phẩm</h2>
                     <Table columns={ columns } dataSource={ productDataForTable } />
                     <div className="flex">
                         {/* dưới */ }
@@ -227,7 +227,7 @@ const OrderList = () =>
                             </div>
                             <div className="flex space-x-4 mt-4 ml-[20px]  ">
                                 <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
-                                <p className="text-gray-500 font-semibold">địa chỉ </p>
+                                <p className="text-gray-500 font-semibold">Địa chỉ </p>
                             </div>
                             <div className=" mt-4 ml-[50px]">
                                 <p className="text-[15px] text-black-500 font-bold" >NGÕ 230/69 mễ trì thượng nhà số 6 </p>
@@ -271,7 +271,7 @@ const OrderList = () =>
                             </div>
                             <div className="flex space-x-4 mt-4 ml-[20px]  ">
                                 <i className="fa-solid fa-house text-[#ababab] pt-[3px] "></i>
-                                <p className="text-gray-500 font-semibold">làng ngõ xóm </p>
+                                <p className="text-gray-500 font-semibold">Làng ngõ xóm </p>
                             </div>
                             <div className=" mt-4 ml-[50px]">
                                 <p className="text-[15px] text-black-500 font-bold" >{ orderData?.country }</p>
@@ -305,7 +305,7 @@ const OrderList = () =>
                             ) ) }
                             { orderData?.cancelReason ? (
                                 <p className="text-sm text-gray-700">
-                                    <span className="font-semibold">lý do Hủy :</span> { orderData?.cancelReason }
+                                    <span className="font-semibold">Lý do Hủy :</span> { orderData?.cancelReason }
                                 </p>
                             ) : (
                                 ""
@@ -323,7 +323,7 @@ const OrderList = () =>
                     </div>
                     <div className="flex space-x-4 mt-4 ml-[20px]">
                         <i className="fa-solid fa-cart-shopping text-[#ababab] pt-[3px] "></i>
-                        <p className="text-gray-500 font-semibold">Order Status</p>
+                        <p className="text-gray-500 font-semibold">Trạng thái đơn hàng</p>
                     </div>
                     <div className=" mt-4 ml-[50px]">
                         <p className="text-[15px] text-gray-500" >{ orderData?.status }</p>
@@ -398,7 +398,7 @@ const OrderList = () =>
                     {/* dưới */ }
                     <div className="mt-[50px] bg-white w-[320px] h-[200px]">
                         <div className="ml-[20px] mt-[10px]">
-                            <h2 className="font-bold text-[20px] "><i className="fa-solid fa-money-bill text-[#286FFD]"></i> Payment</h2>
+                            <h2 className="font-bold text-[20px] "><i className="fa-solid fa-money-bill text-[#286FFD]"></i> Thanh toán</h2>
                             <hr className="border-1 border-black w-[280px] mt-2" />
                         </div>
                         <div className="flex space-x-4 mt-4 ml-[20px]  ">

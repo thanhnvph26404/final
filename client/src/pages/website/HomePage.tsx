@@ -177,7 +177,6 @@ const HomePage = () =>
         { productList?.products?.map( ( product: any ) =>
         {
           return (
-
             <div className="relative w-full sm:w-96 rounded-xl bg-white bg-clip-border text-gray-700 group">
               <button onClick={ () => handleGetProductDetail( product._id ) } className="" key={ product._id }>
                 <div className="relative h-100 mt-[20px] rounded-xl bg-white bg-clip-border text-gray-700 overflow-hidden group-hover:scale-105 transition-transform duration-300 ease-in-out">
@@ -206,7 +205,7 @@ const HomePage = () =>
                     </p>
                   </div>
                   <button onClick={ () => handleGetProductDetail( product._id ) } className="absolute top-[70%] right-0 bg-[#23314b] text-white text-center py-2 hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100 rounded-full w-[150px]">
-                    + Thêm nhanh
+                    + Xem chi tiết
                   </button>
                 </div>
               </button>

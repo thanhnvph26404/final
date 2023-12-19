@@ -13,7 +13,7 @@ const Inspection = () => {
                 <p className='mt-10 text-[#8A919F]'>Sau khi đồng ý với món hàng được giao đến, Quý Khách thanh toán với nhân viên giao hàng (trường hợp đơn hàng được ship COD) và nhận hàng.</p>
                 <p className='mt-10 text-[#8A919F]'>Trường hợp Quý Khách không ưng ý với sản phẩm, Quý Khách có thể từ chối nhận hàng. Tại đây, Bee Fashion sẽ thu thêm chi phí hoàn hàng, tương đương với phí ship của đơn hàng Quý khách đã đặt.</p>
                 <p className='mt-10 font-semibold'>Lưu ý:</p>
-                <p className='mt-10 text-[#8A919F]'>- Khi Quý Khách kiểm tra đơn hàng, nhân viên giao nhận buộc phải đợi Quý Khách kiểm tra hàng hóa bên trong gói hàng. Trường hợp nhân viên từ chối cho Quý Khách kiểm tra hàng hóa, Quý Khách vui lòng liên hệ với Bee Fashion qua hotline: 099999999 để được hỗ trợ.</p>
+                <p className='mt-10 text-[#8A919F]'>- Khi Quý Khách kiểm tra đơn hàng, nhân viên giao nhận buộc phải đợi Quý Khách kiểm tra hàng hóa bên trong gói hàng. Trường hợp nhân viên từ chối cho Quý Khách kiểm tra hàng hóa, Quý Khách vui lòng liên hệ với Bee Fashion qua hotline: 03 43 88 73 27 để được hỗ trợ.</p>
                 <p className='mt-10 text-[#8A919F]'>- Quý Khách tránh dùng vật sắc nhọn để mở gói hàng để tránh gây hư hỏng cho sản phẩm bên trong. Đối với những trường hợp sản phẩm bị hư hỏng do lỗi từ phía Khách hàng, Bee Fashion rất tiếc không thể hỗ trợ Quý Khách đổi/trả/bảo hành sản phẩm.</p>
             </div>
 

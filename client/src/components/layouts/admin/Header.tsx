@@ -55,8 +55,8 @@ const Header = () =>
       <div className='flex justify-end max-w-full mt-8 mb-7 mx-6 h-10'>
         <div className='flex items-center ml-8'>
           <div className='flex items-center ml-6'>
-            <div className='mr-3'>
-              <h3 className='text-sm font-medium text-[#07080B]'>Xin chào:{ currentAdmin?.name }</h3>
+            <div className='mr-3 mt-4'>
+              <h3 className='text-sm font-medium text-[#07080B]'>Xin chào: { currentAdmin?.name }</h3>
               <p className='text-xs font-medium text-black-400 leading-[18px]'>{ currentAdmin?.role }</p>
             </div>
             <div className="relative z-10">

@@ -141,14 +141,14 @@ const ProductDetail = () => {
                             {/* price */}
                             {product?.data?.original_price ? (
                                 <>
-                                    <span className="text-[#f83a3a] text-sm md:text-[21px] font-thin">{product?.data?.original_price.toLocaleString()}₫</span>
-                                    <span className="line-through text-sm md:text-[17px] font-extralight text-[#23314bb3]">{product?.data?.price.toLocaleString()}₫</span>
+                                    <span className="text-[#f83a3a] text-sm md:text-[25px] font-thin">{product?.data?.original_price.toLocaleString()}₫</span>
+                                    <span className="line-through text-sm md:text-[25px] font-extralight text-[#23314bb3]">{product?.data?.price.toLocaleString()}₫</span>
                                     <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
                                         Tiết kiệm {(product?.data?.price - product?.data?.original_price).toLocaleString()}₫
                                     </p>
                                 </>
                             ) : (
-                                <span className="text-[#23314bb3] text-sm md:text-[21px] font-thin">{product?.data?.price.toLocaleString()}₫</span>
+                                <span className="text-[#23314bb3] text-sm md:text-[25px] font-normal">{product?.data?.price.toLocaleString()}₫</span>
                             )}
                         </p>
 

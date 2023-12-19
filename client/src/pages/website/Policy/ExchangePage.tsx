@@ -4,7 +4,7 @@ const Exchange = () => {
     return (
         <div className='sm:w-[900px] m-auto max-sm:w-[360px] '>
             <h1 className='text-center text-4xl font-semibold  text-[#23314B] mt-5 '>Chính sách đổi / hoàn trả</h1>
-            <h2 className='text-center text-3xl font-semibold text-[#23314B] mt-10 '>Ra đời với mong muốn mang đến cho khách hàng những trải nghiệm mua sắm tốt nhất, các sản phẩm của Polomanor khi gửi đến khách hàng luôn được đảm bảo là hàng nguyên mới, chất lượng, đúng với thông tin mô tả và hình ảnh trên website.</h2>
+            <h2 className='text-center text-3xl font-semibold text-[#23314B] mt-10 '>Ra đời với mong muốn mang đến cho khách hàng những trải nghiệm mua sắm tốt nhất, các sản phẩm của Bee Fashion khi gửi đến khách hàng luôn được đảm bảo là hàng nguyên mới, chất lượng, đúng với thông tin mô tả và hình ảnh trên website.</h2>
             <div>
                 <p className='mt-10 text-3xl font-semibold text-[#23314B]'>I. ĐIỀU KIỆN ĐỔI HÀNG</p>
                 <p className='mt-5 text-2xl font-semibold text-[#23314B]'>Bee Fashion nhận đổi / trả sản phẩm với các quy định sau:</p>
