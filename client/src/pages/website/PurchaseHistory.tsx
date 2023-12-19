@@ -98,23 +98,23 @@ const PurchaseHistory = () =>
                 </div>
 
                 { order?.Order?.map( ( order: any ) => (
-                    <div key={ order._id } className='border border-gray-200 my-10 rounded-xl'>
-                        <div className='flex justify-between i items-center'>
-                            <div className='flex mx-4 my-3 w-[472px]'>
+                    <div key={ order._id } className='border w-[850px] border-gray-200 my-10 rounded-xl'>
+                        <div className='flex justify-between  items-center'>
+                            <div className='flex mx-4 my-3 w-[800px]'>
                                 <div className=''>
-                                    <p className='text-gray-500'>ID đơn hàng</p>
+                                    <p className='text-gray-500 w-[200px]'>ID đơn hàng</p>
                                     <p>{ order._id || 'N/A' }</p>
                                 </div>
-                                <div className='ml-14 hidden md:block'>
+                                <div className='ml-14  w-[140px]'>
                                     <p className='text-gray-500'>Ngày mua hàng</p>
                                     <p>{ order?.createdAt?.slice( 0, 10 ) }</p>
                                 </div>
-                                <div className='ml-14 hidden md:block'>
+                                <div className='ml-14 w-[100px]'>
                                     <p className='text-gray-500'>Tổng</p>
                                     <p>{ order?.totalAfterDiscount ? order?.totalAfterDiscount?.toLocaleString() : order?.paymentIntent?.amount?.toLocaleString() } VNĐ</p>
                                 </div>
                             </div>
-                            <div className='flex justify-between items-center'>
+                            <div className='flex mt-2 justify-between items-center'>
                                 <div className='px-5'>
                                     <Link to={ `/profile/orderDetail/${ order._id }` }>
                                         <Button type='primary' className='bg-black-400'>
@@ -179,18 +179,18 @@ const PurchaseHistory = () =>
                         <Table dataSource={ order.products ? [ order.products[ 0 ] ] : [] }>
                             <body className="" key={ order.products._id }>
                                 <Column
-                                    title="ảnh"
+                                    title="Ảnh"
                                     dataIndex="img"
                                     key="img"
                                     render={ ( text, record: any ) => (
                                         <div>
 
-                                            <img src={ record.productInfo.images[ 0 ]?.url } alt="" className='w-[150px] h-[200px]' />
+                                            <img src={ record.productInfo.images[ 0 ]?.url } alt="" className='w-[250px] h-[150px]' />
                                         </div>
                                     ) }
                                 />
                                 <Column
-                                    title="Sản phẩm"
+                                    title="Tên sản phẩm"
                                     dataIndex="name"
                                     key="name"
                                     render={ ( text, record: any ) => (
@@ -203,7 +203,7 @@ const PurchaseHistory = () =>
                                 <Column title="Giá" dataIndex="price" key="price"
                                     render={ ( text, record: any ) => (
                                         <div>
-                                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">{ record.productInfo.price }VNĐ</p>
+                                            <p className=" bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">{ (record.productInfo.price).toLocaleString() }VNĐ</p>
 
                                         </div>
                                     ) }

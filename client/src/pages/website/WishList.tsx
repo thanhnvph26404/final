@@ -58,7 +58,7 @@ const WishList = () =>
                     { wistListProduct?.wishList?.map( ( product: any, index: any ) => (
 
                         <div key={ index } className="relative w-full sm:w-96  rounded-xl bg-white bg-clip-border text-gray-700  group">
-                            <button className='py-4' onClick={ () => removeWishList( product._id ) }>
+                            <button className='py-4 text-[30px]' onClick={ () => removeWishList( product._id ) }>
                                 <TiDelete />
 
                             </button>
