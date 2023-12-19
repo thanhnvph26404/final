@@ -109,6 +109,8 @@ const Header = ( { currentUser }: UserMenuProps ) =>
   };
 
   const check = localStorage.getItem( 'token' ); // Lấy token từ Local Storage
+  const checktoken = localStorage.getItem( 'checktoken' ); // Lấy token từ Local Storage
+
   const cartItemCount = cart?.items?.length || 0;
   const wishList = wistListProduct?.wishList.length || 0
   useEffect( () =>
@@ -116,15 +118,24 @@ const Header = ( { currentUser }: UserMenuProps ) =>
     if ( !check )
     {
       // Nếu không có token (đã đăng xuất), cập nhật lại giá trị cartItemCount
-      const wishList = 0
-      console.log( wishList );
       refetch()
       const cartItemCount = 0;
       console.log( cartItemCount );
     }
   }, [ check ] );
 
+  const checks = () =>
+  {
+    if ( checktoken )
+    {
+      navigate( "/admin" );
+    } else
+    {
 
+      navigate( "/loginAdmin" );
+    }
+
+  }
 
   return (
     <>
@@ -171,13 +182,13 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                           <li>
 
                             <Link to="/collection" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
-                              Bộ sưu tập                                               
-                            </Link>                            
+                              Bộ sưu tập
+                            </Link>
                           </li>
                           <li className="mt-2">
                             <Link to="products" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                               Tất cả sản phẩm
-                             
+
                             </Link>
                           </li>
                         </div>
@@ -275,10 +286,11 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                               Thông tin cá nhân
                             </Link>
                           </li>
-                          <li>
-                            <Link to="LoginAdmin" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
+                          <li onClick={ checks }>
+
+                            <Link to="" className="flex items-center px-4 py-2 text-black-500 hover:bg-blue-100" onClick={ closeDropdown }>
                               <CiSettings className="w-5 h-5 mr-2" />
-                              Cài đặt
+                              Quản trị
                             </Link>
                           </li>
                           <hr />
@@ -352,7 +364,7 @@ const Header = ( { currentUser }: UserMenuProps ) =>
                       {/* Các mục menu dropdown */ }
                       <div className="flex flex-col px-6">
                         <li>
-                          <Link to="profile" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
+                          <Link to="collection" className="relative group inline-block text-[#5A6D57] hover:text-black-500 transition-colors duration-300" onClick={ closesDropdown }>
                             Bộ sưu tập
                             <div className="h-0.5 w-full bg-gray-700 transform scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100"></div>
                           </Link>

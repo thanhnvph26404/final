@@ -91,26 +91,21 @@ export interface IProductsOrder
     hasReviewed?: boolean;
 }
 export const enumStatus = [
-    "Chờ thanh toán",
     "Đang xử lý",
+    "Đã xác nhận",
     "Đang giao hàng",
-    "Đã hoàn tiền",
+    "Đơn hàng đang chuẩn bị được giao đến bạn",
     "Đã hoàn thành",
-    "shipper đã lấy hàng",
-    "đơn hàng đang chuẩn bị được giao đến bạn",
-    "người bán đang chuẩn bị hàng",
+
 
 
 ];
 export const StatusOrder = [
-    "Chờ thanh toán",
     "Đang xử lý",
+    "Đã xác nhận",
     "Đang giao hàng",
-    "Đã hoàn tiền",
+    "Đơn hàng đang chuẩn bị được giao đến bạn",
     "Đã hoàn thành",
-    "shipper đã lấy hàng",
-    "đơn hàng đang chuẩn bị được giao đến bạn",
-    "người bán đang chuẩn bị hàng",
     "Đã hủy"
 
 
