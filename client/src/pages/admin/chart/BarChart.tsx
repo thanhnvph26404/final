@@ -34,8 +34,7 @@ const ChartPage = () =>
   const { data: OrderData } = useGetAllOrderQuery( null )
   const [ startDate, setStartDate ] = useState<any>( dayjs() );
   const [ endDate, setEndDate ] = useState<any>( dayjs() );
-  const [ startYear, setstartYear ] = useState( "" );
-  const [ endYear, setendYear ] = useState( "" );
+
   const [ successOrder, setSuccessOrders ] = useState( 0 );
   const [ inOrder, setInOrders ] = useState( 0 );
   const [ cancelOrder, setCancelOrders ] = useState( 0 );
@@ -46,7 +45,6 @@ const ChartPage = () =>
   const [ statusOrder ] = useGetOrdersByStatusMutation()
   const [ filteredOrders, setFilteredOrders ] = useState<any>( [] );
   const [ totalproductaday, settotalproductaday ] = useState<any>( [] )
-  const [ totalproductmonth, settotalproductmonth ] = useState<any>( [] )
   const { data: productsold } = useProductsoldadayQuery( null )
   console.log( productsold );
 
@@ -106,11 +104,7 @@ const ChartPage = () =>
       setdangxlOrder( dangxlOrderCount );
     }
   }, [ location, OrderData, filteredOrders ] );
-  const hanld = () =>
-  {
-    settotalproductaday( [] )
-    settotalproductmonth( [] )
-  }
+
   const handleFilters = () =>
   {
     let statusoder: any = {
@@ -226,49 +220,6 @@ const ChartPage = () =>
       };
 
       fetchData();
-    } else if ( totalproductmonth?.monthlyProductsSold?.length > 0 )
-    {
-      const fetchData = async () =>
-      {
-        try
-        {
-          const totals = {
-            startYear,
-            endYear
-          };
-
-          const response = await totalmonthProduct( totals ).unwrap();
-          console.log( response );
-
-          // Lấy dữ liệu từ backend và cập nhật biểu đồ
-          const { monthlyProductsSold } = response;
-
-          const dates = monthlyProductsSold.map( ( item: any ) => item.month );
-          const amounts = monthlyProductsSold.map( ( item: any ) => item.totalProduct );
-
-          setChartData( {
-            labels: dates,
-            datasets: [
-              {
-                label: "số lượng sản phẩm",
-                data: amounts,
-                backgroundColor: [ "rgba(255, 0, 90, 1)" ],
-                borderRadius: 5,
-                borderWidth: 1,
-                barPercentage: 0.3 /* Phần trăm thanh */,
-                categoryPercentage: 0.5
-              },
-            ],
-          } );
-
-
-        } catch ( error )
-        {
-          console.log( error );
-        }
-      };
-
-      fetchData();
     } else if ( productsold )
     {
       setChartData( {
@@ -286,7 +237,7 @@ const ChartPage = () =>
         ],
       } );
     }
-  }, [ location, totalproductaday, totalproductmonth, productsold ] );
+  }, [ location, totalproductaday, productsold ] );
   const handleFilter = () =>
   {
 
@@ -316,26 +267,7 @@ const ChartPage = () =>
     }
 
   }
-  const hanldeamountTotalyear = async () =>
-  {
-    const totals = {
-      startYear,
-      endYear
-    }
-    try
-    {
-      totalmonthProduct( totals ).unwrap().then( ( res ) =>
-      {
-        settotalproductmonth( res )
-        settotalproductaday( [] )
-      } )
-    } catch ( error )
-    {
-      console.log( error );
 
-    }
-
-  }
 
 
 
@@ -438,21 +370,7 @@ const ChartPage = () =>
             <div className="flex space-x-2">
 
               <button onClick={ handleFilter }><i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]  pr-[1px]"></i> Lọc</button>
-              <div className=" flex">
-                <DatePicker
-                  placeholder="Chọn tháng bắt đầu"
-                  picker="month"
-                  onChange={ ( date, dateString ) => setstartYear( dateString ) }
-                />
-                <DatePicker picker="month" placeholder="Chọn tháng kết thúc" onChange={ ( date, dateString ) => setendYear( dateString ) } />
-                <div className="flex space-x-2">
 
-                  <button onClick={ hanldeamountTotalyear }>
-                    <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px] pl-[10px] pr-[1px]"></i>
-                    Lọc</button>
-                  {/* <button onClick={ handleReset }>Tất cả</button> */ }
-                </div>
-              </div>
             </div>
           </div>
           <Bar data={ chartData } />

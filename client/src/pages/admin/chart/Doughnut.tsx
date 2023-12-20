@@ -27,9 +27,7 @@ const ChartPage3 = () =>
     // console.log(OrderData);
 
     const [ uniqueMonths, setUniqueMonths ] = useState( new Set() );
-    const [ startDate, setStartDate ] = useState( "" );
-    const [ endDate, setEndDate ] = useState( "" );
-    const [ filteredData3, setFilteredData3 ] = useState( productChart?.products );
+
 
     const updateUniqueMonths = () =>
     {

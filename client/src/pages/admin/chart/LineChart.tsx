@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { useTotalOrderadayMutation, useTotalOrderamonthMutation, useTotaladayQuery } from "../../../store/Order/Ordersevice";
+import { useTotalOrderadayMutation, useTotaladayQuery } from "../../../store/Order/Ordersevice";
 import { Bar } from "react-chartjs-2";
-import { Button, DatePicker } from "antd";
+import { DatePicker } from "antd";
 import dayjs from 'dayjs';
 
 defaults.maintainAspectRatio = false;
@@ -109,11 +109,7 @@ const ChartPage2 = () =>
         }
     }, [ totalamountaday, totaladay ] );
 
-    const hanldeaday = () =>
-    {
-        settotalamountayear( [] );
-        settotalamountaday( [] );
-    };
+
 
     const handleFilter = () =>
     {
@@ -160,13 +156,7 @@ const ChartPage2 = () =>
                             <i className="fa-solid fa-filter text-[#a8a8a8] pt-[10px]"></i>
                             <button onClick={ handleFilter }>Filter</button>
                         </div>
-                        <Button
-                            className="ml-3 bg-blue-500 text-white"
-                            type="primary"
-                            onClick={ hanldeaday }
-                        >
-                            Lấy ra ngày hiện tại
-                        </Button>
+
                     </div>
                 </div>
 

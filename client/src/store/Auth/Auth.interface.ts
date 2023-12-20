@@ -94,7 +94,6 @@ export const enumStatus = [
     "Đang xử lý",
     "Đã xác nhận",
     "Đang giao hàng",
-    "Đơn hàng đang chuẩn bị được giao đến bạn",
     "Đã hoàn thành",
 
 
@@ -104,8 +103,8 @@ export const StatusOrder = [
     "Đang xử lý",
     "Đã xác nhận",
     "Đang giao hàng",
-    "Đơn hàng đang chuẩn bị được giao đến bạn",
     "Đã hoàn thành",
+    "đang chờ được xử lý",
     "Đã hủy"
 
 

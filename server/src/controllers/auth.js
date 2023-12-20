@@ -831,7 +831,11 @@ export const updateOrderStatus = async ( req, res, next ) =>
   try
   {
     const existingOrder = await order.findById( id );
+    const orderId = existingOrder._id
+    const userId = existingOrder.userId;
+    const users = await Auth.findById( userId )
 
+    const userEmail = users.email;
     // Kiểm tra nếu đơn hàng đã chuyển trạng thái nhất định
     if (
       existingOrder.status === "Đã hoàn thành" ||
@@ -859,6 +863,32 @@ export const updateOrderStatus = async ( req, res, next ) =>
       status: status,
       updatedBy: _id, // ID của người thực hiện hành động
       updatedAt: new Date(),
+    } );
+
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
+
+    const mailOptions = {
+      from: 'yourEmail@gmail.com',
+      to: userEmail, // Email người dùng đăng nhập
+      subject: 'Trạng thái đơn hàng ',
+      text: `Đơn hàng ${ orderId } đã được cập nhật qua trạng thái ${ status }.`,
+    };
+
+    transporter.sendMail( mailOptions, ( error, info ) =>
+    {
+      if ( error )
+      {
+        console.log( 'Error occurred while sending email:', error );
+      } else
+      {
+        console.log( 'Email sent:', info.response );
+      }
     } );
 
     // Cập nhật trạng thái mới cho đơn hàng
@@ -1088,6 +1118,7 @@ export const createOrder = async ( req, res ) =>
       throw new Error( "User not found" );
     }
     const user = await Auth.findById( _id );
+    const userEmail = user.email
     let userCart = await Cart.findOne( { userId: updatedUser._id } );
     let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
 
@@ -1115,6 +1146,31 @@ export const createOrder = async ( req, res ) =>
       updatedBy: _id,
       updatedAt: Date.now(), // Ngày giờ cập nhật
     };
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
+
+    const mailOptions = {
+      from: 'yourEmail@gmail.com',
+      to: userEmail, // Email người dùng đăng nhập
+      subject: 'Đơn hàng của tôi',
+      text: `Đơn hàng của bạn đã được mua thành công và đang chờ quản trị viên xác nhận .`,
+    };
+
+    transporter.sendMail( mailOptions, ( error, info ) =>
+    {
+      if ( error )
+      {
+        console.log( 'Error occurred while sending email:', error );
+      } else
+      {
+        console.log( 'Email sent:', info.response );
+      }
+    } );
     if ( couponApplied )
     {
       const usedVoucher = await Voucher.findOneAndUpdate(
@@ -1246,6 +1302,8 @@ export const createPaymentUrl = async ( req, res ) =>
       throw new Error( "User not found" );
     }
     const user = await Auth.findById( _id );
+    const userEmail = user.email
+
     let userCart = await Cart.findOne( { userId: updatedUser._id } );
     let finalAmount = couponApplied && userCart.totalAfterDiscount ? userCart.totalAfterDiscount + shippingFee : userCart.total + shippingFee;
 
@@ -1273,7 +1331,31 @@ export const createPaymentUrl = async ( req, res ) =>
       updatedBy: _id,
       updatedAt: Date.now(), // Ngày giờ cập nhật
     };
+    const transporter = nodemailer.createTransport( {
+      service: 'gmail',
+      auth: {
+        user: 'thanhnvph26404@gmail.com', // Email của bạn
+        pass: 'ricjggvzlskbtsxl', // Mật khẩu email của bạn
+      },
+    } );
 
+    const mailOptions = {
+      from: 'yourEmail@gmail.com',
+      to: userEmail, // Email người dùng đăng nhập
+      subject: 'Đơn hàng của tôi',
+      text: `Đơn hàng của bạn đã được mua thành công và đang chờ quản trị viên xác nhận .`,
+    };
+
+    transporter.sendMail( mailOptions, ( error, info ) =>
+    {
+      if ( error )
+      {
+        console.log( 'Error occurred while sending email:', error );
+      } else
+      {
+        console.log( 'Email sent:', info.response );
+      }
+    } );
     if ( couponApplied )
     {
       const usedVoucher = await Voucher.findOneAndUpdate(
@@ -1381,24 +1463,6 @@ export const vnpayReturn = async ( req, res ) =>
     return res.status( 500 ).json( { error: 'Lỗi máy chủ nội bộ' } );
   }
 }
-const changeStatusPayment = async ( _id ) =>
-{
-  try
-  {
-    const cart = await Auth.findById( _id );
-    console.log( cart );
-
-    return true
-    // Kiểm tra và cập nhật thông tin người dùng nếu 
-    // Thực hiện các tác vụ khác nếu cần
-
-  } catch ( error )
-  {
-    console.error( error );
-    return false; // Trả về false nếu có lỗi
-  }
-};
-
 export const getOrders = async ( req, res ) =>
 {
   const { _id } = req.user
@@ -1547,15 +1611,15 @@ export const confirmCancelOrder = async ( req, res ) =>
     {
       return res.status( 404 ).json( { error: 'Đơn hàng không tồn tại.' } );
     }
-
-    const userId = orderToCancel.userId;
-    const user = await Auth.findById( userId )
+    const user = await Auth.findById( _id )
     if ( !user )
     {
       return res.status( 404 ).json( { message: 'Không tìm thấy thông tin người dùng' } );
     }
+    const userId = orderToCancel.userId;
+    const users = await Auth.findById( userId )
 
-    const userEmail = user.email;
+    const userEmail = users.email;
     if ( isConfirmed )
     {
       const updatedStatusHistory = orderToCancel.statusHistory || [];
@@ -1627,13 +1691,13 @@ export const confirmCancelOrder = async ( req, res ) =>
       // Thay đổi trạng thái về "Đang giao hàng"
       const updatedStatusHistory = orderToCancel.statusHistory || [];
       updatedStatusHistory.push( {
-        status: 'Đang giao hàng', // hoặc trạng thái mới mà bạn muốn thêm vào
+        status: 'Đã xác nhận', // hoặc trạng thái mới mà bạn muốn thêm vào
         updatedAt: new Date(),
         updatedBy: user._id, // hoặc thông tin người cập nhật
       } );
       await order.findByIdAndUpdate(
         id,
-        { status: 'Đang giao hàng', cancelReason: orderToCancel.cancelReason, cancelRequest: false, statusHistory: updatedStatusHistory },
+        { status: 'Đã xác nhận', cancelReason: orderToCancel.cancelReason, cancelRequest: false, statusHistory: updatedStatusHistory },
         { new: true }
       );
 
