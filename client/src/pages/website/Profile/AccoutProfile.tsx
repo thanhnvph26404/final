@@ -44,7 +44,7 @@ const Account = () =>
                         <h3 className="font-medium text-gray-800 text-lg">Thông tin cá nhân </h3>
 
                         <Link to={ `/profile/information` } className="text-rose-500">
-                            Edit
+                            Sửa
                         </Link>
                     </div>
 
@@ -62,7 +62,7 @@ const Account = () =>
 
 
                         <Link to={ `/profile/order-address` } className="text-rose-500">
-                            Edit
+                            Sửa
                         </Link>
                     </div>
 
@@ -81,7 +81,7 @@ const Account = () =>
                         <h3 className="font-medium text-gray-800 text-lg">Đơn hàng  </h3>
 
                         <Link to={ `/profile/order-address` } className="text-rose-500">
-                            Edit
+                            Sửa
                         </Link>
                     </div>
 

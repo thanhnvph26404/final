@@ -29,8 +29,8 @@ const Contact = () => {
         <div className="sm:flex max-sm:w-[360px] m-auto max-sm:mb-4 mt-20px">
             <div className="sm:w-[50%]">
                 <div className="sm:ml-[160px] pt-50px">
-                    <h3 className="font-public-sans text-[#23314B] text-[17px]">Contact Us</h3>
-                    <h1 className="font-public-sans text-3xl text-[#23314B] my-4 font-semibold max-sm:text-center text-[44px]">Do you have any question?</h1>
+                    {/* <h3 className="font-public-sans text-[#23314B] text-[17px]"></h3> */}
+                    <h1 className="font-public-sans text-3xl text-[#23314B] my-4 font-semibold max-sm:text-center text-[44px] mt-[70px]">Bạn có câu hỏi nào không?</h1>
                 </div>
             </div>
             <div className="border-l-2 border-gray-200 sm:ml-4 pl-4 sm:w-[50%] bg-[#F5F5F5] rounded p-6 mx-auto mt-30">

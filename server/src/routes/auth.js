@@ -1,7 +1,7 @@
 
 import express, { Router } from "express"
 import { authMiddlware, isAdmin } from "../middleware/checkPermission"
-import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOrderStatus, createOrder, applyCoupon, getOrders, getAllOrders, getUserCart, removeFromCart, getoneOrders, cancelOrderRequest, confirmCancelOrder, getCancelledOrders, getCancelledtrueOrders, increaseQuantity, decreaseQuantity, getWishList, removeWishList, cancleOrder, createPaymentUrl, vnpayReturn, getvoucher, findOrderByid, findOrderByPhone, updateUserAdmin, updateOrderStatusUser, getoneOrdersAdmin, logInAdmin } from "../controllers/auth"
+import { BlockUser, getAllUser, getOneUser, getUserByToken, logIn, register, removeUser, editAddressToken, unBlockUser, updateUser, verify, addToCart, emptyCart, updateOrderStatus, createOrder, applyCoupon, getOrders, getAllOrders, getUserCart, removeFromCart, getoneOrders, cancelOrderRequest, confirmCancelOrder, getCancelledOrders, getCancelledtrueOrders, increaseQuantity, decreaseQuantity, getWishList, removeWishList, cancleOrder, createPaymentUrl, vnpayReturn, getvoucher, findOrderByid, findOrderByPhone, updateUserAdmin, updateOrderStatusUser, getoneOrdersAdmin, logInAdmin, getAdminByToken } from "../controllers/auth"
 import { addTowishList, locproduct } from "../controllers/products"
 import { saveVoucherToUser } from "../controllers/voucher"
 
@@ -19,6 +19,8 @@ router.get( '/getAllUser', getAllUser )
 router.get( '/getOneUser/:id', authMiddlware, isAdmin, getOneUser )
 router.delete( '/removeUser/:id', removeUser )
 router.post( "/get-user-token", authMiddlware, getUserByToken )
+router.post( "/get-admin-token", authMiddlware, getAdminByToken )
+
 router.put( '/updateUser', authMiddlware, updateUser )
 router.put( '/updateUserAdmin/:id', authMiddlware, updateUserAdmin )
 router.delete( "/emptyCart", authMiddlware, emptyCart )

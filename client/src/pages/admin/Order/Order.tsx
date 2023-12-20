@@ -178,7 +178,7 @@ const ListOrder = () =>
             title: "Tổng tiền ",
             dataIndex: "paymentIntent",
             key: "paymentIntent",
-            render: ( paymentIntent ) => <p>{ paymentIntent?.amount }</p>,
+            render: ( paymentIntent ) => <p>{ paymentIntent?.amount.toLocaleString() }</p>,
 
         }
         ,
@@ -213,7 +213,7 @@ const ListOrder = () =>
             dataIndex: "status",
             key: "status",
             render: ( status, record ) => (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-8">
                     <div>
                         <span className="" style={ { color: status === "Đã hủy" || status === "đang chờ được xử lý" ? "red" : "black" } }>
                         </span>
@@ -238,7 +238,7 @@ const ListOrder = () =>
                             className="bg-blue-500"
                             onClick={ () => handleToggleEdit( record._id, status ) }
                         >
-                            { editingRowId === record._id ? "Update" : <AiFillEdit /> }
+                            { editingRowId === record._id ? "Đổi trạng thái" : <AiFillEdit /> }
                         </Button>
                     </div>
                 </div>
@@ -282,7 +282,7 @@ const ListOrder = () =>
 
                 <RangePicker
                     onChange={ ( dates: any ) =>
-{
+                    {
                         if ( dates && dates.length === 2 )
                         {
                             setStartDate( dates[ 0 ] );

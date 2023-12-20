@@ -129,6 +129,7 @@ const VouCherList = () => {
             title: 'Giới hạn tiền',
             dataIndex: 'minimumOrderAmount',
             key: 'minimumOrderAmount',
+            render: (number) => <p>{number?.toLocaleString()}đ</p>,
         },
         {
             title: 'Trạng thái',

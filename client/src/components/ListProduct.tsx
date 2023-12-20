@@ -9,60 +9,51 @@ import { Iproductdata } from "../store/products/product.interface";
 
 type Props = {};
 
-const ListProduct = ( props: Props ) =>
-{
+const ListProduct = (props: Props) => {
     // const dispatch = useAppDispatch();
-    const [ arrange, setArrange ] = useState( false );
-    const [ filter, setFilter ] = useState( false );
-    const [ avaiable, setAvaiable ] = useState( false );
-    const [ value, setValue ] = useState( [ 0, 1000000 ] );
+    const [arrange, setArrange] = useState(false);
+    const [filter, setFilter] = useState(false);
+    const [avaiable, setAvaiable] = useState(false);
+    const [value, setValue] = useState([0, 1000000]);
 
-    const { data: productList } = useGetProductsQuery( {
-        gte: value[ 0 ].toString(), // Chuyển giá trị thành chuỗi số
-        lte: value[ 1 ].toString(), // Chuyển giá trị thành chuỗi số
-    } ); console.log( productList );
+    const { data: productList } = useGetProductsQuery({
+        gte: value[0].toString(), // Chuyển giá trị thành chuỗi số
+        lte: value[1].toString(), // Chuyển giá trị thành chuỗi số
+    }); console.log(productList);
 
-    const [ sortedProducts, setSortedProducts ] = useState<Iproductdata[]>( [] );
-    const [ sortOption, setSortOption ] = useState( "lowest" );
-    useEffect( () =>
-    {
-        if ( productList?.products )
-        {
-            const sorted = [ ...productList.products ];
+    const [sortedProducts, setSortedProducts] = useState<Iproductdata[]>([]);
+    const [sortOption, setSortOption] = useState("lowest");
+    useEffect(() => {
+        if (productList?.products) {
+            const sorted = [...productList.products];
 
             // Sắp xếp dựa trên giá và lựa chọn của người dùng
-            if ( sortOption === "lowest" )
-            {
-                sorted.sort( ( a, b ) => a.price - b.price );
-            } else if ( sortOption === "highest" )
-            {
-                sorted.sort( ( a, b ) => b.price - a.price );
+            if (sortOption === "lowest") {
+                sorted.sort((a, b) => a.price - b.price);
+            } else if (sortOption === "highest") {
+                sorted.sort((a, b) => b.price - a.price);
             }
 
-            setSortedProducts( sorted );
+            setSortedProducts(sorted);
         }
-    }, [ productList, sortOption ] );
+    }, [productList, sortOption]);
 
-    useEffect( () =>
-    {
+    useEffect(() => {
         // Gọi API để lấy sản phẩm theo khoảng giá đã chọn khi value thay đổi
-        if ( productList?.products )
-        {
+        if (productList?.products) {
             // Lọc danh sách sản phẩm dựa trên giá trong khoảng value
             const filteredProducts = productList.products.filter(
-                ( product: any ) =>
-                    product.price >= value[ 0 ] && product.price <= value[ 1 ]
+                (product: any) =>
+                    product.price >= value[0] && product.price <= value[1]
             );
-            setSortedProducts( filteredProducts );
+            setSortedProducts(filteredProducts);
         }
-    }, [ productList, value ] );
-    const handleSliderChange = ( newValue: number | number[] ) =>
-    {
-        setValue( newValue as number[] );
+    }, [productList, value]);
+    const handleSliderChange = (newValue: number | number[]) => {
+        setValue(newValue as number[]);
     };
-    const handleSortChange = ( event: React.ChangeEvent<HTMLSelectElement> ) =>
-    {
-        setSortOption( event.target.value );
+    const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSortOption(event.target.value);
     };
 
 
@@ -71,17 +62,14 @@ const ListProduct = ( props: Props ) =>
 
 
 
-    const handleToggle = () =>
-    {
-        setAvaiable( !avaiable );
+    const handleToggle = () => {
+        setAvaiable(!avaiable);
     };
-    const handleTongleArrange = () =>
-    {
-        setArrange( !arrange );
+    const handleTongleArrange = () => {
+        setArrange(!arrange);
     };
-    const handleTongleFilter = () =>
-    {
-        setFilter( !filter );
+    const handleTongleFilter = () => {
+        setFilter(!filter);
     };
 
     return (
@@ -125,7 +113,7 @@ const ListProduct = ( props: Props ) =>
                         </span> */}
                     </div>
                     <div>
-                        <select name="" id="" onChange={ handleSortChange }>
+                        <select name="" id="" onChange={handleSortChange}>
                             <option value="lowest">Giá từ thấp đến cao</option>
                             <option value="highest">Giá từ cao đến thấp</option>
                         </select>
@@ -142,20 +130,20 @@ const ListProduct = ( props: Props ) =>
                                 className="relative"
                             >
                                 <div
-                                    className={ `block w-10 h-5 bg-[#23314b26]  rounded-full shadow-inner ${ avaiable ? "bg-[#23314b]" : ""
-                                        }` }
+                                    className={`block w-10 h-5 bg-[#23314b26]  rounded-full shadow-inner ${avaiable ? "bg-[#23314b]" : ""
+                                        }`}
                                 ></div>
                                 <div
-                                    className={ `dot absolute left-1 top-[3px] bg-white w-3.5 h-3.5  rounded-full transition ${ avaiable ? "translate-x-[134%]" : ""
-                                        }` }
+                                    className={`dot absolute left-1 top-[3px] bg-white w-3.5 h-3.5  rounded-full transition ${avaiable ? "translate-x-[134%]" : ""
+                                        }`}
                                 ></div>
                             </label>
 
                             <input
                                 type="checkbox"
                                 id="dark-mode-toggle"
-                                checked={ avaiable }
-                                onChange={ handleToggle }
+                                checked={avaiable}
+                                onChange={handleToggle}
                                 className="hidden"
                             />
                         </div>
@@ -164,21 +152,21 @@ const ListProduct = ( props: Props ) =>
                             <div className="flex justify-between ">
                                 <label htmlFor="price">Giá</label>
                                 <span
-                                    className={ `inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] transform transition-transform duration-300 ${ arrange ? "rotate-180" : ""
-                                        }` }
-                                    onClick={ handleTongleArrange }
+                                    className={`inline-block  p-1.5  bg-[#23314b1a] rounded-full group hover:bg-[#23314b] transform transition-transform duration-300 ${arrange ? "rotate-180" : ""
+                                        }`}
+                                    onClick={handleTongleArrange}
                                 >
                                     <MdOutlineKeyboardArrowDown className="text-[#23314b] text-xs group-hover:text-white" />
                                 </span>
                             </div>
-                            { arrange && (
-                                <div className={ `mt-5` }>
+                            {arrange && (
+                                <div className={`mt-5`}>
                                     <div className="">
                                         <Slider
                                             className="slider w-full h-1 bg-[#23314b] rounded-full mb-6"
-                                            onChange={ handleSliderChange } value={ value }
-                                            min={ 0 }
-                                            max={ 1000000 }
+                                            onChange={handleSliderChange} value={value}
+                                            min={0}
+                                            max={1000000}
                                         />
                                     </div>
 
@@ -195,10 +183,10 @@ const ListProduct = ( props: Props ) =>
                                                 type="number"
                                                 placeholder="0"
                                                 className="placeholder:text-sm placeholder:font-thin placeholder:text-[#23314b] w-full text-end outline-none font-thin"
-                                                min={ 0 }
-                                                step={ 10000 }
-                                                value={ value[ 0 ] }
-                                                onChange={ ( e ) => setValue( [ parseInt( e.target.value ), value[ 1 ] ] ) }
+                                                min={0}
+                                                step={10000}
+                                                value={value[0]}
+                                                onChange={(e) => setValue([parseInt(e.target.value), value[1]])}
                                             />
                                         </label>
                                         <span className="text-base text-[#23314bb3] font-thin">
@@ -216,34 +204,49 @@ const ListProduct = ( props: Props ) =>
                                                 type="number"
                                                 placeholder="0"
                                                 className="placeholder:text-sm placeholder:font-thin placeholder:text-[#23314b] w-full text-end outline-none font-thin"
-                                                min={ 0 }
-                                                step={ 10000 }
-                                                value={ value[ 1 ] }
-                                                onChange={ ( e ) => setValue( [ value[ 0 ], parseInt( e.target.value ) ] ) }
+                                                min={0}
+                                                step={10000}
+                                                value={value[1]}
+                                                onChange={(e) => setValue([value[0], parseInt(e.target.value)])}
                                             />
                                         </label>
                                     </div>
                                 </div>
-                            ) }
+                            )}
                         </div>
                         <hr />
                     </div>
-                    {/* list product */ }
+                    {/* list product */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 z-10">
-                        { sortedProducts.map( ( product: any ) =>
-                        {
-                            return <Link to={ `/home/product-detail/${ product?._id }` } className=" flex-1" key={ product?._id }>
+                        {sortedProducts.map((product: any) => {
+                            return <Link to={`/home/product-detail/${product?._id}`} className=" flex-1" key={product?._id}>
                                 <div className="gap-x-2 gap-y-6 md:gap-x-6 md:gap-y-12 lg:grid-cols-3 z-10">
                                     <div className="">
                                         <div className="relative ">
-                                            <img className="object-cover w-full" src={ product?.images[ 0 ]?.url } alt="" />
-                                            <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">Tiết kiệm 21.000₫</p>
+                                            <img className="object-cover w-full" src={product?.images[0]?.url} alt="" />
+                                            {product.original_price && (
+
+                                                <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]">
+                                                    Tiết kiệm {(product.price - product.original_price).toLocaleString()} đ
+                                                </p>
+
+                                            )}
+                                            {/* <p className="absolute z-10 top-3 left-3 bg-[#f83a3a] text-[8px] sm:text-xs font-semibold rounded-full text-white px-2 py-[3px]"></p> */}
                                             <button className="absolute text-[15px] font-medium bg-[#23314b] border-2 border-transparent text-white px-5 py-2 z-10 right-4 bottom-2 rounded-full hover:bg-transparent hover:text-[#23314b] hover:border-2 hover:border-[#23314b] opacity-0 group-hover:opacity-100 group-hover:bottom-4 transition duration-500 ease-in-out">+ Thêm nhanh</button>
                                         </div>
-                                        <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">{ product.name }</p>
+                                        <p className="text-[#23314b] text-sm md:text-[17px] font-semibold text-center mt-[20px] ">{product.name}</p>
                                         <p className="flex justify-center gap-2">
-                                            <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{ product?.price?.toLocaleString() }₫</span>
-                                            <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{ product?.original_price?.toLocaleString() }₫</span>
+                                            {/* Hiển thị điều kiện dựa trên sự tồn tại của original_price */}
+                                            {product.original_price ? (
+                                                <>
+                                                    <span className="text-[#f83a3a] text-sm md:text-base font-extralight">{product.original_price.toLocaleString()}₫</span>
+                                                    <span className="line-through text-sm md:text-base font-extralight text-[#23314bb3]">{product.price.toLocaleString()}₫</span>
+                                                </>
+                                            ) : (
+                                                <span className="text-sm md:text-base font-extralight text-[#23314bb3] pl-[30px]"> {/* Căn giữa giá */}
+                                                    {product.price.toLocaleString()}₫
+                                                </span>
+                                            )}
                                         </p>
                                     </div>
 
@@ -251,7 +254,7 @@ const ListProduct = ( props: Props ) =>
 
                                 </div>
                             </Link>
-                        } ) }
+                        })}
                     </div>
                 </div>
                 <div className="mx-auto mt-8 flex justify-between items-center w-44 border rounded-full h-[50px] font-thin text-[#23314b] text-[17px]">

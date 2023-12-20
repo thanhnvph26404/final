@@ -151,10 +151,10 @@ const Comment = (props: any) => {
         <div className="">
             <div className="w-full sm:w-3/4 px-4 sm:px-8 mt-3">
                 <div className="flex mt-5">
-                    <p className="hidden sm:block w-3/4  text-[25px]">Bình luận</p>
+                    <p className="hidden sm:block w-3/4  text-[25px] text-[#23314b] font-semibold pl-[90px]">Bình luận</p>
                     {/* <Link to={"/comment/655ccc2ee2774e2e50993f8a"}>add ccmt</Link> */}
                 </div>
-                <div className="mx-auto" style={{ marginTop: 100, width: 1200 }}>
+                <div className="mx-auto w-[1200px]" >
                     <Table
                         style={{ backgroundColor: "white" }}
                         columns={columns}
@@ -261,9 +261,9 @@ const Comment = (props: any) => {
                     </div>
 
                 </div>
-                <div>
+                {/* <div>
                     <button className="w-[200px] h-[45px] border-2 mt-2 bg-[#23314b] text-white font-thin hover:opacity-70" onClick={handleToggleForm}>Thêm bình luận</button>
-                </div>
+                </div> */}
             </div>
 
             <hr className="w-auto ml-[100px] mt-10" />

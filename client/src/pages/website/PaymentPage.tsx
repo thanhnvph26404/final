@@ -461,7 +461,7 @@ const CheckoutPage = () =>
             }
         } catch ( error )
         {
-            toastError( "bn ch chon phuong thuc van chuyen" )
+            toastError( "Bạn chưa chọn phương thức vận chuyển" )
         }
 
     };
@@ -813,8 +813,8 @@ const CheckoutPage = () =>
                             {/* Content inside the Popup */ }
                             { selectedVoucher && (
                                 <div className="modal">
-                                        <button className="close pl-[20px] text-[40px]" onClick={ handleCloseModal }>&times;</button>
-                                        <h2 className='text-[40px] text-center font-medium text-[#23314B]' >Thông Tin Mã Giảm Giá</h2>
+                                    <button className="close pl-[20px] text-[40px]" onClick={ handleCloseModal }>&times;</button>
+                                    <h2 className='text-[40px] text-center font-medium text-[#23314B]' >Thông Tin Mã Giảm Giá</h2>
                                     <div className="modal-content h-[400px] text-left pl-[60px] pt-[30px] ">
                                         <h2 className='text-[20px] font-medium text-[#23314B]'>Tên voucher : { selectedVoucher.name } </h2>
                                         <p className='text-[20px] font-medium text-[#23314B]'>Code: { selectedVoucher?.code }</p>

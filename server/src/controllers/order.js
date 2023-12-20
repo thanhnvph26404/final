@@ -26,7 +26,6 @@ export const createOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const updateOrder = async ( req, res ) =>
 {
     try
@@ -55,7 +54,6 @@ export const updateOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const deleteOrder = async ( req, res ) =>
 {
     try
@@ -71,7 +69,6 @@ export const deleteOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const getAllOrders = async ( req, res ) =>
 {
     try
@@ -86,7 +83,6 @@ export const getAllOrders = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
-
 export const getOneOrder = async ( req, res ) =>
 {
     try
@@ -105,6 +101,53 @@ export const getOneOrder = async ( req, res ) =>
         res.status( 500 ).json( { message: "Lỗi server: " + error.message } );
     }
 };
+export const adaytotal = async ( req, res ) =>
+{
+    try
+    {
+        const today = new Date(); // Lấy ngày hiện tại
+
+        // Đặt thời gian từ 00:00:00.000 đến 23:59:59.999 của ngày hiện tại
+        const startOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0 );
+        const endOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999 );
+
+        const totalAmount = await Order.aggregate( [
+            {
+                $match: {
+                    createdAt: {
+                        $gte: startOfToday, // Lớn hơn hoặc bằng ngày bắt đầu của ngày hiện tại
+                        $lte: endOfToday, // Nhỏ hơn hoặc bằng ngày cuối cùng của ngày hiện tại
+                    },
+                    status: { $nin: [ "Đã hủy", "Đã hoàn tiền" ] }, // Lọc trạng thái không phải 'đã hủy' hoặc 'đã hoàn tiền'
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$paymentIntent.amount' }, // Tính tổng số tiền của các đơn hàng
+                },
+            },
+        ] );
+
+        if ( totalAmount.length > 0 )
+        {
+            res.json( {
+                today: today.toISOString().split( 'T' )[ 0 ],
+                totalAmount: totalAmount[ 0 ].totalAmount,
+            } );
+        } else
+        {
+            res.json( {
+                today: today.toISOString().split( 'T' )[ 0 ],
+                totalAmount: 0,
+            } ); // Trả về 0 nếu không có đơn hàng nào trong ngày
+        }
+    } catch ( error )
+    {
+        console.error( "Lỗi khi tính tổng số tiền:", error );
+        res.status( 500 ).json( { error: "Đã xảy ra lỗi khi tính tổng số tiền" } );
+    }
+}
 export const calculateTotalAmount = async ( req, res ) =>
 {
     try
@@ -218,10 +261,6 @@ export const calculatetotalAmountday = async ( req, res ) =>
         res.status( 500 ).json( { error: "Đã xảy ra lỗi khi lấy tổng tiền từng ngày trong khoảng thời gian" } );
     }
 };
-
-
-
-
 export const calculatetotalAmountmonth = async ( req, res ) =>
 {
     try
@@ -430,4 +469,129 @@ export const calculateProductsSoldPerMonth = async ( req, res ) =>
         res.status( 500 ).json( { error: "Đã xảy ra lỗi khi tính tổng số sản phẩm bán" } );
     }
 };
+export const calculateTotalProductsSoldToday = async ( req, res ) =>
+{
+    try
+    {
+        const today = new Date(); // Lấy ngày hiện tại
+
+        // Đặt thời gian từ 00:00:00.000 đến 23:59:59.999 của ngày hiện tại
+        const startOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0, 0 );
+        const endOfToday = new Date( today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999 );
+
+        const orders = await Order.find( {
+            createdAt: {
+                $gte: startOfToday, // Lớn hơn hoặc bằng thời gian bắt đầu của ngày hiện tại
+                $lte: endOfToday, // Nhỏ hơn hoặc bằng thời gian kết thúc của ngày hiện tại
+            },
+            status: { $nin: [ "Đã hủy", "Đã hoàn tiền" ] },
+        } );
+
+        let totalProductsSoldToday = 0;
+
+        orders.forEach( ( order ) =>
+        {
+            order.products.forEach( ( product ) =>
+            {
+                totalProductsSoldToday += product.quantity;
+            } );
+        } );
+
+        res.json( {
+            today: today.toISOString().split( 'T' )[ 0 ], // Ngày hiện tại
+            totalProductsSoldToday
+        } );
+    } catch ( error )
+    {
+        console.error( 'Đã xảy ra lỗi khi tính toán số lượng sản phẩm:', error );
+        res.status( 500 ).json( { error: 'Đã xảy ra lỗi khi tính toán số lượng sản phẩm' } );
+    }
+};
+export const topBuys = async ( req, res ) =>
+{
+    try
+    {
+        const { startDate, endDate } = req.body; // Assuming these dates are sent in the request body
+
+        if ( !startDate || !endDate )
+        {
+            return res.status( 400 ).json( { error: 'Start date and end date are required.' } );
+        }
+
+        const topBuyers = await Order.aggregate( [
+            {
+                $match: {
+                    createdAt: { $gte: new Date( startDate ), $lte: new Date( endDate ) },
+                    // Add any other conditions based on your data model
+                },
+            },
+            {
+                $group: {
+                    _id: '$userId',
+                    totalOrders: { $sum: 1 },
+                    totalAmount: { $sum: '$paymentIntent.amount' },
+                },
+            },
+
+            {
+                $sort: { totalOrders: -1 },
+            },
+            {
+                $limit: 5,
+            },
+        ] ).exec();
+
+        const populatedBuyers = await Order.populate( topBuyers, { path: '_id', model: 'User' } );
+
+        res.json( populatedBuyers );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: 'Internal server error' } );
+    }
+};
+export const topSellingProducts = async ( req, res ) =>
+{
+    try
+    {
+        const { startDate, endDate } = req.body; // Assuming these dates are sent in the request body
+
+        if ( !startDate || !endDate )
+        {
+            return res.status( 400 ).json( { error: 'Start date and end date are required.' } );
+        }
+
+        const topProducts = await Order.aggregate( [
+            {
+                $match: {
+                    createdAt: { $gte: new Date( startDate ), $lte: new Date( endDate ) },
+                    status: { $nin: [ "Đã hủy", "Đã hoàn tiền" ] } // Lọc bỏ trạng thái "Đã hủy"
+                }
+            },
+            {
+                $unwind: '$products',
+            },
+            {
+                $group: {
+                    _id: '$products.product', // Group by product ID
+                    totalQuantitySold: { $sum: '$products.quantity' }, // Calculate total quantity sold for each product
+                    productName: { $first: '$products.productInfo.name' }, // Get product name
+                    productInfo: { $first: '$products.productInfo' }, // Get product info
+                },
+            },
+            {
+                $sort: { totalQuantitySold: -1 }, // Sort by total quantity sold
+            },
+            {
+                $limit: 10, // Get the top 5 products
+            },
+        ] ).exec();
+
+        res.json( topProducts );
+    } catch ( error )
+    {
+        res.status( 500 ).json( { error: 'Internal server error' } );
+    }
+};
+
+
 

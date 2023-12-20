@@ -56,9 +56,52 @@ export const orderApi = createApi( {
             },
             invalidatesTags: [ 'Order' ]
         } ),
-
+        totaladay: builder.query( {
+            query: () => 
+            {
+                return {
+                    url: `totalOrderaday`,
+                    method: 'GET',
+                }
+            },
+            providesTags: [ 'Order' ]
+        } ),
+        productsoldaday: builder.query( {
+            query: () => 
+            {
+                return {
+                    url: `productOrderaday`,
+                    method: 'GET',
+                }
+            },
+            providesTags: [ 'Order' ]
+        } ),
+        topbuyer: builder.mutation( {
+            query: ( { startDate, endDate } ) => 
+            {
+                const body = { startDate, endDate }
+                return {
+                    url: `topBuyer`,
+                    method: 'POST',
+                    body
+                }
+            },
+            invalidatesTags: [ 'Order' ]
+        } ),
+        topproduct: builder.mutation( {
+            query: ( { startDate, endDate } ) => 
+            {
+                const body = { startDate, endDate }
+                return {
+                    url: `topSellingProducts`,
+                    method: 'POST',
+                    body
+                }
+            },
+            invalidatesTags: [ 'Order' ]
+        } ),
     } )
 
 } )
 
-export const { useTotalOrderadayMutation, useTotalProductadayMutation, useTotalproductamonthMutation, useTotalOrderamonthMutation } = orderApi
+export const { useTotalOrderadayMutation, useTopproductMutation, useProductsoldadayQuery, useTopbuyerMutation, useTotaladayQuery, useTotalProductadayMutation, useTotalproductamonthMutation, useTotalOrderamonthMutation } = orderApi
