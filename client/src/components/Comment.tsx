@@ -261,9 +261,9 @@ const Comment = (props: any) => {
                     </div>
 
                 </div>
-                <div>
+                {/* <div>
                     <button className="w-[200px] h-[45px] border-2 mt-2 bg-[#23314b] text-white font-thin hover:opacity-70" onClick={handleToggleForm}>Thêm bình luận</button>
-                </div>
+                </div> */}
             </div>
 
             <hr className="w-auto ml-[100px] mt-10" />
