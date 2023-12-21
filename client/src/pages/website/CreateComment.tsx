@@ -79,14 +79,13 @@ const CreateComment = () => {
                     .unwrap()
                     .then((response) => {
                         message.info("bình luận thành công")
-
                     })
 
             }))
 
             console.log("list new cmt", newcmt);
 
-            navigate('/home/product-detail/' + order.products[0].product?._id)
+            navigate('/home')
         }
     }
 
