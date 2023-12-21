@@ -255,7 +255,7 @@ const UpdateProduct = () => {
                             { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                         ]}
                     >
-                        <InputNumber className='ml-[40px]'/>
+                        <InputNumber className='ml-[40px]' />
                     </Form.Item>
                     <Form.Item
                         label="Giá giảm"
@@ -267,7 +267,7 @@ const UpdateProduct = () => {
                             { validator: validateDiscount },
                         ]}
                     >
-                        <InputNumber className='ml-[35px]'/>
+                        <InputNumber className='ml-[35px]' />
                     </Form.Item>
                     <Form.Item
                         labelCol={{ span: 3 }}
@@ -321,7 +321,7 @@ const UpdateProduct = () => {
                                             {...field}
                                             name={[field.name, 'size']}
                                             fieldKey={[field.fieldKey, 'size']}
-                                            label="Size"
+                                            label="Kích cỡ"
                                             rules={[{ required: true, message: 'Kích cỡ bắt buộc chọn' }]}
                                         >
                                             <Select placeholder="Select size" className='pl-[20px]' >
@@ -340,7 +340,7 @@ const UpdateProduct = () => {
                                             className='pl-[20px]'
                                             rules={[{ required: true, message: 'Số lượng bắt buộc nhập' }]}
                                         >
-                                            <InputNumber placeholder="Quantity" min={0} className='ml-[30px]'/>
+                                            <InputNumber placeholder="Quantity" min={0} className='ml-[30px]' />
                                         </Form.Item>
                                         <MinusCircleOutlined onClick={() => remove(field.name)} />
                                     </Space>

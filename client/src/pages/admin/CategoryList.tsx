@@ -94,7 +94,7 @@ const CategoryList = () => {
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
                     </Link>
 
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Xóa danh mục"
                         description="Bạn có chắc muốn xóa danh mục này?"
                         onConfirm={() => confirm(record.key)}
@@ -102,7 +102,7 @@ const CategoryList = () => {
                         cancelText="Hủy"
                     >
                         <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Popconfirm>
+                    </Popconfirm> */}
                 </Space>
             ),
         },

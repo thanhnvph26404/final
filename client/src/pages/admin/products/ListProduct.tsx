@@ -136,7 +136,7 @@ const ListProduct = () => {
             title: 'Danh mục',
             dataIndex: 'category',
             key: 'category',
-            render: (category) => <p>{category.title}</p>,
+            render: (category) => <p>{category?.title}</p>,
         },
         {
             title: 'Thương hiệu',
@@ -191,7 +191,7 @@ const ListProduct = () => {
                         <IoPencilSharp className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
                     </Link>
 
-                    <Popconfirm
+                    {/* <Popconfirm
                         title="Xóa sản phẩm"
                         description="Bạn có chắc chắn muốn xóa sản phẩm này không?"
                         onConfirm={() => removeProduct(record._id)}
@@ -199,7 +199,7 @@ const ListProduct = () => {
                         cancelText="Hủy"
                     >
                         <FaTrashCan className="text-lg text-gray-85 hover:text-[#1D1F2C]" />
-                    </Popconfirm>
+                    </Popconfirm> */}
                 </Space>
             ),
         },

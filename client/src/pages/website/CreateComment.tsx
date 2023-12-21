@@ -52,7 +52,7 @@ const CreateComment = () => {
 
 
     }, [isFetching])
-    console.log(products);
+    console.log(order);
 
     const handleAddComment = async (e: any) => {
         e.preventDefault();

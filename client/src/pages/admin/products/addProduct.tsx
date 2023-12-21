@@ -187,7 +187,7 @@ const AddProduct = () => {
                                     { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                                 ]}
                             >
-                                <InputNumber className='ml-[37px]'/>
+                                <InputNumber className='ml-[37px]' />
                             </Form.Item>
                             <Form.Item
                                 label="Giá giảm"
@@ -250,7 +250,7 @@ const AddProduct = () => {
                                 rules={[{ required: true }]}
                                 hasFeedback
                             >
-                                <ReactQuill className='pl-[40px]'/>
+                                <ReactQuill className='pl-[40px]' />
                             </Form.Item>
                             <Form.Item
                                 label="Ảnh sản phẩm"
@@ -283,7 +283,7 @@ const AddProduct = () => {
                                             wrapperCol={{ span: 18 }} help={duplicateVariantError ? 'Biến thể đã tồn tại' : ''}
                                             label="Màu"
                                             name={[field.name, 'color']}
-                                            className="my-auto pb-[20px] w-[180px]" 
+                                            className="my-auto pb-[20px] w-[180px]"
                                             rules={[{ required: true, message: 'Vui lòng chọn màu' }]}
                                         >
                                             <Select placeholder="Chọn màu" className="w-8 mx-3">
@@ -298,7 +298,7 @@ const AddProduct = () => {
                                         <Form.Item
                                             validateStatus={duplicateVariantError ? 'error' : ''}
                                             help={duplicateVariantError ? 'Biến thể đã tồn tại' : ''}
-                                            label="Size"
+                                            label="Kích cỡ"
                                             labelCol={{ span: 8 }}
                                             wrapperCol={{ span: 18 }}
                                             className="my-auto ml-10 pb-[20px] w-[180px] "
@@ -318,18 +318,18 @@ const AddProduct = () => {
                                             label="Số lượng"
                                             labelCol={{ span: 8 }}
                                             wrapperCol={{ span: 18 }}
-                                            className="my-auto pb-[40px]"
+                                            className="my-auto pb-[20px]"
                                             name={[field.name, 'quantity']}
                                             rules={[{ required: true, message: 'Vui lòng nhập số lượng' }]}
                                         >
                                             <Input placeholder="Nhập số lượng" type="number" />
                                         </Form.Item>
 
-                                        <MinusCircleOutlined className='pb-[45px] pl-[8px]' onClick={() => remove(field.name)} />
+                                        <MinusCircleOutlined className='pb-[20px] pl-[8px]' onClick={() => remove(field.name)} />
                                     </Space>
                                 ))}
 
-                                <Form.Item className='pl-[80px]'> 
+                                <Form.Item className='pl-[80px]'>
                                     <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
                                         Thêm biến thể sản phẩm
                                     </Button>
