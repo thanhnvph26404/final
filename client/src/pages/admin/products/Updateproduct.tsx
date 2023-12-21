@@ -255,7 +255,7 @@ const UpdateProduct = () => {
                             { type: 'number', min: 1, max: 100000000, message: 'Giá gốc không hợp lệ' },
                         ]}
                     >
-                        <InputNumber className='ml-[40px]'/>
+                        <InputNumber className='ml-[40px]' />
                     </Form.Item>
                     <Form.Item
                         label="Giá giảm"
@@ -267,7 +267,7 @@ const UpdateProduct = () => {
                             { validator: validateDiscount },
                         ]}
                     >
-                        <InputNumber className='ml-[35px]'/>
+                        <InputNumber className='ml-[35px]' />
                     </Form.Item>
                     <Form.Item
                         labelCol={{ span: 3 }}
@@ -321,10 +321,10 @@ const UpdateProduct = () => {
                                             {...field}
                                             name={[field.name, 'size']}
                                             fieldKey={[field.fieldKey, 'size']}
-                                            label="Size"
+                                            label="Kích cỡ"
                                             rules={[{ required: true, message: 'Kích cỡ bắt buộc chọn' }]}
                                         >
-                                            <Select placeholder="Select size" className='pl-[20px]' >
+                                            <Select placeholder="chọn kích cỡ" className='pl-[20px]' >
                                                 {size?.data?.map((size: any) => (
                                                     <Select.Option key={size._id} value={size.size}>
                                                         {size.size}
@@ -337,12 +337,14 @@ const UpdateProduct = () => {
                                             name={[field.name, 'quantity']}
                                             fieldKey={[field.fieldKey, 'quantity']}
                                             label="Số lượng"
-                                            className='pl-[20px]'
+                                            className='my-auto pl-[20px]'
                                             rules={[{ required: true, message: 'Số lượng bắt buộc nhập' }]}
                                         >
-                                            <InputNumber placeholder="Quantity" min={0} className='ml-[30px]'/>
+
+                                            <InputNumber placeholder="Quantity" min={0} className=' ml-[30px]' />
+                                            <MinusCircleOutlined className='pb-[20px] pl-[8px]' onClick={() => remove(field.name)} />
                                         </Form.Item>
-                                        <MinusCircleOutlined onClick={() => remove(field.name)} />
+
                                     </Space>
                                 ))}
                                 <Form.Item className='pl-[80px]'>
